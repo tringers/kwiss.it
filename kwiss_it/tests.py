@@ -1,7 +1,6 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.urls import path
-from django.utils import timezone
-import os.path
+
 
 class SecretKeyTest(TestCase):
 
@@ -13,3 +12,9 @@ class SecretKeyTest(TestCase):
 
 
 
+class CheckWebsite(TestCase):
+
+	def test_load_start_page(self):
+		client = Client()
+		response = client.get('/kwiss_it/')
+		self.assertEqual(200, response.status_code)

@@ -21,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# The following try and except block reads the SECRET_KEY or generates a new one
 try:
     file = open("kwiss/SECRET_KEY", "r")
     SECRET_KEY = file.readline()
     file.close()
 except FileNotFoundError:
-    print("Secretkey not found.")
     with open("kwiss/SECRET_KEY", 'w') as file:
         file.write(utils.get_random_secret_key())
 
@@ -40,6 +40,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'kwiss_it.apps.KwissItConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -113,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'de-de'
 
 TIME_ZONE = 'UTC'
 
