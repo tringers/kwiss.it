@@ -16,5 +16,5 @@ class CheckWebsite(TestCase):
 
 	def test_load_start_page(self):
 		client = Client()
-		response = client.get('/kwiss_it/')
+		response = client.get('/')
 		self.assertEqual(200, response.status_code)

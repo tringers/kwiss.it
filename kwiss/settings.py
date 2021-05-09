@@ -84,12 +84,37 @@ WSGI_APPLICATION = 'kwiss.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+try:
+    file = open("kwiss/my.cnf", "r")
+    file.close()
+except FileNotFoundError:
+    print("my.cnf not found")
+    with open("kwiss/my.cnf", 'w') as file:
+        file.write('[client]\n')
+        file.write('database =\n')
+        file.write('user =\n')
+        file.write('password =\n')
+        file.write('host =\n')
+        file.write('default - character - set = utf8\n')
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# IMPORTANT!!! To change the database from sqlite to mariadb, comment out DATABASE above this comment, comment in DATABASE below this comment.
+# IMPORTANT!!! Furthermore, the my.cnf in the kwiss directory must be adapted.
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'OPTIONS': {
+#             'read_default_file': 'SecurityDashboard/my.cnf'
+#         }
+#     }
+# }
 
 
 # Password validation
