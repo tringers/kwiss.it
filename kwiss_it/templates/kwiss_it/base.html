@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <meta charset="UTF-8">
     <title>Kwiss.it</title>
@@ -7,25 +8,42 @@
     <script src="../../static/bootstrap-5.0.0-dist/js/bootstrap.min.js"></script>
     <link href="../../static/css/base.css" rel="stylesheet">
 </head>
+
 <body>
 
-<div class="col-lg-8 mx-auto p-3 py-md-5">
-  <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
-    <a href="/temp/" class="d-flex align-items-center text-dark text-decoration-none">
-        <img src="../../static/images/Logo.png">
-    </a>
-  </header>
+    <div class="col-lg-8 mx-auto p-3 py-md-5">
+        <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
+            <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
+                <img src="../../static/images/Logo.png" alt="">
+            </a>
+            <nav class="navbar navbar-expand-lg bg-transparent">
+                <div class="container-fluid">
+                    <ul class="nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">First</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Second</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Third</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+    </div>
 
     {% block content %}
 
     {% endblock %}
 
 
-
-  <footer class="pt-5 my-5 text-muted border-top">
-    Created by the Kwiss.it Team, 2021
-  </footer>
-</div>
+    <div class="col-lg-8 mx-auto p-3 py-md-5">
+        <footer class="pt-5 my-5 text-muted border-top">
+            Created by the Kwiss.it Team, 2021
+        </footer>
+    </div>
 
 
 </body>
