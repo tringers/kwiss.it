@@ -1,8 +1,10 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.template import loader
+
 
 def index(request):
 	return HttpResponse("Hello World")
 
-def hello_name(request, name):
-	return HttpResponse("Hello {}!".format(name))
+def template(request):
+	return render(request, 'kwiss_it/index.html')

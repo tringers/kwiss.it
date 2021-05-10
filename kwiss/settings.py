@@ -109,7 +109,7 @@ DATABASES = {
 
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
+#         'ENGINE': 'django.db.backends.mariadb',
 #         'OPTIONS': {
 #             'read_default_file': 'SecurityDashboard/my.cnf'
 #         }
