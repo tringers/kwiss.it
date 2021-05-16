@@ -97,24 +97,24 @@ except FileNotFoundError:
         file.write('host =\n')
         file.write('default - character - set = utf8\n')
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+#}
 
 # IMPORTANT!!! To change the database from sqlite to mariadb, comment out DATABASE above this comment, comment in DATABASE below this comment.
 # IMPORTANT!!! Furthermore, the my.cnf in the kwiss directory must be adapted.
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mariadb',
-#         'OPTIONS': {
-#             'read_default_file': 'SecurityDashboard/my.cnf'
-#         }
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mariadb',
+        'OPTIONS': {
+            'read_default_file': 'my.cnf'
+        }
+    }
+}
 
 
 # Password validation
