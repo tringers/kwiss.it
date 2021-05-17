@@ -12,7 +12,7 @@ class Picture(models.Model):
 class User(AbstractBaseUser):
 	Uname = models.CharField(max_length=64, unique=True)
 	Uemail = models.CharField(max_length=320, unique=True)
-	Pid = models.ForeignKey(Picture, null=True, blank=True, on_delete=models.SET_NULL)
+	Pid = models.ForeignKey(Picture, null=True, blank=True, on_delete=models.SET_NULL, help_text="Picture ID")
 
 	USERNAME_FIELD = 'Uname'
 	EMAIL_FIELD = 'Uemail'
@@ -35,14 +35,14 @@ class Category(models.Model):
 	Cid = models.PositiveIntegerField(primary_key=True)
 	Cname = models.CharField(max_length=128)
 	Cdescription = models.CharField(max_length=512)
-	STid = models.ForeignKey(State, db_index=True, default=0, on_delete=models.RESTRICT)
+	STid = models.ForeignKey(State, db_index=True, default=0, on_delete=models.RESTRICT, help_text="State ID")
 	Cupvotes = models.PositiveIntegerField(db_index=True, default=0)
 	Cdownvotes = models.PositiveIntegerField(db_index=True, default=0)
 
 
 class Score_Category(models.Model):
-	Sid = models.ForeignKey(Score, on_delete=models.CASCADE)
-	Cid = models.ForeignKey(Category, on_delete=models.CASCADE)
+	Sid = models.ForeignKey(Score, on_delete=models.CASCADE, help_text="Score ID")
+	Cid = models.ForeignKey(Category, on_delete=models.CASCADE, help_text="Category ID")
 	SCplaycount = models.PositiveIntegerField(default=0)
 
 	class Meta:
@@ -56,17 +56,17 @@ class QuestionType(models.Model):
 
 class Question(models.Model):
 	Qid = models.PositiveIntegerField(primary_key=True)
-	Cid = models.ForeignKey(Category, db_index=True, default=0, on_delete=models.SET_DEFAULT)
-	Pid = models.ForeignKey(Picture, null=True, blank=True, on_delete=models.SET_NULL)
+	Cid = models.ForeignKey(Category, db_index=True, default=0, on_delete=models.SET_DEFAULT, help_text="Category ID")
+	Pid = models.ForeignKey(Picture, null=True, blank=True, on_delete=models.SET_NULL, help_text="Picture ID")
 	Qtext = models.CharField(max_length=256)
-	STid = models.ForeignKey(State, db_index=True, default=0, on_delete=models.RESTRICT)
-	QTid = models.ForeignKey(QuestionType, db_index=True, on_delete=models.RESTRICT)
+	STid = models.ForeignKey(State, db_index=True, default=0, on_delete=models.RESTRICT, help_text="State ID")
+	QTid = models.ForeignKey(QuestionType, db_index=True, on_delete=models.RESTRICT, help_text="QuestionType ID")
 	Qupvotes = models.PositiveIntegerField(default=0)
 	Qdownvotes = models.PositiveIntegerField(default=0)
 
 
 class Answer(models.Model):
-	Qid = models.ForeignKey(Question, on_delete=models.CASCADE)
+	Qid = models.ForeignKey(Question, on_delete=models.CASCADE, help_text="Question ID")
 	Anum = models.PositiveIntegerField()
 	Atext = models.CharField(max_length=64)
 	Acorrect = models.BooleanField(default=0)
@@ -76,13 +76,20 @@ class Answer(models.Model):
 
 
 class ReportType(models.Model):
-	RTid = models.IntegerField(primary_key=True)
+	RTid = models.PositiveIntegerField(primary_key=True)
 	RTname = models.CharField(max_length=32, unique=True)
 	RTdescription = models.CharField(max_length=256)
 
 
 class Report(models.Model):
-	Rid = models.IntegerField(primary_key=True)
-	RTid = models.ForeignKey(ReportType, on_delete=models.RESTRICT, db_index=True)
-	RefId = models.IntegerField(db_index=True)
+	Rid = models.PositiveIntegerField(primary_key=True)
+	RTid = models.ForeignKey(ReportType, on_delete=models.RESTRICT, db_index=True, help_text="ReportType ID")
+	RefId = models.PositiveIntegerField(db_index=True)
 
+
+class DiscordRole(models.Model):
+	DRid = models.PositiveIntegerField(primary_key=True)
+	Uid = models.ForeignKey(User, db_index=True, on_delete=models.CASCADE)
+	DRkey = models.CharField(max_length=36, help_text="Generated UUID4", unique=True)
+	DiscordName = models.CharField(max_length=256, help_text="User's Discord Name in base64url")
+	Deprecated = models.BooleanField(default=False)
