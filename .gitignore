@@ -130,7 +130,5 @@ dmypy.json
 .pyre/
 
 .my.cnf
-my.cnf
+kwiss/my.cnf
 .idea/
-
-# Test
