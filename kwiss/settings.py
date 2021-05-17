@@ -109,9 +109,9 @@ except FileNotFoundError:
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mariadb',
+        'ENGINE': 'django.db.backends.mysql',
         'OPTIONS': {
-            'read_default_file': 'my.cnf'
+            'read_default_file': 'kwiss/my.cnf'
         }
     }
 }
