@@ -11,39 +11,51 @@
 
 <body>
 
-    <div class="col-lg-8 mx-auto p-3 py-md-5">
-        <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
-            <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
-                <img src="../../static/images/Logo.png" alt="">
-            </a>
-            <nav class="navbar navbar-expand-lg bg-transparent">
-                <div class="container-fluid">
-                    <ul class="nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">First</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Second</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Third</a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </header>
-    </div>
+<div class="col-lg-8 mx-auto p-3 py-md-5">
+    <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
+        <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
+            <img src="../../static/images/Logo.png" alt="">
+        </a>
+        <nav class="navbar navbar-expand-lg bg-transparent">
+            <div class="container-fluid">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">First</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Second</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Third</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+</div>
 
-    {% block content %}
+{% block content %}
 
-    {% endblock %}
+{% endblock %}
 
 
-    <div class="col-lg-8 mx-auto p-3 py-md-5">
-        <footer class="pt-5 my-5 text-muted border-top">
-            Created by the Kwiss.it Team, 2021
-        </footer>
-    </div>
+<div class="col-lg-8 mx-auto p-3 py-md-5">
+    <footer class="pt-5 my-5 text-muted border-top d-flex justify-content-between">
+        <ul class="list-inline">
+            <li class="list-inline-item pl-2 border-left border-light">
+                Created by the Kwiss.it Team, 2021
+            </li>
+        </ul>
+        <ul class="list-inline">
+            <li class="list-inline-item pl-2">
+                <a href="datenschutz" class="">Datenschutz</a>
+            </li>
+            <li class="list-inline-item pl-2">
+                <a href="impressum" class="">Impressum</a>
+            </li>
+        </ul>
+    </footer>
+</div>
 
 
 </body>
