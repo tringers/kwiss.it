@@ -7,6 +7,8 @@
     <link href="../../static/bootstrap-5.0.0-dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="../../static/bootstrap-5.0.0-dist/js/bootstrap.min.js"></script>
     <link href="../../static/css/base.css" rel="stylesheet">
+    {% block headscript %}
+    {% endblock %}
 </head>
 
 <body>
@@ -35,9 +37,7 @@
 </div>
 
 {% block content %}
-
 {% endblock %}
-
 
 <div class="col-lg-8 mx-auto p-3 py-md-5">
     <footer class="pt-5 my-5 text-muted border-top d-flex justify-content-between">
@@ -57,6 +57,9 @@
     </footer>
 </div>
 
+
+{% block bodyscript %}
+{% endblock %}
 
 </body>
 </html>
