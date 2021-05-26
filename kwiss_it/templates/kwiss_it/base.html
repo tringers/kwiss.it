@@ -15,7 +15,7 @@
 
 <div class="col-lg-8 mx-auto p-3 py-md-5">
     <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
-        <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
+        <a href="{% url 'index' %}" class="d-flex align-items-center text-dark text-decoration-none">
             <img src="../../static/images/Logo.png" alt="">
         </a>
         <nav class="navbar navbar-expand-lg bg-transparent">
@@ -48,10 +48,10 @@
         </ul>
         <ul class="list-inline">
             <li class="list-inline-item pl-2">
-                <a href="datenschutz" class="">Datenschutz</a>
+                <a href="{% url 'datenschutz' %}" class="">Datenschutz</a>
             </li>
             <li class="list-inline-item pl-2">
-                <a href="impressum" class="">Impressum</a>
+                <a href="{% url 'impressum' %}" class="">Impressum</a>
             </li>
         </ul>
     </footer>
