@@ -11,13 +11,13 @@ class Picture(models.Model):
 
 
 class UserDescription(models.Model):
-	Uid = models.ForeignKey(User, unique=True, on_delete=models.CASCADE)
+	Uid = models.OneToOneField(User, on_delete=models.CASCADE)
 	Udescription = models.CharField(max_length=1000)
 
 
 class UserPicture(models.Model):
-	Uid = models.ForeignKey(User, unique=True, on_delete=models.CASCADE)
-	Pid = models.ForeignKey(Picture, unique=True, on_delete=models.CASCADE)
+	Uid = models.OneToOneField(User, on_delete=models.CASCADE)
+	Pid = models.OneToOneField(Picture, default=0, on_delete=models.SET_DEFAULT)
 
 
 class Score(models.Model):
