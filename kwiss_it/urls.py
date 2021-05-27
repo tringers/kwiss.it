@@ -10,7 +10,8 @@ urlpatterns = [
     path('settings', views.settings, name='settings'),
     path('review', views.review, name='review'),
 
-    path('login', views.login, name='login'),
+    path('login', views.login_view, name='login'),
+    path('logout', views.logout_view, name='logout'),
     path('register', views.register, name='register'),
     path('password-reset', views.login, name='vergessen'),
     path('user', views.user, name='user'),

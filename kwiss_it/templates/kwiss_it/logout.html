@@ -1,0 +1,12 @@
+{% extends "kwiss_it/base.html" %}
+
+{% block content %}
+
+    <div class="col-lg-8 mx-auto p-3">
+        <h1>Abmelden</h1>
+        {% if infoMsg != '' %}
+            <div class="alert alert-info">{{ infoMsg }}</div>
+        {% endif %}
+    </div>
+
+{% endblock %}

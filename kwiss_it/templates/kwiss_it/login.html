@@ -15,12 +15,12 @@
     <div class="row col-lg-8 mx-auto p-3">
         <form class="needs-validation" id="loginForm" action="{% url 'login' %}" method="post">
 
-            <div class="mb-3">
+            <div class="mb-3 form-group">
                 <label for="inputUsername" class="form-label">Benutzername</label>
                 <input type="text" class="form-control" id="inputUsername" required maxlength="64">
             </div>
 
-            <div class="mb-3">
+            <div class="mb-3 form-group">
                 <label for="inputPassword" class="form-label">Passwort</label>
                 <input type="password" class="form-control" id="inputPassword" required maxlength="64">
             </div>
@@ -32,10 +32,10 @@
 
             <div class="row justify-content-between">
                 <div class="col d-grid">
-                    <input type="submit" name="buttonLogin" class="btn btn-primary" value="Anmelden">
+                    <input type="submit" name="buttonLogin" class="btn btn-primary" value="Anmelden" {% if user.is_authenticated %}disabled{% endif %}>
                 </div>
                 <div class="col d-grid">
-                    <button type="submit" name="buttonLostPassword" class="btn btn-outline-danger">Password vergessen</button>
+                    <button type="submit" name="buttonLostPassword" class="btn btn-outline-danger" {% if user.is_authenticated %}disabled{% endif %}>Password vergessen</button>
                 </div>
             </div>
 

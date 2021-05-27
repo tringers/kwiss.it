@@ -41,21 +41,39 @@
                     </div>
 
                     {% if user.is_authenticated %}
-                        {{ user.username }}
+                        <div class="dropdown d-flex">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="userButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ user.username }}
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userButton">
+                                <div class="dropdown-item">
+                                    <a href="{% url 'user' %}" id="buttonLogout" class="col-12 btn btn-outline-primary px-6">Profil</a>
+                                </div>
+                                <div class="dropdown-item">
+                                    <a href="{% url 'settings' %}" id="buttonLogout" class="col-12 btn btn-outline-primary px-6">Einstellungen</a>
+                                </div>
+                                <div class="dropdown-item">
+                                    <a href="{% url 'logout' %}" id="buttonLogout" class="col-12 btn btn-outline-danger px-6">Abmelden</a>
+                                </div>
+                            </div>
+                        </div>
                     {% else %}
                         <div class="dropdown d-flex">
                             <button class="btn btn-primary dropdown-toggle" type="button" id="loginButton" data-bs-toggle="dropdown" aria-expanded="false">
                                 Anmelden
                             </button>
 
-                            <ul class="dropdown-menu" aria-labelledby="loginButton">
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="loginButton">
                                 <li>
                                     <form id="loginForm" action="{% url 'login' %}" method="post">
-                                        <div class="dropdown-item">
-                                            <input type="text" class="form-control" id="inputUsername" placeholder="Benutzername">
+                                        <div class="dropdown-item form-group">
+                                            <!--suppress HtmlFormInputWithoutLabel -->
+                                            <input type="text" class="form-control" id="inputUsername" name="inputUsername" placeholder="Benutzername">
                                         </div>
-                                        <div class="dropdown-item">
-                                            <input type="password" class="form-control" id="inputPassword" placeholder="Passwort">
+                                        <div class="dropdown-item form-group">
+                                            <!--suppress HtmlFormInputWithoutLabel -->
+                                            <input type="password" class="form-control" id="inputPassword" name="inputPassword" placeholder="Passwort">
                                         </div>
                                         <div class="dropdown-item">
                                             <input type="submit" name="buttonLogin" class="col-12 btn btn-outline-primary px-6" value="Anmelden">
