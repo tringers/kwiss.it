@@ -117,6 +117,8 @@ def register(request):
 
 		# TODO: Register user / Check the following code
 		user_obj = User.objects.create_user(inputUsername, inputEmail, inputPassword)
+		# TODO: Set is_active to 1 after email validation
+		user_obj.is_active = 0
 		user_obj.save()
 		args['infoMsg'] = 'Registrierung erfolgreich, bitte anmelden.'
 		return register_end(request, args)
