@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import User
 
 
 # Create your models here.
@@ -9,14 +10,14 @@ class Picture(models.Model):
 	Pcontent = models.CharField(max_length=64)
 
 
-class User(AbstractBaseUser):
-	Uname = models.CharField(max_length=64, unique=True)
-	Uemail = models.CharField(max_length=320, unique=True)
-	Pid = models.ForeignKey(Picture, null=True, blank=True, on_delete=models.SET_NULL, help_text="Picture ID")
+class UserDescription(models.Model):
+	Uid = models.ForeignKey(User, unique=True, on_delete=models.CASCADE)
+	Udescription = models.CharField(max_length=1000)
 
-	USERNAME_FIELD = 'Uname'
-	EMAIL_FIELD = 'Uemail'
-	REQUIRED_FIELDS = ['Uname', 'Uemail']
+
+class UserPicture(models.Model):
+	Uid = models.ForeignKey(User, unique=True, on_delete=models.CASCADE)
+	Pid = models.ForeignKey(Picture, unique=True, on_delete=models.CASCADE)
 
 
 class Score(models.Model):
