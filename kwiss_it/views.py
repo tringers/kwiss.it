@@ -143,11 +143,11 @@ def login(request, args=None):
         if user_obj is not None:
             # Redirect to a success page.
             login(request, user_obj)
-            args['infoMsg'] = 'Logged in successfully'
+            args['infoMsg'] = 'Login Erfolgreich'
             pass
         else:
             # Return an 'invalid login' error message.
-            args['errorMsg'] = 'Login failed'
+            args['errorMsg'] = 'Login Fehlgeschlagen'
             pass
 
     return render(request, 'kwiss_it/login.html', args)
