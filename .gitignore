@@ -132,3 +132,6 @@ dmypy.json
 .my.cnf
 kwiss/my.cnf
 .idea/
+
+node_modules/
+package-lock.json
