@@ -115,7 +115,7 @@ def register(request):
 			args['errorMsg'] = 'Password erfüllt nicht die Mindestvoraussetzungen.'
 			return register_end(request, args)
 
-		# TODO: Register user
+		# TODO: Register user / Check the following code
 		user_obj = User.objects.create_user(inputUsername, inputEmail, inputPassword)
 		user_obj.save()
 		args['infoMsg'] = 'Registrierung erfolgreich, bitte anmelden.'
@@ -155,10 +155,7 @@ def login_view(request, args=None):
 			return render(request, 'kwiss_it/login.html', args)
 
 		if not buttonLogin or not inputUsername or not inputPassword:
-			args['errorMsg'] = 'One of the required values were not present.<br>'
-			args['errorMsg'] += buttonLogin + '<br>'
-			args['errorMsg'] += inputUsername + '<br>'
-			args['errorMsg'] += inputPassword + '<br>'
+			args['errorMsg'] = 'One of the required values were not present.'
 			return register_end(request, args)
 
 		user_obj = authenticate(request, username=inputUsername, password=inputPassword)

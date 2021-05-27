@@ -1,8 +1,9 @@
 {% extends "kwiss_it/base.html" %}
+{% load static %}
 
 {% block content %}
 
-    <div class="col-lg-8 mx-auto p-3 py-md-5">
+    <div class="col-lg-8 mx-auto p-3">
         <h1>Registrieren</h1>
         {% if infoMsg != '' %}
             <div class="alert alert-info">{{ infoMsg }}</div>
@@ -16,26 +17,30 @@
         <form class="needs-validation" id="registerForm" action="{% url 'register' %}" method="post">
 
             <div class="mb-3 form-group">
-                <label for="inputEmail" class="form-label">Email Adresse</label>
-                <input type="email" class="form-control" name="inputEmail" id="inputEmail" required maxlength="320">
+                <label for="inputEmail" class="form-label">Email Adresse:</label>
+                <input type="email" class="form-control" name="inputEmail" id="regInputEmail" required maxlength="320">
             </div>
 
-            {# TODO: Benutzernamen nach verfügbarkeit checken, sobald rausgeklickt wird #}
+            {# TODO: Benutzernamen nach Verfügbarkeit checken, sobald rausgeklickt wird / LostFocus #}
             <div class="mb-3 form-group">
-                <label for="inputUsername" class="form-label">Benutzername</label>
-                <input type="text" class="form-control" name="inputUsername" id="inputUsername" required maxlength="64">
+                <label for="inputUsername" class="form-label">Benutzername:</label>
+                <input type="text" class="form-control" name="inputUsername" id="regInputUsername" required maxlength="64">
             </div>
 
-            {# TODO: Checken, ob das Passwort den Richtlinien entspricht, min. 8 Zeichen, darunter 3 der 4 Kategorien (Zahlen, Kleinbuchstaben, Großbuchstaben, Sonderzeichen) #}
+            <div class="form-group d-flex justify-content-between">
+                <label for="regInputPassword" class="form-label col-auto">Passwort:</label>
+                <b class="col-auto text-red px-2 validate-password-error"></b>
+            </div>
             <div class="mb-3 form-group">
-                <label for="inputPassword" class="form-label">Passwort</label>
-                <input type="password" class="form-control" name="inputPassword" id="inputPassword" required maxlength="64">
+                <input type="password" class="form-control validate-password validate-password-identical-first" name="inputPassword" id="regInputPassword" required maxlength="64">
             </div>
 
-            {# TODO: Nach eingabe des wiederholten Passworts auch automatisch nach Übereinstimmung mit dem oberen checken #}
+            <div class="form-group d-flex justify-content-between">
+                <label for="regInputPassword2" class="form-label col-auto">Passwort wiederholen:</label>
+                <b class="col-auto text-red px-2 validate-password-identical-error"></b>
+            </div>
             <div class="mb-3 form-group">
-                <label for="inputPassword2" class="form-label">Passwort wiederholen</label>
-                <input type="password" class="form-control" name="inputPassword2" id="inputPassword2" required maxlength="64">
+                <input type="password" class="form-control validate-password-identical-second" name="inputPassword2" id="regInputPassword2" required maxlength="64">
             </div>
 
             <div class="row justify-content-between pt-3">
@@ -47,6 +52,9 @@
             {% csrf_token %}
         </form>
     </div>
-    </div>
 
+{% endblock %}
+
+{% block bodyscript %}
+    <script src="{% static 'js/validation.min.js' %}"></script>
 {% endblock %}

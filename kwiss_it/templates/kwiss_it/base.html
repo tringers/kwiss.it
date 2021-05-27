@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 <html lang="de">
 
+{% load static %}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kwiss.it</title>
-    <link href="../../static/bootstrap-5.0.0-dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="../../static/bootstrap-5.0.0-dist/js/bootstrap.min.js"></script>
-    <link href="../../static/css/base.css" rel="stylesheet">
+    <link href="{% static 'bootstrap-5.0.0-dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    <script src="{% static 'bootstrap-5.0.0-dist/js/bootstrap.min.js' %}"></script>
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
     {% block headscript %}
     {% endblock %}
 </head>
 
 <body>
 
-<div class="col-lg-8 mx-auto p-3 py-md-5">
+<div class="col-lg-8 mx-auto p-3 py-md-2 pt-md-4">
     <header class="pb-3 mb-3 border-bottom">
         <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
             <div class="container-fluid">
                 <a href="{% url 'index' %}" class="navbar-brand">
-                    <img src="../../static/images/Logo.png" alt="">
+                    <img src="{% static 'images/Logo.png' %}" alt="">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -51,7 +53,8 @@
                                     <a href="{% url 'user' %}" id="buttonLogout" class="col-12 btn btn-outline-primary px-6">Profil</a>
                                 </div>
                                 <div class="dropdown-item">
-                                    <a href="{% url 'settings' %}" id="buttonLogout" class="col-12 btn btn-outline-primary px-6">Einstellungen</a>
+                                    {# TODO: Einstellungen als Fenster in der Seite, eine Art Top Layer? #}
+                                    <button id="buttonLogout" class="col-12 btn btn-outline-primary px-6">Einstellungen</button>
                                 </div>
                                 <div class="dropdown-item">
                                     <a href="{% url 'logout' %}" id="buttonLogout" class="col-12 btn btn-outline-danger px-6">Abmelden</a>

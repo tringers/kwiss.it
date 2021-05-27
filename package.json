@@ -1,0 +1,7 @@
+{
+  "name": "kwiss.it",
+  "version": "1.0.0",
+  "dependencies": {
+    "uglify-js": ">=3.13"
+  }
+}
