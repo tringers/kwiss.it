@@ -5,3 +5,8 @@
 body {
   background-color: whitesmoke;
 }
+
+.px-6 {
+  padding-left: 4.5rem;
+  padding-right: 4.5rem;
+}
