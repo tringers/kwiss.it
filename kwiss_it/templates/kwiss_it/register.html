@@ -4,36 +4,47 @@
 
     <div class="col-lg-8 mx-auto p-3 py-md-5">
         <h1>Registrieren</h1>
-        {% if errorMsg %}
+        {% if infoMsg != '' %}
+            <div class="alert alert-info">{{ infoMsg }}</div>
+        {% endif %}
+        {% if errorMsg != '' %}
             <div class="alert alert-danger">{{ errorMsg }}</div>
         {% endif %}
     </div>
+
     <div class="row col-lg-8 mx-auto p-3">
         <form class="needs-validation" id="registerForm" action="{% url 'register' %}" method="post">
+
             <div class="mb-3">
                 <label for="inputEmail" class="form-label">Email Adresse</label>
-                <input type="email" class="form-control" id="inputEmail" required>
+                <input type="email" class="form-control" name="inputEmail" id="inputEmail" required maxlength="320">
             </div>
+
             {# TODO: Benutzernamen nach verfügbarkeit checken, sobald rausgeklickt wird #}
             <div class="mb-3">
                 <label for="inputUsername" class="form-label">Benutzername</label>
-                <input type="text" class="form-control" id="inputUsername" required>
+                <input type="text" class="form-control" name="inputUsername" id="inputUsername" required maxlength="64">
             </div>
+
             {# TODO: Checken, ob das Passwort den Richtlinien entspricht, min. 8 Zeichen, darunter 3 der 4 Kategorien (Zahlen, Kleinbuchstaben, Großbuchstaben, Sonderzeichen) #}
             <div class="mb-3">
                 <label for="inputPassword" class="form-label">Passwort</label>
-                <input type="password" class="form-control" id="inputPassword" required>
+                <input type="password" class="form-control" name="inputPassword" id="inputPassword" required maxlength="64">
             </div>
+
             {# TODO: Nach eingabe des wiederholten Passworts auch automatisch nach Übereinstimmung mit dem oberen checken #}
             <div class="mb-3">
                 <label for="inputPassword2" class="form-label">Passwort wiederholen</label>
-                <input type="password" class="form-control" id="inputPassword2" required>
+                <input type="password" class="form-control" name="inputPassword2" id="inputPassword2" required maxlength="64">
             </div>
+
             <div class="row justify-content-between pt-3">
                 <div class="col d-grid">
-                    <button type="submit" name="buttonRegister" class="btn btn-primary">Registrieren</button>
+                    <input type="submit" name="buttonRegister" class="btn btn-primary" value="Registrieren">
                 </div>
             </div>
+
+            {% csrf_token %}
         </form>
     </div>
     </div>
