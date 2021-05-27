@@ -44,25 +44,28 @@
                         <button class="btn btn-primary dropdown-toggle" type="button" id="loginButton" data-bs-toggle="dropdown" aria-expanded="false">
                             Anmelden
                         </button>
+
                         <ul class="dropdown-menu" aria-labelledby="loginButton">
-                            <li>
-                                <div class="dropdown-item">
-                                    <input type="text" class="form-control" id="inputUsername" placeholder="Benutzername">
-                                </div>
-                            </li>
-                            <li>
-                                <div class="dropdown-item">
-                                    <input type="password" class="form-control" id="inputPassword" placeholder="Passwort">
-                                </div>
-                            </li>
-                            <li>
-                                <div class="dropdown-item">
-                                    <button type="submit" class="col-12 btn btn-outline-primary px-6">Anmelden</button>
-                                </div>
-                                <div class="dropdown-item">
-                                    <button type="submit" class="col-12 btn btn-outline-danger px-6">Registrieren</button>
-                                </div>
-                            </li>
+                            <form id="loginForm" action="{% url 'login' %}" method="post">
+                                <li>
+                                    <div class="dropdown-item">
+                                        <input type="text" class="form-control" id="inputUsername" placeholder="Benutzername">
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="dropdown-item">
+                                        <input type="password" class="form-control" id="inputPassword" placeholder="Passwort">
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="dropdown-item">
+                                        <button type="submit" name="buttonLogin" class="col-12 btn btn-outline-primary px-6">Anmelden</button>
+                                    </div>
+                                    <div class="dropdown-item">
+                                        <button type="submit" name="buttonRegister" class="col-12 btn btn-outline-danger px-6">Registrieren</button>
+                                    </div>
+                                </li>
+                            </form>
                         </ul>
                     </div>
                 </div>
