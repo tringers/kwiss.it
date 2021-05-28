@@ -32,9 +32,11 @@ function livePreviewTrigger() {
     let output = document.getElementById('descriptionPreviewP');
     let charLeft = document.getElementById('descriptionCharacterLeft');
     charLeft.innerHTML = String(1000 - input.value.length) + " Zeichen verbleibend";
+    let html = /(<([a-zA-Z \/!])+([^>])*)/;
+    let content = input.value.replace(html, '');
 
     if(!preview) return;
-    output.innerHTML = marked(input.value);
+    output.innerHTML = marked(content);
 }
 
 marked.setOptions({

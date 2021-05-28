@@ -186,6 +186,7 @@ def user(request):
 def user_profile(request, username):
 	check_user_last_seen(request)
 	args = {
+		'infoMsg': '',
 		'errorMsg': '',
 		'userprofile': {
 			'requested': username,
@@ -198,7 +199,9 @@ def user_profile(request, username):
 	}
 
 	if request.method == 'POST':
-		return user_profile_post(request)
+		args['errorMsg'] = user_profile_post(request)
+		if args['errorMsg'] == '':
+			args['infoMsg'] = 'Erfolgreich gespeichert.'
 
 	# User Object
 	profileAS = User.objects.filter(username=username)
@@ -238,7 +241,7 @@ def user_profile_post(request):
 	# - User Description
 	# - Email Address
 	# - User Password
-	return None
+	return ''
 
 
 def login_view(request, args=None):
