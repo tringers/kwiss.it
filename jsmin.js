@@ -16,6 +16,8 @@ if (process.argv.length < 4) {
                 'validateEmailaddress',
                 'validateUsername',
                 'validatePassword',
+                'toggleLivePreview',
+                'livePreviewTrigger',
             ]
         }
     });

@@ -4,94 +4,141 @@
 {% block content %}
 
     <div class="col-lg-8 mx-auto p-3">
-        <h1>Profil von {{ user.username }}</h1>
+        {% if errorMsg != '' %}
+            <div class="alert alert-danger">{{ errorMsg }}</div>
+        {% endif %}
 
-        <ul class="nav nav-tabs pt-4" id="profileTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="true">Profil</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab" aria-controls="settings" aria-selected="false">Einstellungen</button>
-            </li>
-        </ul>
+        <h1>Profil von {{ userprofile.requested }}</h1>
+
+        {% if user.is_authenticated and userprofile.username == user.username %}
+            <ul class="nav nav-tabs pt-4" id="profileTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="true">Profil</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab" aria-controls="settings" aria-selected="false">Einstellungen</button>
+                </li>
+            </ul>
+        {% endif %}
 
         <div class="tab-content pt-2" id="profileTabContent">
             <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                 <div class="container">
-                    <div class="row">
+                    <div class="row" id="profileInfoRow">
                         <div class="col-3 card bg-transparent text-white p-1 mb-auto">
-                            <img class="col-lg-12 img-thumbnail card-img" src="{% static 'images/profile/pb-0.png' %}" alt="">
+                            <img class="col-lg-12 img-thumbnail card-img"
+                                    {% if userprofile.picture == '' %}
+                                 src="{% static 'images/profile/pb-0.png' %}"
+                                    {% else %}
+                                 src="{{ userprofile.picture }}"
+                                    {% endif %} alt="">
                             <div class="card-img-overlay d-flex justify-content-end p-2">
                                 <a class="card-link hover-special-1 col-2"><img class="col-12 bg-light" src="{% static 'images/upload.png' %}" alt="" title="Upload"></a>
                             </div>
                         </div>
+                        {# TODO: [Optional] Beschreibung des eigenen Profils anpassen können, vielleicht auch mit Markdown Unterstützung? #}
+                        {# TODO: Wenn ein Username in der URL übergeben wird, Benutzerprofil anzeigen mit Beschreibung, wann registriert und zuletzt online #}
                         <div class="col-9">
-                            <div class="row">
-                                <div class="col-5">Benutzername:</div>
-                                <div class="col-7">{{ user.username }}</div>
-                            </div>
-                            <div class="row">
-                                <div class="col-5">Email Adresse:</div>
-                                <div class="col-7">{{ user.email }}</div>
-                            </div>
-
-                            {# TODO: [Optional] Beschreibung des eigenen Profils anpassen können, vielleicht auch mit Markdown Unterstützung? #}
-                            {# TODO: Wenn ein Username in der URL übergeben wird, Benutzerprofil anzeigen mit Beschreibung, wann registriert und zuletzt online #}
-
-                            <div class="row pt-4">
-                                <h4>Passwort ändern:</h4>
-                                <div class="container">
-                                    <form class="needs-validation" id="changePasswordForm">
-                                        <div class="row pb-1">
-                                            <div class="col-5 my-auto">Passwort eingeben:</div>
-                                            <div class="col-7">
-                                                <!--suppress HtmlFormInputWithoutLabel -->
-                                                <input type="password" class="form-control" id="inputPassword" name="inputPassword" required maxlength="64">
-                                            </div>
-                                        </div>
-                                        <div class="row pb-2">
-                                            <div class="col-5 my-auto">Passwort wiederholen:</div>
-                                            <div class="col-7">
-                                                <!--suppress HtmlFormInputWithoutLabel -->
-                                                <input type="password" class="form-control" id="inputPassword2" name="inputPassword2" required maxlength="64">
-                                            </div>
-                                        </div>
-                                        <div class="row pb-1">
-                                            <div class="col-5">
-                                                <input type="submit" class="form-control btn btn-outline-primary" id="inputChangePassword" name="inputChangePassword" value="Passwort ändern">
-                                            </div>
-                                            <div class="col-7"></div>
-                                        </div>
-                                    </form>
+                            {% if user.is_authenticated and userprofile.username == user.username %}
+                                <div class="row">
+                                    <div class="col-5">Benutzername:</div>
+                                    <div class="col-7">{{ userprofile.username }}</div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-5">Email Adresse:</div>
+                                    <div class="col-7">{{ user.email }}</div>
+                                </div>
+                            {% endif %}
+                            {# TODO: [Optional] Add badges like administrator, moderator, ... #}
+                            {# TODO: Show last seen, registered since, ... #}
+                            {% if userprofile.registered != '' %}
+                                <div class="row">
+                                    <div class="col-5">Registriert seit:</div>
+                                    <div class="col-7">{{ userprofile.registered }}</div>
+                                </div>
+                            {% endif %}
+                            {% if userprofile.lastseen != '' %}
+                                <div class="row">
+                                    <div class="col-5">Zuletzt gesehen:</div>
+                                    <div class="col-7">{{ userprofile.lastseen }}</div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if userprofile.description %}
+                        <div class="row py-4" id="profileDescriptionRow">
+                            <p class="disabled hidden" id="profileDescriptionRaw">{{ userprofile.description }}</p>
+                            <p class="border-1 border rounded-1" id="profileDescription"></p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% if user.is_authenticated and userprofile.username == user.username %}
+                <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+                    <div class="container py-2 mb-2">
+                        <div class="row" id="changeDescriptionRow">
+                            <div class="d-flex justify-content-between">
+                                <label class="col-auto">Beschreibung anpassen:</label>
+                                <label class="col-auto"><a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="_blank">Unterstützt Markdown</a></label>
                             </div>
+                            {# TODO: Form is not working at the moment #}
+                            <form class="needs-validation" id="changeDescriptionForm">
+                                <div class="row pt-1">
+                                    <textarea class="bg-light rounded-2" id="newDescription" maxlength="1000" oninput="livePreviewTrigger()">{{ userprofile.description }}</textarea>
+                                </div>
+                                <div class="row pt-2">
+                                    <div class="form-check col-4 my-auto">
+                                        <input class="form-check-input" type="checkbox" value="" id="descriptionPreviewCheckbox" onclick="toggleLivePreview()">
+                                        <label class="form-check-label" for="descriptionPreview">
+                                            Live Vorschau
+                                        </label>
+                                    </div>
+                                    <div class="col-4 my-auto" id="descriptionCharacterLeft">1000 Zeichen verbleibend</div>
+                                    <div class="col-4">
+                                        <input type="submit" class="col-12 btn btn-primary" value="Speichern">
+                                    </div>
+                                </div>
+                                <div class="row pt-2 hidden invisible" id="descriptionPreviewDiv">
+                                    <p class="border-1 border rounded-1 hidden invisible lh-1" id="descriptionPreviewP"></p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row border-3 border-top py-2 mb-2" id="changePWRow">
+                        <h4>Passwort ändern:</h4>
+                        <div class="container">
+                            <form class="needs-validation" id="changePasswordForm">
+                                <div class="row pb-1">
+                                    <div class="col-5 my-auto">Passwort eingeben:</div>
+                                    <div class="col-7">
+                                        <!--suppress HtmlFormInputWithoutLabel -->
+                                        <input type="password" class="form-control" id="inputPassword" name="inputPassword" required maxlength="64">
+                                    </div>
+                                </div>
+                                <div class="row pb-2">
+                                    <div class="col-5 my-auto">Passwort wiederholen:</div>
+                                    <div class="col-7">
+                                        <!--suppress HtmlFormInputWithoutLabel -->
+                                        <input type="password" class="form-control" id="inputPassword2" name="inputPassword2" required maxlength="64">
+                                    </div>
+                                </div>
+                                <div class="row pb-1">
+                                    <div class="col-5">
+                                        <input type="submit" class="form-control btn btn-outline-primary" id="inputChangePassword" name="inputChangePassword" value="Passwort ändern">
+                                    </div>
+                                    <div class="col-7"></div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
-                <h3>Einstellungen</h3>
-                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing
-                    elit. Aenean commodo ligula eget dolor. Aenean massa
-                    <strong>strong</strong>. Cum sociis natoque penatibus
-                    et magnis dis parturient montes, nascetur ridiculus
-                    mus. Donec quam felis, ultricies nec, pellentesque
-                    eu, pretium quis, sem. Nulla consequat massa quis
-                    enim. Donec pede justo, fringilla vel, aliquet nec,
-                    vulputate eget, arcu. In enim justo, rhoncus ut,
-                    imperdiet a, venenatis vitae, justo. Nullam dictum
-                    felis eu pede <a class="external ext" href="#">link</a>
-                    mollis pretium. Integer tincidunt. Cras dapibus.
-                    Vivamus elementum semper nisi. Aenean vulputate
-                    eleifend tellus. Aenean leo ligula, porttitor eu,
-                    consequat vitae, eleifend ac, enim. Aliquam lorem ante,
-                    dapibus in, viverra quis, feugiat a, tellus. Phasellus
-                    viverra nulla ut metus varius laoreet. Quisque rutrum.
-                    Aenean imperdiet. Etiam ultricies nisi vel augue.
-                    Curabitur ullamcorper ultricies nisi.</p>
-
-            </div>
+            {% endif %}
         </div>
     </div>
 
+{% endblock %}
+
+{% block bodyscript %}
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="{% static 'js/usersettings.min.js' %}"></script>
 {% endblock %}

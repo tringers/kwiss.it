@@ -1,12 +1,42 @@
 import string
+import pytz
+from datetime import datetime
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template import loader
 from django.contrib.auth.models import User
+from .models import UserPicture, UserDescription, Picture
 from django.contrib.auth import authenticate, login, logout
+
+last_seen = {
+	'username': '2021-01-01 12:00'
+}
+
+forbidden_usernames = [
+	'user',
+	'username',
+	'admin',
+	'administrator',
+	'mod',
+	'moderator',
+	'test',
+]
+
+
+def check_user_last_seen(request):
+	if not request.user.is_authenticated:
+		return
+
+	timezone = pytz.timezone('Europe/Berlin')
+	dt = datetime.now(timezone)
+	username = request.user.username
+	last_seen[username] = dt.strftime("%Y-%m-%d %H:%M")
+
+	return
 
 
 def index(request):
+	check_user_last_seen(request)
 	return render(request, 'kwiss_it/index.html')
 
 
@@ -19,6 +49,7 @@ def impressum(request):
 
 
 def lobby(request, lobby_id):
+	check_user_last_seen(request)
 	return render(request, 'kwiss_it/lobby.html')
 
 
@@ -64,6 +95,11 @@ def register(request):
 			return register_end(request, args)
 		if len(inputPassword) > 64:
 			args['errorMsg'] = 'Password zu lang, maximal 64 Zeichen erlaubt.'
+			return register_end(request, args)
+
+		# Check if username is allowed
+		if any(inputUsername in s for s in forbidden_usernames):
+			args['errorMsg'] = 'Benutzername nicht erlaubt.'
 			return register_end(request, args)
 
 		# Check if username or email address exists
@@ -136,8 +172,73 @@ def register_end(request, args=None):
 	return render(request, 'kwiss_it/register.html', args)
 
 
+def user_short(request, username):
+	return redirect('/user/' + username)
+
+
 def user(request):
-	return render(request, 'kwiss_it/user.html')
+	if request.user.is_authenticated:
+		return redirect('/user/' + request.user.username)
+	else:
+		return redirect('index')
+
+
+def user_profile(request, username):
+	check_user_last_seen(request)
+	args = {
+		'errorMsg': '',
+		'userprofile': {
+			'requested': username,
+			'username': '',
+			'picture': '',
+			'description': '',
+			'registered': '',
+			'lastseen': '',
+		},
+	}
+
+	if request.method == 'POST':
+		return user_profile_post(request)
+
+	# User Object
+	profileAS = User.objects.filter(username=username)
+	if len(profileAS) < 1:
+		args['errorMsg'] = 'Kein Benutzer mit dem Benutzernamen gefunden.'
+		return render(request, 'kwiss_it/user.html', args)
+	profileA = profileAS[0]
+
+	profileBS = UserPicture.objects.filter(Uid=profileA.id)
+	profileCS = UserDescription.objects.filter(Uid=profileA.id)
+	userprofile = args['userprofile']
+
+	userprofile['username'] = profileA.username
+	userprofile['registered'] = profileA.date_joined.strftime("%Y-%m-%d")
+	userprofile['lastseen'] = last_seen[profileA.username]
+
+	# Profile Picture
+	if len(profileBS) > 0:
+		profileB = profileBS[0]
+		profilePS = Picture.objects.get(id=profileB.Pid)
+		if len(profilePS) > 0:
+			profileP = profilePS[0]
+			userprofile['picture'] = profileP.Pcontent
+
+	if len(profileCS) > 0:
+		profileC = profileCS[0]
+		userprofile['description'] = profileC.Udescription
+
+	args['userprofile'] = userprofile
+
+	return render(request, 'kwiss_it/user.html', args)
+
+
+def user_profile_post(request):
+	# Detect, which changes should be done
+	# - User Picture
+	# - User Description
+	# - Email Address
+	# - User Password
+	return None
 
 
 def login_view(request, args=None):
