@@ -10,6 +10,7 @@ function toggleLivePreview() {
         prev2.classList.remove('hidden');
         prev.classList.remove('invisible');
         prev2.classList.remove('invisible');
+        livePreviewTrigger();
     } else {
         preview = false;
         prev.classList.add('hidden');
@@ -29,6 +30,10 @@ function livePreviewTrigger() {
     if(!preview) return;
     output.innerHTML = marked(input.value);
 }
+
+marked.setOptions({
+   breaks: true
+});
 
 let desc = document.getElementById('newDescription');
 let charLeft = document.getElementById('descriptionCharacterLeft');
