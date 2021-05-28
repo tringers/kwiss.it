@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from .models import UserPicture, UserDescription, Picture
 from django.contrib.auth import authenticate, login, logout
 
+# TODO: In die Datenbank übertragen
 last_seen = {
 	'username': '2021-01-01 12:00'
 }
@@ -98,7 +99,7 @@ def register(request):
 			return register_end(request, args)
 
 		# Check if username is allowed
-		if any(inputUsername in s for s in forbidden_usernames):
+		if any(inputUsername.lower() in s for s in forbidden_usernames):
 			args['errorMsg'] = 'Benutzername nicht erlaubt.'
 			return register_end(request, args)
 
