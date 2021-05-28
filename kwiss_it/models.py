@@ -20,6 +20,7 @@ class UserPicture(models.Model):
 	Pid = models.OneToOneField(Picture, default=0, on_delete=models.SET_DEFAULT)
 
 
+# TODO: Add QuestionCorrect, QuestionWrong
 class Score(models.Model):
 	Sid = models.PositiveIntegerField(primary_key=True)
 	Uid = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -41,6 +42,7 @@ class Category(models.Model):
 	Cdownvotes = models.PositiveIntegerField(db_index=True, default=0)
 
 
+# TODO: Statt pro Kategorie auf Playcount pro Frage
 class Score_Category(models.Model):
 	Sid = models.ForeignKey(Score, on_delete=models.CASCADE, help_text="Score ID")
 	Cid = models.ForeignKey(Category, on_delete=models.CASCADE, help_text="Category ID")
