@@ -1,3 +1,9 @@
+/*
+IMPORTANT:
+After changing code in here:
+  Please run jsmin.bat or equivalent.
+ */
+
 let preview = false;
 
 function toggleLivePreview() {
