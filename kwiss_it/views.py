@@ -1,17 +1,16 @@
 import string
 import pytz
 from datetime import datetime
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.template import loader
 from django.contrib.auth.models import User
-from .models import UserPicture, UserDescription, Picture
+from .models import UserPicture, UserDescription, Picture, UserLastSeen
 from django.contrib.auth import authenticate, login, logout
+# noinspection PyPackageRequirements
+from ratelimit.decorators import ratelimit
+from urllib.parse import unquote
 
-# TODO: In die Datenbank übertragen
-last_seen = {
-	'username': '2021-01-01 12:00'
-}
 
 forbidden_usernames = [
 	'user',
@@ -28,10 +27,23 @@ def check_user_last_seen(request):
 	if not request.user.is_authenticated:
 		return
 
-	timezone = pytz.timezone('Europe/Berlin')
-	dt = datetime.now(timezone)
 	username = request.user.username
-	last_seen[username] = dt.strftime("%Y-%m-%d %H:%M")
+	user_objset = User.objects.filter(username=username)
+
+	if len(user_objset) < 1:
+		return
+
+	user_obj = user_objset[0]
+
+	uls_objset = UserLastSeen.objects.filter(Uid=user_obj)
+
+	if len(uls_objset) < 1:
+		uls_obj = UserLastSeen.objects.create(Uid=user_obj)
+		uls_obj.save()
+		pass
+	else:
+		uls_obj = uls_objset[0]
+		uls_obj.LastSeen = datetime.now()
 
 	return
 
@@ -58,6 +70,7 @@ def settings(request):
 	return render(request, 'kwiss_it/settings.html')
 
 
+@ratelimit(key='ip', rate='6/m', method='POST')
 def register(request):
 	args = {
 		'errorMsg': '',
@@ -152,12 +165,13 @@ def register(request):
 			args['errorMsg'] = 'Password erfüllt nicht die Mindestvoraussetzungen.'
 			return register_end(request, args)
 
-		# TODO: Register user / Check the following code
 		user_obj = User.objects.create_user(inputUsername, inputEmail, inputPassword)
-		# TODO: Set is_active to 1 after email validation
+		# TODO: Send mail to user
+		# TODO: After email validation: Set is_active to 1
+		# TODO: After email validation: Create all necessary model entries
 		user_obj.is_active = 0
 		user_obj.save()
-		args['infoMsg'] = 'Registrierung erfolgreich, bitte anmelden.'
+		args['infoMsg'] = 'Bestätige deine Email Adresse, danach kannst du dich anmelden.'
 		return register_end(request, args)
 
 	return register_end(request, args)
@@ -171,6 +185,34 @@ def register_end(request, args=None):
 		}
 
 	return render(request, 'kwiss_it/register.html', args)
+
+
+# Burst limit and normal limit
+@ratelimit(key='ip', rate='30/m', method='ALL')
+@ratelimit(key='ip', rate='60/h', method='ALL')
+def register_checkusername(request, username):
+	# If user found, status 409 with appropriate msg
+	username = unquote(username)
+	user_objset = User.objects.filter(username=username)
+
+	if any(username.lower() in f for f in forbidden_usernames):
+		return register_checkusername_res(403, 'Benutzername "' + username + '" ist nicht erlaubt.')
+
+	if len(user_objset) > 0:
+		return register_checkusername_res(409, 'Benutzername "' + username + '" ist bereits vergeben.')
+
+	return register_checkusername_res(200, '')
+
+
+def register_checkusername_short(request):
+	return register_checkusername_res(200, '')
+
+
+def register_checkusername_res(status, msg):
+	return JsonResponse({
+		'status': status,
+		'message': msg,
+	})
 
 
 def user_short(request, username):
@@ -217,7 +259,10 @@ def user_profile(request, username):
 
 	userprofile['username'] = profileA.username
 	userprofile['registered'] = profileA.date_joined.strftime("%Y-%m-%d")
-	userprofile['lastseen'] = last_seen[profileA.username]
+	uls_objset = UserLastSeen.objects.filter(Uid=profileA.id)
+	if len(uls_objset) > 0:
+		uls_obj = uls_objset[0]
+		userprofile['lastseen'] = uls_obj.LastSeen.strftime("%Y-%m-%d %H:%M")
 
 	# Profile Picture
 	if len(profileBS) > 0:
@@ -227,6 +272,7 @@ def user_profile(request, username):
 			profileP = profilePS[0]
 			userprofile['picture'] = profileP.Pcontent
 
+	# User description
 	if len(profileCS) > 0:
 		profileC = profileCS[0]
 		userprofile['description'] = profileC.Udescription
@@ -245,6 +291,7 @@ def user_profile_post(request):
 	return ''
 
 
+@ratelimit(key='ip', rate='6/m', method='POST')
 def login_view(request, args=None):
 	if args is None or not args:
 		args = {

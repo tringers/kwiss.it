@@ -21,10 +21,12 @@
                 <input type="email" class="form-control" name="inputEmail" id="regInputEmail" required maxlength="320">
             </div>
 
-            {# TODO: Benutzernamen nach Verfügbarkeit checken, sobald rausgeklickt wird / LostFocus #}
+            <div class="form-group d-flex justify-content-between">
+                <label for="inputUsername" class="form-label col-auto">Benutzername:</label>
+                <b class="col-auto text-red px-2" id="usernameStatus"></b>
+            </div>
             <div class="mb-3 form-group">
-                <label for="inputUsername" class="form-label">Benutzername:</label>
-                <input type="text" class="form-control" name="inputUsername" id="regInputUsername" required maxlength="64">
+                <input type="text" class="form-control" name="inputUsername" id="regInputUsername" required maxlength="64" onfocusout="testUsername()">
             </div>
 
             <div class="form-group d-flex justify-content-between">

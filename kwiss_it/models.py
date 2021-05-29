@@ -20,12 +20,18 @@ class UserPicture(models.Model):
 	Pid = models.OneToOneField(Picture, default=0, on_delete=models.SET_DEFAULT)
 
 
-# TODO: Add QuestionCorrect, QuestionWrong
+class UserLastSeen(models.Model):
+	Uid = models.OneToOneField(User, on_delete=models.CASCADE)
+	LastSeen = models.DateTimeField(auto_now=True)
+
+
 class Score(models.Model):
 	Sid = models.PositiveIntegerField(primary_key=True)
 	Uid = models.OneToOneField(User, on_delete=models.CASCADE)
 	Swon = models.PositiveIntegerField(db_index=True, default=0)
 	Slost = models.PositiveIntegerField(db_index=True, default=0)
+	Qcorrect = models.PositiveIntegerField(db_index=True, default=0)
+	Qwrong = models.PositiveIntegerField(db_index=True, default=0)
 
 
 class State(models.Model):
@@ -42,11 +48,9 @@ class Category(models.Model):
 	Cdownvotes = models.PositiveIntegerField(db_index=True, default=0)
 
 
-# TODO: Statt pro Kategorie auf Playcount pro Frage
 class Score_Category(models.Model):
 	Sid = models.ForeignKey(Score, on_delete=models.CASCADE, help_text="Score ID")
 	Cid = models.ForeignKey(Category, on_delete=models.CASCADE, help_text="Category ID")
-	SCplaycount = models.PositiveIntegerField(default=0)
 
 	class Meta:
 		unique_together = ('Sid', 'Cid')
@@ -64,6 +68,7 @@ class Question(models.Model):
 	Qtext = models.CharField(max_length=256)
 	STid = models.ForeignKey(State, db_index=True, default=0, on_delete=models.RESTRICT, help_text="State ID")
 	QTid = models.ForeignKey(QuestionType, db_index=True, on_delete=models.RESTRICT, help_text="QuestionType ID")
+	Qplaycount = models.PositiveIntegerField(default=0)
 	Qupvotes = models.PositiveIntegerField(default=0)
 	Qdownvotes = models.PositiveIntegerField(default=0)
 

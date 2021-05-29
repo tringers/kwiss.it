@@ -18,6 +18,7 @@ if (process.argv.length < 4) {
                 'validatePassword',
                 'toggleLivePreview',
                 'livePreviewTrigger',
+                'testUsername',
             ]
         }
     });

@@ -8,7 +8,7 @@ const format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
 
 function validatePassword(element, errorField) {
     let value = element.value;
-    if(errorField !== null)
+    if (errorField !== null)
         errorField.innerHTML = '';
 
     if (value.length < 8 && errorField !== null) {
@@ -52,12 +52,27 @@ function validatePassword(element, errorField) {
     }
 }
 
+function testUsername() {
+    let input = document.getElementById('regInputUsername').value;
+    let status = document.getElementById('usernameStatus');
+    fetch('/register/checkusername/' + encodeURI(input))
+        .then(res => res.json()
+            .then(data => {
+                if(parseInt(data.status) !== 200) {
+                    status.innerHTML = data.message;
+                } else {
+                    status.innerHTML = '';
+                }
+            })
+        );
+}
+
 let ePW = document.getElementsByClassName('validate-password');
 let ePWE = document.getElementsByClassName('validate-password-error');
 for (let i = 0; i < ePW.length; i++) {
     let e = ePW[i];
     e.addEventListener('input', () => {
-        validatePassword(e, ePWE.length >= i ? ePWE[i]: null);
+        validatePassword(e, ePWE.length >= i ? ePWE[i] : null);
     })
 }
 
@@ -66,18 +81,18 @@ let elPassIdentSecond = document.getElementsByClassName('validate-password-ident
 let elPassIdentErr = document.getElementsByClassName('validate-password-identical-error');
 let ePWIF = null, ePWIS = null, ePWIE = null;
 
-if(elPassIdentFirst.length >= 1)
+if (elPassIdentFirst.length >= 1)
     ePWIF = elPassIdentFirst[0];
 
-if(elPassIdentSecond.length >= 1)
+if (elPassIdentSecond.length >= 1)
     ePWIS = elPassIdentSecond[0];
 
-if(elPassIdentErr.length >= 1)
+if (elPassIdentErr.length >= 1)
     ePWIE = elPassIdentErr[0];
 
-if(ePWIF !== null && ePWIS !== null && ePWIE !== null) {
+if (ePWIF !== null && ePWIS !== null && ePWIE !== null) {
     ePWIS.addEventListener('input', () => {
-        if(ePWIS.value !== ePWIF.value) {
+        if (ePWIS.value !== ePWIF.value) {
             ePWIE.innerHTML = 'Passwörter sind nicht identisch!';
         } else {
             ePWIE.innerHTML = '';

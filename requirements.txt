@@ -6,3 +6,4 @@ setuptools >= 56.0
 sqlparse >= 0.4
 mysqlclient >= 2.0
 djangorestframework
+django-ratelimit
