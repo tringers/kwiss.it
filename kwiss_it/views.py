@@ -21,7 +21,7 @@ forbidden_usernames = [
 	'moderator',
 	'test',
 ]
-allow_chars_for_email= r'^[a-z0-9.!#$%&\'*+-/=?^_`{|}~@]+$'
+allow_chars_for_email = r'^[a-z0-9.!#$%&\'*+-/=?^_`{|}~@]+$'
 
 def check_user_last_seen(request):
 	if not request.user.is_authenticated:
@@ -79,7 +79,7 @@ def register(request):
 
 	if request.method == 'POST':
 		buttonRegister = request.POST.get('buttonRegister')
-		inputEmail = request.POST.get('inputEmail').lower()
+		inputEmail = request.POST.get('inputEmail')
 		inputUsername = request.POST.get('inputUsername')
 		inputPassword = request.POST.get('inputPassword')
 		inputPassword2 = request.POST.get('inputPassword2')
@@ -92,6 +92,10 @@ def register(request):
 		if not buttonRegister or not inputEmail or not inputUsername or not inputPassword or not inputPassword2:
 			args['errorMsg'] = 'One of the required values were not present'
 			return register_end(request, args)
+
+		# Set email and username lower
+		inputEmail = inputEmail.lower()
+		ininputUsername = inputUsername.lower()
 
 		# Check min max length of username, email address and password
 		if len(inputEmail) < 6 or len(inputEmail) > 320:
@@ -237,6 +241,7 @@ def user_profile(request, username):
 		'userprofile': {
 			'requested': username,
 			'username': '',
+			'firstname': '',
 			'picture': '',
 			'description': '',
 			'registered': '',
@@ -249,6 +254,12 @@ def user_profile(request, username):
 		if args['errorMsg'] == '':
 			args['infoMsg'] = 'Erfolgreich gespeichert.'
 
+	##TODO Find sth better here
+	if not username:
+		return HttpResponse(404)
+
+	username = username.lower()
+
 	# User Object
 	profileAS = User.objects.filter(username=username)
 	if len(profileAS) < 1:
@@ -260,6 +271,9 @@ def user_profile(request, username):
 	profileCS = UserDescription.objects.filter(Uid=profileA.id)
 	userprofile = args['userprofile']
 
+	userprofile['requested'] = profileA.first_name
+	userprofile['username'] = profileA.first_name
+	userprofile['firstname'] = profileA.first_name
 	userprofile['username'] = profileA.username
 	userprofile['registered'] = profileA.date_joined.strftime("%Y-%m-%d")
 	uls_objset = UserLastSeen.objects.filter(Uid=profileA.id)
@@ -315,7 +329,7 @@ def login_view(request, args=None):
 			args['errorMsg'] = 'One of the required values were not present.'
 			return register_end(request, args)
 
-		user_obj = authenticate(request, username=inputUsername, password=inputPassword)
+		user_obj = authenticate(request, username=inputUsername.lower(), password=inputPassword)
 
 		if user_obj is not None:
 			# Redirect to a success page.
