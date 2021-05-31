@@ -19,8 +19,13 @@ class SeparateFileTest(TestCase):
 
 class WebsiteTest(TestCase):
 
-	def test_load_start_page(self):
+	pages = [
+		"/", "datenschutz/", "impressum/",
+		"login/", "logout/", "register/", "password-reset/",
+		"user/", "createlobby/",
+	]
+
+	def test_load_page(self):
 		client = Client()
 		response = client.get('/')
 		self.assertEqual(200, response.status_code)
-
