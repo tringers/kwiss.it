@@ -10,7 +10,7 @@ from django.contrib.auth import authenticate, login, logout
 # noinspection PyPackageRequirements
 from ratelimit.decorators import ratelimit
 from urllib.parse import unquote
-
+import re
 
 forbidden_usernames = [
 	'user',
@@ -21,7 +21,7 @@ forbidden_usernames = [
 	'moderator',
 	'test',
 ]
-
+allow_chars_for_email= r'^[a-z0-9.!#$%&\'*+-/=?^_`{|}~@]+$'
 
 def check_user_last_seen(request):
 	if not request.user.is_authenticated:
@@ -137,6 +137,9 @@ def register(request):
 			args['errorMsg'] = 'Bitte valide Email Adresse eingeben.'
 			return register_end(request, args)
 
+		if not re.compile(allow_chars_for_email).search(inputEmail):
+			args['errorMsg'] = 'Bitte valide Email Adresse eingeben.'
+			return register_end(request, args)
 		# Check if password meets requirements
 		if inputPassword != inputPassword2:
 			args['errorMsg'] = 'Passwörter sind nicht identisch.'
@@ -278,7 +281,7 @@ def user_profile(request, username):
 		userprofile['description'] = profileC.Udescription
 
 	args['userprofile'] = userprofile
-
+##TODO Profil auf privat stellen
 	return render(request, 'kwiss_it/user.html', args)
 
 
