@@ -12,6 +12,7 @@
 		{% endif %}
 
 		{# TODO Wenn Profil nicht gefunden wird #}
+		{# TODO Überarbeiten #}
 		<h1>Profil von {{ userprofile.requested }}</h1>
 
 		{% if user.is_authenticated and userprofile.username == user.username %}
