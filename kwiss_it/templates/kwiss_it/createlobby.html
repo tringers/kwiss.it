@@ -1,4 +1,5 @@
 {% extends "kwiss_it/base.html" %}
+{% load static %}
 
 {% block content %}
 	<div class="col-lg-8 mx-auto p-3">
@@ -13,29 +14,34 @@
 
 	<div class="row col-lg-8 mx-auto p-3 disabled">
 		<form id="lobbyCreation" action="{% url 'createlobby' %}" method="post">
-			<div class="mb-3 form-group form-floating">
+			<div class="mb-3 form-group form-floating ">
 				<input type="text" class="form-control" id="createlobbyname" name="lobbyname" required maxlength="64" placeholder="Lobby-Name">
 				<label for="createlobbyname">Lobby Name</label>
 			</div>
 			{# TODO Formatierung der radio buttons #}
-			<div class="mb-3 form-group input-group form-check btn-group" role="group">
-				<input class="form-check-input btn-check" type="radio" name="gamemode" id="gamebasic" autocomplete="off" checked>
-				<label class="form-check-label btn btn-outline-primary" for="gamebasic">
-					Basic
-				</label>
-				<input class="form-check-input btn-check" type="radio" name="gamemode" id="gamerace" autocomplete="off">
-				<label class="form-check-label btn btn-outline-primary" for="gamerace">
-					Race
-				</label>
-			</div>
+				<div class="mb-3 form-group input-group form-check btn-group" role="group">
+					<input class="form-check-input btn-check" type="radio" name="gamemode" id="gamebasic" autocomplete="off" checked>
+					<label class="form-check-label btn btn-outline-primary" for="gamebasic">
+						Basic
+					</label>
+					<input class="form-check-input btn-check" type="radio" name="gamemode" id="gamerace" autocomplete="off">
+					<label class="form-check-label btn btn-outline-primary" for="gamerace">
+						Race
+					</label>
+				</div>
+				<div class="mb-3 form-group input-group">
+					<label for="questionamount" class="form-label">Fragenmenge</label>
+					<input type="range" class="form-range" min="1" max="64" step="1" value="18" id="questionamountslider">
+					<input type="number" id="questionamountfield" value="18">
+				</div>
 			<div class="mb-3 form-group">
 				<label for="lobbytype" class="form-label">Lobby art</label>
 				<select class="form-select" aria-label="Lobby art" id="lobbytype">
-					<option>Öffentlich</option>
 					<option>Privat</option>
+					<option>Öffentlich</option>
 				</select>
 			</div>
-			<div class="mb-3 form-group form-floating">
+			<div class="mb-3 form-group form-floating" id="lobbypasswordfield">
 				<input type="password" class="form-control" id="lobbypassword" placeholder="Passwort">
 				<label>Passwort</label>
 			</div>
@@ -49,9 +55,19 @@
 						<th scope="col">Ausgewählt</th>
 					</tr>
 					<thead>
-					<tbody  id="categorylist"></tbody>
+					<tbody id="categorylist"></tbody>
 				</table>
 			</div>
+			<div class="mb-3 form-group">
+				<input type="submit" name="buttoncreate" class="btn btn-primary" value="Lobby Erstellen">
+
+			</div>
+			{% csrf_token %}
 		</form>
 	</div>
+
+{% endblock %}
+
+{% block bodyscript %}
+	<script src="{% static 'js/createLobby.min.js' %}"></script>
 {% endblock %}
