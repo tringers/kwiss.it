@@ -54,6 +54,9 @@ class Category(models.Model):
 	Cupvotes = models.PositiveIntegerField(db_index=True, default=0)
 	Cdownvotes = models.PositiveIntegerField(db_index=True, default=0)
 
+	def __str__(self):
+		return self.Cname
+
 
 class Score_Category(models.Model):
 	Sid = models.ForeignKey(Score, on_delete=models.CASCADE, help_text="Score ID")
@@ -152,3 +155,6 @@ class DiscordRole(models.Model):
 	DRkey = models.CharField(max_length=36, help_text="Generated UUID4", unique=True)
 	DiscordName = models.CharField(max_length=256, help_text="User's Discord Name in base64url")
 	Deprecated = models.BooleanField(default=False)
+
+	def __str__(self):
+		return str(self.Uid) + ' : ' + self.DiscordName

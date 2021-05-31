@@ -1,0 +1,57 @@
+{% extends "kwiss_it/base.html" %}
+
+{% block content %}
+	<div class="col-lg-8 mx-auto p-3">
+		<h1>Lobby erstellen</h1>
+		{% if infoMsg != '' and infoMsg != None %}
+			<div class="alert alert-info">{{ infoMsg }}</div>
+		{% endif %}
+		{% if errorMsg != '' and errorMsg != None %}
+			<div class="alert alert-danger">{{ errorMsg }}</div>
+		{% endif %}
+	</div>
+
+	<div class="row col-lg-8 mx-auto p-3 disabled">
+		<form id="lobbyCreation" action="{% url 'createlobby' %}" method="post">
+			<div class="mb-3 form-group form-floating">
+				<input type="text" class="form-control" id="createlobbyname" name="lobbyname" required maxlength="64" placeholder="Lobby-Name">
+				<label for="createlobbyname">Lobby Name</label>
+			</div>
+			{# TODO Formatierung der radio buttons #}
+			<div class="mb-3 form-group input-group form-check btn-group" role="group">
+				<input class="form-check-input btn-check" type="radio" name="gamemode" id="gamebasic" autocomplete="off" checked>
+				<label class="form-check-label btn btn-outline-primary" for="gamebasic">
+					Basic
+				</label>
+				<input class="form-check-input btn-check" type="radio" name="gamemode" id="gamerace" autocomplete="off">
+				<label class="form-check-label btn btn-outline-primary" for="gamerace">
+					Race
+				</label>
+			</div>
+			<div class="mb-3 form-group">
+				<label for="lobbytype" class="form-label">Lobby art</label>
+				<select class="form-select" aria-label="Lobby art" id="lobbytype">
+					<option>Öffentlich</option>
+					<option>Privat</option>
+				</select>
+			</div>
+			<div class="mb-3 form-group form-floating">
+				<input type="password" class="form-control" id="lobbypassword" placeholder="Passwort">
+				<label>Passwort</label>
+			</div>
+			<div class="mb-3 form-group">
+				<label>Frage Kategorien</label>
+				<table class="table table-striped ">
+					<thead>
+					<tr>
+						<th scope="col">Kategorien Namen</th>
+						<th scope="col">Anzahl Fragen</th>
+						<th scope="col">Ausgewählt</th>
+					</tr>
+					<thead>
+					<tbody  id="categorylist"></tbody>
+				</table>
+			</div>
+		</form>
+	</div>
+{% endblock %}

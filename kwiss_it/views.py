@@ -23,6 +23,7 @@ forbidden_usernames = [
 ]
 allow_chars_for_email = r'^[a-z0-9.!#$%&\'*+-/=?^_`{|}~@]+$'
 
+
 def check_user_last_seen(request):
 	if not request.user.is_authenticated:
 		return
@@ -295,7 +296,7 @@ def user_profile(request, username):
 		userprofile['description'] = profileC.Udescription
 
 	args['userprofile'] = userprofile
-##TODO Profil auf privat stellen
+	##TODO Profil auf privat stellen
 	return render(request, 'kwiss_it/user.html', args)
 
 
@@ -355,3 +356,12 @@ def logout_view(request):
 
 def review(request):
 	return render(request, 'kwiss_it/review.html')
+
+
+def createlobby_view(request,args=None):
+	if args is None or not args:
+		args = {
+			'errorMsg': '',
+			'infoMsg': ''
+		}
+	return render(request, 'kwiss_it/createlobby.html')
