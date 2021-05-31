@@ -117,6 +117,7 @@ class Lobby(models.Model):
 	Ltype = models.ForeignKey(LobbyType, on_delete=models.RESTRICT)
 	Lprivate = models.BooleanField(default=False)
 	Lpassword = models.CharField(max_length=128, help_text='250000 iterations of SHA256')
+	Lauthtoken = models.CharField(max_length=64, help_text='Auth token for Link join. Should be contained in link')
 	Lcreated = models.DateTimeField(auto_now=True)
 
 
