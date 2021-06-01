@@ -116,18 +116,15 @@ class LobbyType(models.Model):
 
 class Lobby(models.Model):
 	Lid = models.BigAutoField(primary_key=True)
+	Uid = models.ForeignKey(User, on_delete=models.SET_NULL)
 	Lname = models.CharField(max_length=64)
 	Ltype = models.ForeignKey(LobbyType, on_delete=models.RESTRICT)
+	Lplayerlimit = models.PositiveSmallIntegerField(default=8)
+	Lcurrentplayer = models.PositiveSmallIntegerField(default=0)
 	Lprivate = models.BooleanField(default=False)
-	Lpassword = models.CharField(max_length=128, help_text='250000 iterations of SHA256')
-	Lauthtoken = models.CharField(max_length=64, help_text='Auth token for Link join. Should be contained in link')
+	Lpassword = models.CharField(max_length=128, help_text='250000 iterations of SHA256', null=True)
+	Lauthtoken = models.CharField(max_length=64, help_text='Auth token for Link join. Should be contained in link', null=True)
 	Lcreated = models.DateTimeField(auto_now=True)
-
-
-class Lobby_Player(models.Model):
-	Lid = models.ForeignKey(Lobby, on_delete=models.CASCADE)
-	Uid = models.ForeignKey(User, on_delete=models.RESTRICT)
-	LPwon = models.BooleanField(default=False)
 
 
 class ReportType(models.Model):

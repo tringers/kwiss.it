@@ -5,12 +5,12 @@
 
     <div class="col-lg-8 mx-auto p-3">
         <h1>Registrieren</h1>
-        {% if infoMsg != '' %}
-            <div class="alert alert-info">{{ infoMsg }}</div>
-        {% endif %}
-        {% if errorMsg != '' %}
-            <div class="alert alert-danger">{{ errorMsg }}</div>
-        {% endif %}
+        {% if infoMsg != '' and infoMsg != None %}
+			<div class="alert alert-info">{{ infoMsg }}</div>
+		{% endif %}
+		{% if errorMsg != '' and errorMsg != None %}
+			<div class="alert alert-danger">{{ errorMsg }}</div>
+		{% endif %}
     </div>
 
     <div class="row col-lg-8 mx-auto p-3 disabled">

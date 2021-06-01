@@ -342,7 +342,7 @@ def login_view(request, args=None):
 			args['errorMsg'] = 'Login fehlgeschlagen.'
 			pass
 
-	return render(request, 'kwiss_it/login.html', args)
+	return render(request, 'kwiss_it/index.html', args)
 
 
 def logout_view(request):
