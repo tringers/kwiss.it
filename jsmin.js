@@ -12,7 +12,7 @@ if (process.argv.length < 4) {
         mangle: {
             eval: true,
             toplevel: true,
-            reserved: [
+            reserved: [ // TODO: Reservierte Funktionsnamen entfernen und dynamisch in JS die Listener usw. setzen
                 'validateEmailaddress',
                 'validateUsername',
                 'validatePassword',

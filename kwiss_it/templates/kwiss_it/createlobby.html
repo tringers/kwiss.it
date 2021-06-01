@@ -2,72 +2,114 @@
 {% load static %}
 
 {% block content %}
-	<div class="col-lg-8 mx-auto p-3">
-		<h1>Lobby erstellen</h1>
-		{% if infoMsg != '' and infoMsg != None %}
-			<div class="alert alert-info">{{ infoMsg }}</div>
-		{% endif %}
-		{% if errorMsg != '' and errorMsg != None %}
-			<div class="alert alert-danger">{{ errorMsg }}</div>
-		{% endif %}
-	</div>
+    <div class="col-lg-8 mx-auto p-3">
+        <h1>Lobby erstellen</h1>
+        {% if infoMsg != '' and infoMsg != None %}
+            <div class="alert alert-info">{{ infoMsg }}</div>
+        {% endif %}
+        {% if errorMsg != '' and errorMsg != None %}
+            <div class="alert alert-danger">{{ errorMsg }}</div>
+        {% endif %}
+    </div>
 
-	<div class="row col-lg-8 mx-auto p-3 disabled">
-		<form id="lobbyCreation" action="{% url 'createlobby' %}" method="post">
-			<div class="mb-3 form-group form-floating ">
-				<input type="text" class="form-control" id="createlobbyname" name="lobbyname" required maxlength="64" placeholder="Lobby-Name">
-				<label for="createlobbyname">Lobby Name</label>
-			</div>
-			{# TODO Formatierung der radio buttons #}
-				<div class="mb-3 form-group input-group form-check btn-group" role="group">
-					<input class="form-check-input btn-check" type="radio" name="gamemode" id="gamebasic" autocomplete="off" checked>
-					<label class="form-check-label btn btn-outline-primary" for="gamebasic">
-						Basic
-					</label>
-					<input class="form-check-input btn-check" type="radio" name="gamemode" id="gamerace" autocomplete="off">
-					<label class="form-check-label btn btn-outline-primary" for="gamerace">
-						Race
-					</label>
-				</div>
-				<div class="mb-3 form-group input-group">
-					<label for="questionamount" class="form-label">Fragenmenge</label>
-					<input type="range" class="form-range" min="1" max="64" step="1" value="18" id="questionamountslider">
-					<input type="number" id="questionamountfield" value="18">
-				</div>
-			<div class="mb-3 form-group">
-				<label for="lobbytype" class="form-label">Lobby art</label>
-				<select class="form-select" aria-label="Lobby art" id="lobbytype">
-					<option>Privat</option>
-					<option>Öffentlich</option>
-				</select>
-			</div>
-			<div class="mb-3 form-group form-floating" id="lobbypasswordfield">
-				<input type="password" class="form-control" id="lobbypassword" placeholder="Passwort">
-				<label>Passwort</label>
-			</div>
-			<div class="mb-3 form-group">
-				<label>Frage Kategorien</label>
-				<table class="table table-striped ">
-					<thead>
-					<tr>
-						<th scope="col">Kategorien Namen</th>
-						<th scope="col">Anzahl Fragen</th>
-						<th scope="col">Ausgewählt</th>
-					</tr>
-					<thead>
-					<tbody id="categorylist"></tbody>
-				</table>
-			</div>
-			<div class="mb-3 form-group">
-				<input type="submit" name="buttoncreate" class="btn btn-primary" value="Lobby Erstellen">
+    <div class="row col-lg-8 mx-auto p-3 disabled">
+        <form id="lobbyCreation" action="{% url 'createlobby' %}" method="post">
+            {% comment %}<div class="mb-3 form-group form-floating">
+                <input type="text" class="form-control" id="createlobbyname" name="lobbyname" required maxlength="64" placeholder="Raumname">
+                <label for="createlobbyname">Raumname</label>
+            </div>{% endcomment %}
 
-			</div>
-			{% csrf_token %}
-		</form>
-	</div>
+            {# Erstmal floating entfernt, da es kein einheitliches Design bietet (zu hoch) #}
+            <div class="mb-4 form-group">
+                <label for="createlobbyname">Raumname:</label>
+                <input type="text" class="form-control" id="createlobbyname" name="lobbyname" required maxlength="64" placeholder="{{ user.first_name }}'s Raum">
+            </div>
+
+            <div class="mb-4 form-group">
+                <div class="row pb-1 mb-1">
+                    <div class="col-6 my-auto">
+                        <label for="lobbytype" class="form-label my-auto">Lobbytyp:</label>
+                    </div>
+                    <div class="col-6 form-group">
+                        <select class="form-select" aria-label="" id="lobbytype">
+                            <option>Öffentlich</option>
+                            <option>Privat</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4 form-group" id="lobbypasswordfield" hidden>
+                <div class="row pb-1 mb-1">
+                    <div class="col-6 my-auto">
+                        <label for="lobbypassword" class="form-label my-auto">Passwort:</label>
+                    </div>
+                    <div class="col-6 form-group">
+                        <input type="password" class="form-control" id="lobbypassword" placeholder="Passwort">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4 form-group">
+                <div class="row pb-1 mb-1">
+                    <div class="col-6 my-auto">
+                        <label for="gamemode" class="form-label my-auto">Punktesystem:</label>
+                    </div>
+                    <div class="col-6 btn-group">
+                        <div class="btn-group col-6" role="group">
+                            <input class="form-check-input btn-check" type="radio" name="gamemode" id="gamebasic" autocomplete="off" checked>
+                            <label class="form-check-label btn btn-outline-primary" for="gamebasic">
+                                Basic
+                            </label>
+                        </div>
+                        <div class="btn-group col-6" role="group">
+                            <input class="form-check-input btn-check" type="radio" name="gamemode" id="gamerace" autocomplete="off">
+                            <label class="form-check-label btn btn-outline-primary" for="gamerace">
+                                Race
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4 form-group">
+                <div class="row pb-1 mb-1">
+                    <div class="col-6 my-auto">
+                        <label for="questionamount" class="form-label my-auto">Anzahl an Fragen:</label>
+                    </div>
+                    <div class="col-6">
+                        <input type="number" class="form-control mb-2" id="questionamountfield" value="20">
+                        <div class="input-group">
+                            <input type="range" class="form-range" min="1" max="64" step="1" value="20" id="questionamountslider">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Note: Keine Ahnung wie du das hier gedacht hast. Die anderen Elemente sind aber schonmal angepasst [by Le Duc] #}
+            <div class="mb-4 form-group">
+                <label>Frageauswahl:</label>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">Kategorien Namen</th>
+                        <th scope="col">Anzahl Fragen</th>
+                        <th scope="col">Ausgewählt</th>
+                    </tr>
+                    <thead>
+                    <tbody id="categorylist"></tbody>
+                </table>
+            </div>
+            <div class="mb-4 form-group">
+                <input type="submit" name="buttoncreate" class="btn btn-primary" value="Lobby Erstellen">
+
+            </div>
+            {% csrf_token %}
+        </form>
+    </div>
 
 {% endblock %}
 
 {% block bodyscript %}
-	<script src="{% static 'js/createLobby.min.js' %}"></script>
+    <script src="{% static 'js/createLobby.min.js' %}"></script>
 {% endblock %}

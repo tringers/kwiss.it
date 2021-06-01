@@ -82,6 +82,7 @@ def register(request):
 		buttonRegister = request.POST.get('buttonRegister')
 		inputEmail = request.POST.get('inputEmail')
 		inputUsername = request.POST.get('inputUsername')
+		inputName = request.POST.get('inputName')
 		inputPassword = request.POST.get('inputPassword')
 		inputPassword2 = request.POST.get('inputPassword2')
 
@@ -90,13 +91,13 @@ def register(request):
 			return register_end(request, args)
 
 		# Check if everything was entered
-		if not buttonRegister or not inputEmail or not inputUsername or not inputPassword or not inputPassword2:
+		if not buttonRegister or not inputEmail or not inputUsername or not inputName or not inputPassword or not inputPassword2:
 			args['errorMsg'] = 'One of the required values were not present'
 			return register_end(request, args)
 
 		# Set email and username lower
 		inputEmail = inputEmail.lower()
-		ininputUsername = inputUsername.lower()
+		inputUsername = inputUsername.lower()
 
 		# Check min max length of username, email address and password
 		if len(inputEmail) < 6 or len(inputEmail) > 320:
@@ -108,6 +109,12 @@ def register(request):
 			return register_end(request, args)
 		if len(inputUsername) > 64:
 			args['errorMsg'] = 'Benutzername zu lang, maximal 64 Zeichen erlaubt.'
+			return register_end(request, args)
+		if len(inputName) < 4:
+			args['errorMsg'] = 'Anzeigename zu kurz, Mindestlänge beträgt 4 Zeichen.'
+			return register_end(request, args)
+		if len(inputName) > 64:
+			args['errorMsg'] = 'Anzeigename zu lang, maximal 64 Zeichen erlaubt.'
 			return register_end(request, args)
 		if len(inputPassword) < 8:
 			args['errorMsg'] = 'Password zu kurz, Mindestlänge beträgt 8 Zeichen.'
@@ -145,6 +152,18 @@ def register(request):
 		if not re.compile(allow_chars_for_email).search(inputEmail):
 			args['errorMsg'] = 'Bitte valide Email Adresse eingeben.'
 			return register_end(request, args)
+
+		# Check if username only contains letter, digits, underscore or minus
+		if not re.match("^[A-Za-z0-9_-]*$", inputUsername):
+			args['errorMsg'] = 'Benutzername enthält ungültige Zeigen'
+			return register_end(request, args)
+
+		# Check if display name only contains valid characters
+		# TODO: Selben Check auch beim Abändern nutzen
+		if not re.match("^[A-Za-z0-9 _!§$%&/()=?+#*'~,.;:-]*$", inputName):
+			args['errorMsg'] = 'Anezigename enthält ungültige Zeigen'
+			return register_end(request, args)
+
 		# Check if password meets requirements
 		if inputPassword != inputPassword2:
 			args['errorMsg'] = 'Passwörter sind nicht identisch.'
@@ -178,6 +197,7 @@ def register(request):
 		# TODO: After email validation: Set is_active to 1
 		# TODO: After email validation: Create all necessary model entries
 		user_obj.is_active = 0
+		user_obj.first_name = inputName
 		user_obj.save()
 		args['infoMsg'] = 'Bestätige deine Email Adresse, danach kannst du dich anmelden.'
 		return register_end(request, args)
@@ -328,7 +348,7 @@ def login_view(request, args=None):
 
 		if not buttonLogin or not inputUsername or not inputPassword:
 			args['errorMsg'] = 'One of the required values were not present.'
-			return register_end(request, args)
+			return render(request, 'kwiss_it/index.html', args)
 
 		user_obj = authenticate(request, username=inputUsername.lower(), password=inputPassword)
 

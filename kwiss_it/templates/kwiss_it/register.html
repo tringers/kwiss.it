@@ -6,27 +6,32 @@
     <div class="col-lg-8 mx-auto p-3">
         <h1>Registrieren</h1>
         {% if infoMsg != '' and infoMsg != None %}
-			<div class="alert alert-info">{{ infoMsg }}</div>
-		{% endif %}
-		{% if errorMsg != '' and errorMsg != None %}
-			<div class="alert alert-danger">{{ errorMsg }}</div>
-		{% endif %}
+            <div class="alert alert-info">{{ infoMsg }}</div>
+        {% endif %}
+        {% if errorMsg != '' and errorMsg != None %}
+            <div class="alert alert-danger">{{ errorMsg }}</div>
+        {% endif %}
     </div>
 
     <div class="row col-lg-8 mx-auto p-3 disabled">
         <form class="needs-validation" id="registerForm" action="{% url 'register' %}" method="post">
 
             <div class="mb-3 form-group">
-                <label for="inputEmail" class="form-label">Email Adresse:</label>
+                <label for="regInputEmail" class="form-label">Email Adresse:</label>
                 <input type="email" class="form-control" name="inputEmail" id="regInputEmail" required maxlength="320">
             </div>
 
             <div class="form-group d-flex justify-content-between">
-                <label for="inputUsername" class="form-label col-auto">Benutzername:</label>
+                <label for="regInputUsername" class="form-label col-auto">Benutzername:</label>
                 <b class="col-auto text-red px-2" id="usernameStatus"></b>
             </div>
             <div class="mb-3 form-group">
                 <input type="text" class="form-control" name="inputUsername" id="regInputUsername" required maxlength="64" onfocusout="testUsername()">
+            </div>
+
+            <div class="mb-3 form-group">
+                <label for="regInputName" class="form-label">Anzeigename:</label>
+                <input type="text" class="form-control" name="inputName" id="regInputName" required maxlength="32">
             </div>
 
             <div class="form-group d-flex justify-content-between">
