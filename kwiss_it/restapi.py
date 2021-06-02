@@ -1,5 +1,5 @@
 from django.db.models import Q
-from .models import LobbyType, Lobby, LobbyPlayer, Category, QuestionType, Question, Answer
+from .models import LobbyType, Lobby, LobbyPlayer, LobbyQuestions, Category, QuestionType, Question, Answer
 from rest_framework import serializers, viewsets
 
 
@@ -110,4 +110,11 @@ class QuestionTypeSerializer(serializers.ModelSerializer):
 class QuestionTypeView(viewsets.ReadOnlyModelViewSet):
 	queryset = QuestionType.objects.all()
 	serializer_class = QuestionTypeSerializer
+
+
+# Answer
+class AnswerSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Answer
+		fields = ['']
 

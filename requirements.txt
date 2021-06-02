@@ -9,3 +9,4 @@ django-filter
 django-guardian
 djangorestframework
 django-ratelimit
+django-lazysignup
