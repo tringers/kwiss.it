@@ -55,7 +55,7 @@ class State(models.Model):
 class Category(models.Model):
 	Cid = models.BigAutoField(primary_key=True)
 	Uid = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-	Cname = models.CharField(max_length=128)
+	Cname = models.CharField(max_length=128, unique=True)
 	Cdescription = models.CharField(max_length=512)
 	STid = models.ForeignKey(State, db_index=True, default=0, on_delete=models.RESTRICT, help_text="State ID")
 	Cupvotes = models.PositiveIntegerField(db_index=True, default=0)

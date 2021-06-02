@@ -1,5 +1,16 @@
-from django.urls import path, re_path
+from django.urls import path, re_path, include
+from rest_framework import routers
 from . import views
+from . import restapi
+
+
+router = routers.DefaultRouter()
+router.register(r'lobby', restapi.LobbyView)
+router.register(r'lobbyplayer', restapi.LobbyPlayerView)
+router.register(r'category', restapi.CategoryView)
+router.register(r'question', restapi.QuestionView)
+router.register(r'questiontype', restapi.QuestionTypeView)
+
 
 urlpatterns = [
 	path('', views.index, name='index'),
@@ -23,4 +34,5 @@ urlpatterns = [
 	path('user/', views.user, name='user'),
 	path('user/<str:username>', views.user_profile, name='userProfile'),
 	path('createlobby', views.createlobby_view, name='createlobby'),
+	path('api/', include(router.urls)),
 ]
