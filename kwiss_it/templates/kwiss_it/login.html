@@ -33,9 +33,11 @@
 
             <div class="row justify-content-between">
                 <div class="col d-grid">
+                {# TODO guest #}
                     <input type="submit" name="buttonLogin" class="btn btn-primary" value="Anmelden" {% if user.is_authenticated %}disabled{% endif %}>
                 </div>
                 <div class="col d-grid">
+                {# TODO guest #}
                     <button type="submit" name="buttonLostPassword" class="btn btn-outline-danger" {% if user.is_authenticated %}disabled{% endif %}>Password vergessen</button>
                 </div>
             </div>
