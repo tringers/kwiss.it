@@ -18,9 +18,9 @@ class LobbyView(viewsets.ReadOnlyModelViewSet):
 		queryset = Lobby.objects.filter(
 			Q(Lstarted=False) &
 			(
-				Q(Lprivate=True) &
-				Q(Lpassword__isnull=False) |
-				Q(Lprivate=False)
+					Q(Lprivate=True) &
+					Q(Lpassword__isnull=False) |
+					Q(Lprivate=False)
 			)
 		)
 
@@ -62,6 +62,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class CategoryView(viewsets.ReadOnlyModelViewSet):
+	##TODO die apie anfrage zur category muss entweder die anzahl der fragen in der Kategorie ausgeben oder wir brauchen eine extra api anfrage /category/{{STid}} um mehr infos auslesen zu können über die kategorie
 	queryset = Category.objects.all()
 	serializer_class = CategorySerializer
 
@@ -117,4 +118,3 @@ class AnswerSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Answer
 		fields = ['']
-
