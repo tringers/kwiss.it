@@ -5,7 +5,8 @@ urlpatterns = [
 	path('', views.index, name='index'),
 	path('datenschutz', views.datenschutz, name='datenschutz'),
 	path('impressum', views.impressum, name='impressum'),
-	re_path(r'(?P<lobby_id>[0-9A-F]{6})/$', views.lobby, name='lobby'),
+	re_path(r'lobby/(?P<lobby_key>[0-9A-F]{6})/$', views.lobby_view, name='lobby'),
+	re_path(r'lobby/(?P<lobby_key>[0-9A-F]{6})/(?P<auth_token>[0-9a-f\-]{0,36})/$', views.lobby_view, name='lobby'),
 
 	path('settings', views.settings, name='settings'),
 	path('review', views.review, name='review'),
@@ -23,4 +24,5 @@ urlpatterns = [
 	path('user/', views.user, name='user'),
 	path('user/<str:username>', views.user_profile, name='userProfile'),
 	path('createlobby', views.createlobby_view, name='createlobby'),
+	path('lobbylist',views.lobbylist_view,name='lobbylist'),
 ]

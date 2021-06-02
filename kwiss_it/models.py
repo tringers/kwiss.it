@@ -136,6 +136,9 @@ class Lobby(models.Model):
 	Lauthtoken = models.CharField(max_length=64, help_text='Auth token for Link join. Should be contained in link', null=True)
 	Lcreated = models.DateTimeField(auto_now=True)
 	Lstarted = models.BooleanField(default=False)
+
+
+
 # Player joining lobby -> currentplayer +1 -> load questions
 # Player leaving lobby/or timeout -> currentplayer -1 - unload questions
 # All player ready -> wait 5 seconds -> switch to game
