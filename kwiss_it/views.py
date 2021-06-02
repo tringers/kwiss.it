@@ -308,10 +308,8 @@ def user_profile(request, username):
 	if len(profileDS) > 0:
 		profileD = profileDS[0]
 		userprofile['private'] = profileD.UPprivate
-		if profileD.UPregistered:
-			userprofile['registeredDisable'] = True
-		if profileD.UPlastseen:
-			userprofile['lastseenDisable'] = True
+		userprofile['registeredDisable'] = profileD.UPregistered
+		userprofile['lastseenDisable'] = profileD.UPlastseen
 
 	# Profile Picture
 	if len(profileBS) > 0:
