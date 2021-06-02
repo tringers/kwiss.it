@@ -9,7 +9,8 @@ const qamin = 1;
 
 function reloadScoreboard() {
     let xhttp = new XMLHttpRequest();
-    let url = "" //TODO api url für kategorien einfügen
+    let url = "/api/"   // TODO: API URL für Kategorien einfügen (entweder /api oder api.kwiss.it, mal schauen. Beides wäre möglich)
+                        //  API mit Django Authentifizierung einstellen in settings.py
     xhttp.open("GET", url, true);
     xhttp.responseType = "json";
     xhttp.onload = function () {

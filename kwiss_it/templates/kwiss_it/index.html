@@ -3,13 +3,14 @@
 {% block content %}
 
     <div class="col-lg-8 mx-auto p-3">
-        <h1>Welcome to Kwiss.it</h1>
         {% if infoMsg != '' and infoMsg != None %}
-			<div class="alert alert-info">{{ infoMsg }}</div>
-		{% endif %}
-		{% if errorMsg != '' and errorMsg != None %}
-			<div class="alert alert-danger">{{ errorMsg }}</div>
-		{% endif %}
+            <div class="alert alert-info">{{ infoMsg }}</div>
+        {% endif %}
+        {% if errorMsg != '' and errorMsg != None %}
+            <div class="alert alert-danger">{{ errorMsg }}</div>
+        {% endif %}
+
+        <h1>Welcome to Kwiss.it</h1>
         <p class="fs-5 col-md-8">Hier startet das Quiz Erlebnis rund um Karlsruhe.</p>
     </div>
 

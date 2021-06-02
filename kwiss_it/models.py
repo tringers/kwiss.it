@@ -10,6 +10,10 @@ class Picture(models.Model):
 	Pcontent = models.CharField(max_length=64)
 
 
+class UserPrivate(models.Model):
+	Uid = models.OneToOneField(User, on_delete=models.CASCADE)
+
+
 class UserDescription(models.Model):
 	Uid = models.OneToOneField(User, on_delete=models.CASCADE)
 	Udescription = models.CharField(max_length=1000)
@@ -45,9 +49,9 @@ class State(models.Model):
 		return self.Sdescription
 
 
-##TODO Zuordnung Kategorie/Fragen zu User, für Bearbeitung durch diesen
 class Category(models.Model):
 	Cid = models.BigAutoField(primary_key=True)
+	Uid = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 	Cname = models.CharField(max_length=128)
 	Cdescription = models.CharField(max_length=512)
 	STid = models.ForeignKey(State, db_index=True, default=0, on_delete=models.RESTRICT, help_text="State ID")
@@ -78,6 +82,7 @@ class QuestionType(models.Model):
 class Question(models.Model):
 	Qid = models.BigAutoField(primary_key=True)
 	Cid = models.ForeignKey(Category, db_index=True, default=0, on_delete=models.SET_DEFAULT, help_text="Category ID")
+	Uid = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 	Pid = models.ForeignKey(Picture, null=True, blank=True, on_delete=models.SET_NULL, help_text="Picture ID")
 	Qtext = models.CharField(max_length=256)
 	STid = models.ForeignKey(State, db_index=True, default=0, on_delete=models.RESTRICT, help_text="State ID")
@@ -107,7 +112,6 @@ class Answer(models.Model):
 		unique_together = ('Qid', 'Anum')
 
 
-##TODO Lobbys
 class LobbyType(models.Model):
 	LTid = models.SmallAutoField(primary_key=True)
 	LTname = models.CharField(max_length=32)

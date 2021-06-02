@@ -16,8 +16,11 @@ urlpatterns = [
 	path('register/checkusername/', views.register_checkusername_short, name='register_checkusername_short'),
 	path('register/checkusername/<str:username>', views.register_checkusername, name='register_checkusername'),
 	path('password-reset', views.login, name='vergessen'),
+	path('u', views.user, name='userShort'),
+	path('u/', views.user, name='userShort'),
 	path('u/<str:username>', views.user_short, name='userShort'),
 	path('user', views.user, name='user'),
+	path('user/', views.user, name='user'),
 	path('user/<str:username>', views.user_profile, name='userProfile'),
-	path('createlobby',views.createlobby_view,name='createlobby'),
+	path('createlobby', views.createlobby_view, name='createlobby'),
 ]

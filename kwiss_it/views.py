@@ -5,7 +5,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.template import loader
 from django.contrib.auth.models import User
-from .models import UserPicture, UserDescription, Picture, UserLastSeen
+from .models import UserPrivate, UserPicture, UserDescription, Picture, UserLastSeen
 from django.contrib.auth import authenticate, login, logout
 # noinspection PyPackageRequirements
 from ratelimit.decorators import ratelimit
@@ -161,7 +161,7 @@ def register(request):
 		# Check if display name only contains valid characters
 		# TODO: Selben Check auch beim Abändern nutzen
 		if not re.match("^[A-Za-z0-9 _!§$%&/()=?+#*'~,.;:-]*$", inputName):
-			args['errorMsg'] = 'Anezigename enthält ungültige Zeigen'
+			args['errorMsg'] = 'Anzeigename enthält ungültige Zeigen'
 			return register_end(request, args)
 
 		# Check if password meets requirements
@@ -259,10 +259,12 @@ def user_profile(request, username):
 	args = {
 		'infoMsg': '',
 		'errorMsg': '',
+		'errorCode': 0,
 		'userprofile': {
 			'requested': username,
 			'username': '',
 			'firstname': '',
+			'private': '',
 			'picture': '',
 			'description': '',
 			'registered': '',
@@ -275,21 +277,19 @@ def user_profile(request, username):
 		if args['errorMsg'] == '':
 			args['infoMsg'] = 'Erfolgreich gespeichert.'
 
-	##TODO Find sth better here
-	if not username:
-		return HttpResponse(404)
-
 	username = username.lower()
 
 	# User Object
 	profileAS = User.objects.filter(username=username)
 	if len(profileAS) < 1:
 		args['errorMsg'] = 'Kein Benutzer mit dem Benutzernamen gefunden.'
+		args['errorCode'] = 1
 		return render(request, 'kwiss_it/user.html', args)
 	profileA = profileAS[0]
 
 	profileBS = UserPicture.objects.filter(Uid=profileA.id)
 	profileCS = UserDescription.objects.filter(Uid=profileA.id)
+	profileDS = UserPrivate.objects.filter(Uid=profileA.id)
 	userprofile = args['userprofile']
 
 	userprofile['requested'] = profileA.first_name
@@ -301,6 +301,9 @@ def user_profile(request, username):
 	if len(uls_objset) > 0:
 		uls_obj = uls_objset[0]
 		userprofile['lastseen'] = uls_obj.LastSeen.strftime("%Y-%m-%d %H:%M")
+
+	# Check for profile private
+	userprofile['private'] = len(profileDS) > 0
 
 	# Profile Picture
 	if len(profileBS) > 0:
@@ -316,16 +319,20 @@ def user_profile(request, username):
 		userprofile['description'] = profileC.Udescription
 
 	args['userprofile'] = userprofile
-	##TODO Profil auf privat stellen
 	return render(request, 'kwiss_it/user.html', args)
 
 
 def user_profile_post(request):
 	# Detect, which changes should be done
 	# - User Picture
+	# - User Display Name
 	# - User Description
 	# - Email Address
 	# - User Password
+	buttonDescription = request.POST.get('inputChangeDescription')
+	buttonName = request.POST.get('inputChangeName')
+	buttonPassword = request.POST.get('inputChangePassword')
+
 	return ''
 
 
@@ -347,7 +354,7 @@ def login_view(request, args=None):
 			return render(request, 'kwiss_it/login.html', args)
 
 		if not buttonLogin or not inputUsername or not inputPassword:
-			args['errorMsg'] = 'One of the required values were not present.'
+			args['errorMsg'] = 'Login fehlgeschlagen. Nicht alle notwendigen Daten wurden eingegeben.'
 			return render(request, 'kwiss_it/index.html', args)
 
 		user_obj = authenticate(request, username=inputUsername.lower(), password=inputPassword)

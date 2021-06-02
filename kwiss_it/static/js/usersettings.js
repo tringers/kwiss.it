@@ -12,17 +12,11 @@ function toggleLivePreview() {
     let prev2 = document.getElementById('descriptionPreviewP');
     if(checkbox.checked) {
         preview = true;
-        prev.classList.remove('hidden');
-        prev2.classList.remove('hidden');
-        prev.classList.remove('invisible');
-        prev2.classList.remove('invisible');
+        prev.hidden = false;
         livePreviewTrigger();
     } else {
         preview = false;
-        prev.classList.add('hidden');
-        prev2.classList.add('hidden');
-        prev.classList.add('invisible');
-        prev2.classList.add('invisible');
+        prev.hidden = true;
     }
 }
 

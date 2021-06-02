@@ -23,62 +23,70 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 # The following try and except block reads the SECRET_KEY or generates a new one
 try:
-    file = open("kwiss/SECRET_KEY", "r")
-    SECRET_KEY = file.readline()
-    file.close()
+	file = open("kwiss/SECRET_KEY", "r")
+	SECRET_KEY = file.readline()
+	file.close()
 except FileNotFoundError:
-    with open("kwiss/SECRET_KEY", 'w') as file:
-        file.write(utils.get_random_secret_key())
+	with open("kwiss/SECRET_KEY", 'w') as file:
+		file.write(utils.get_random_secret_key())
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '127.0.0.1',
-    '10.150.1.6',
+	'127.0.0.1',
+	'10.150.1.6',
 ]
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'kwiss_it.apps.KwissItConfig',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+	'kwiss_it.apps.KwissItConfig',
+	'django.contrib.admin',
+	'django.contrib.auth',
+	'django.contrib.contenttypes',
+	'django.contrib.sessions',
+	'django.contrib.messages',
+	'django.contrib.staticfiles',
+	'rest_framework',
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'django.middleware.security.SecurityMiddleware',
+	'django.contrib.sessions.middleware.SessionMiddleware',
+	'django.middleware.common.CommonMiddleware',
+	'django.middleware.csrf.CsrfViewMiddleware',
+	'django.contrib.auth.middleware.AuthenticationMiddleware',
+	'django.contrib.messages.middleware.MessageMiddleware',
+	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+	'DEFAULT_PERMISSION_CLASSES': [
+		'rest_framework.permissions.DjangoModelPermissions'
+	],
+	'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+}
 
 ROOT_URLCONF = 'kwiss.urls'
 
 TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
+	{
+		'BACKEND': 'django.template.backends.django.DjangoTemplates',
+		'DIRS': [BASE_DIR / 'templates']
+		,
+		'APP_DIRS': True,
+		'OPTIONS': {
+			'context_processors': [
+				'django.template.context_processors.debug',
+				'django.template.context_processors.request',
+				'django.contrib.auth.context_processors.auth',
+				'django.contrib.messages.context_processors.messages',
+			],
+		},
+	},
 ]
 
 WSGI_APPLICATION = 'kwiss.wsgi.application'
@@ -88,17 +96,17 @@ WSGI_APPLICATION = 'kwiss.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 try:
-    file = open("kwiss/my.cnf", "r")
-    file.close()
+	file = open("kwiss/my.cnf", "r")
+	file.close()
 except FileNotFoundError:
-    print("my.cnf not found")
-    with open("kwiss/my.cnf", 'w') as file:
-        file.write('[client]\n')
-        file.write('database =\n')
-        file.write('user =\n')
-        file.write('password =\n')
-        file.write('host =\n')
-        file.write('default - character - set = utf8\n')
+	print("my.cnf not found")
+	with open("kwiss/my.cnf", 'w') as file:
+		file.write('[client]\n')
+		file.write('database =\n')
+		file.write('user =\n')
+		file.write('password =\n')
+		file.write('host =\n')
+		file.write('default - character - set = utf8\n')
 
 #DATABASES = {
 #    'default': {
@@ -111,12 +119,12 @@ except FileNotFoundError:
 # IMPORTANT!!! Furthermore, the my.cnf in the kwiss directory must be adapted.
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'OPTIONS': {
-            'read_default_file': 'kwiss/my.cnf'
-        }
-    }
+	'default': {
+		'ENGINE': 'django.db.backends.mysql',
+		'OPTIONS': {
+			'read_default_file': 'kwiss/my.cnf'
+		}
+	}
 }
 
 
@@ -124,18 +132,18 @@ DATABASES = {
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+	{
+		'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+	},
 ]
 
 
