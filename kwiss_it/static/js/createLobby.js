@@ -10,17 +10,33 @@ const tamin = 10;  //timeamountmin
 const tamax = 124; //timeamountmax
 const pamin = 2;    //playeramountmin
 const pamax = 16;   //playeramountmax
-
-function reloadScoreboard() {
+let lastCategory = ""; //last loaded category
+let currentCategory = ""; //current viewing category
+function reloadScoreboard(lastcat = "") {
     let xhttp = new XMLHttpRequest();
-    let url = "/api/"   // TODO: API URL für Kategorien einfügen (entweder /api oder api.kwiss.it, mal schauen. Beides wäre möglich)
-                        //  API mit Django Authentifizierung einstellen in settings.py
+    let url=""
+    if (lastcat != "") {
+        url = "/api/category/?lastcat=" + lastcat;
+    } else {
+        url = "/api/category/";
+    }
     xhttp.open("GET", url, true);
     xhttp.responseType = "json";
     xhttp.onload = function () {
         if (xhttp.status === 200) {
             let table = document.getElementById("categorylist");
-
+            let content = JSON.parse(this.responseText);
+            let tableNew = "";
+            for (let i = 0; i < content.entries.length; i++) {
+                tableNew += "<tr> <td>" + content.entries[i].Cname + "</td>" +
+                    " <td> TODO </td>" +
+                    " <td> <input class=\"form-check-input\" type=\"checkbox\" name=\"categorys\" value=\"" + content.entries[i].STid + "\"> </td> </tr>";
+            }
+            table.innerHTML = tableNew;
+            let length= content.entries.length;
+            if (length >= 1) {
+                currentCategory = content.entries[length-1].Cname;
+            }
         }
     }
 }
@@ -90,5 +106,5 @@ pafield.addEventListener("change", function () {
 
 
 if (document.getElementById("categorylist")) {
-    reloadScoreboard();
+    let intervalId = window.setInterval(reloadScoreboard(currentCategory),2000);
 }
