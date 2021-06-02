@@ -528,7 +528,7 @@ def createlobby_view(request):
 		if lobby_type != "Öffentlich" and lobby_type != "Privat":
 			args['errorMsg'] = 'ungültiger Lobbytyp'
 			return createlobby_end(request, args)
-		if inputPassword is not None or inputPassword != "":
+		if inputPassword is not None and inputPassword != "":
 			if not check_valid_chars(inputPassword):
 				args['errorMsg'] = 'Passwort enthält ungültige Zeigen'
 				return createlobby_end(request, args)
@@ -555,7 +555,7 @@ def createlobby_view(request):
 						"errorMsg"] = 'Es ist ein Fehler beim Lobbyerstellen aufgetreten bitte in wenigen Minuten erneut Probieren.'
 					return createlobby_end(request, args)
 		lobby_obj = Lobby.objects.create(Uid=request.user, Lname=lobby_name, Ltype=game_mode_objset[0],
-		                                 Lplayerlimit=player_amount, Lpassword=inputPassword, Lauthtoken=uuid_token,
+		                                 Lplayerlimit=player_amount,Lpassword=inputPassword,Lauthtoken=uuid_token,
 		                                 Lkey=lobby_key)
 		lobby_obj.save()
 
@@ -572,6 +572,10 @@ def createlobby_end(request, args):
 
 
 def lobbylist_view(request):
+	args = {
+		'errorMsg': '',
+		'infoMsg': ''
+	}
 	return render(request, 'kwiss_it/lobbylist.html', args)
 
 
@@ -592,10 +596,11 @@ def join_lobby(Lkey, user_obj: User, password=None, authtoken=None):
 	elif lobby.Lauthtoken is not None and lobby.Lauthtoken == authtoken and player_amount >= lobby.Lplayerlimit:
 		test_valid = True
 	if test_valid:
-		LobbyPlayer.create(Lid=lobby_set, Uid=user_obj)
-		return [True, 'Lobby erfolgreich gejoint']
+		LobbyPlayer.objects.create(Lid=lobby, Uid=user_obj)
+		LobbyPlayer.save()
+		return [True, 'Lobby erfolgreich beigetreten']
 	else:
-		return [False, 'Lobby konnte nicht gejoint werden']
+		return [False, 'Lobby konnte nicht beigetreten werden']
 
 
 def lobby_view(request, lobby_key, auth_token=None):
