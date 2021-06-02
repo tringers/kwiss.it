@@ -69,14 +69,13 @@
                                     </div>
                                 {% endif %}
                                 {# TODO: [Optional] Add badges like administrator, moderator, ... #}
-                                {# TODO: Show user description with live markdown translation #}
-                                {% if userprofile.registered != '' %}
+                                {% if userprofile.username == user.username and userprofile.registered != '' or not userprofile.registeredDisable and userprofile.registered != '' %}
                                     <div class="row">
                                         <div class="col-5">Registriert seit:</div>
                                         <div class="col-7">{{ userprofile.registered }}</div>
                                     </div>
                                 {% endif %}
-                                {% if userprofile.lastseen != '' %}
+                                {% if userprofile.username == user.username and userprofile.lastseen != '' or not userprofile.lastseenDisable and userprofile.lastseen != '' %}
                                     <div class="row">
                                         <div class="col-5">Zuletzt gesehen:</div>
                                         <div class="col-7">{{ userprofile.lastseen }}</div>
@@ -114,7 +113,7 @@
                                         Markdown</a></label>
                                 </div>
                                 <div class="row pt-1 mx-0">
-                                    <textarea class="bg-light rounded-2" id="newDescription" maxlength="1000">{{ userprofile.description }}</textarea>
+                                    <textarea class="bg-light rounded-2" name="newDescription" id="newDescription" maxlength="1000">{{ userprofile.description }}</textarea>
                                 </div>
                                 <div class="row pt-2 mx-0">
                                     <div class="form-check col-6 my-auto">
@@ -134,22 +133,22 @@
                                     <div class="col-6">Privatsphäre Einstellungen:</div>
                                     <div class="col-6 ps-3">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="checkProfilePrivate" {% if userprofile.private %}checked{% endif %}>
+                                            <input class="form-check-input" type="checkbox" value="" name="checkProfilePrivate" id="checkProfilePrivate" {% if userprofile.private %}checked{% endif %}>
                                             <label class="form-check-label" for="checkProfilePrivate">Profil privat</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="checkRegistered" {% if userprofile.registered %}checked{% endif %}>
+                                            <input class="form-check-input" type="checkbox" value="" name="checkRegistered" id="checkRegistered" {% if userprofile.registered %}checked{% endif %}>
                                             <label class="form-check-label" for="checkRegistered">"Registriert seit" sichtbar</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="checkLastSeen" {% if userprofile.lastseen %}checked{% endif %}>
+                                            <input class="form-check-input" type="checkbox" value="" name="checkLastSeen" id="checkLastSeen" {% if userprofile.lastseen %}checked{% endif %}>
                                             <label class="form-check-label" for="checkLastSeen">"Zuletzt gesehen" sichtbar</label>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="col-6 pt-3">
-                                    <input type="submit" class="col-12 btn btn-primary" id="inputChangeDescription" name="inputChangeDescription" value="Speichern">
+                                    <input type="submit" class="col-12 btn btn-primary" id="inputChangeProfile" name="inputChangeProfile" value="Speichern">
                                 </div>
                             </form>
                         </div>

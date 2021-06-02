@@ -44,3 +44,10 @@ marked.setOptions({
 let desc = document.getElementById('newDescription');
 let charLeft = document.getElementById('descriptionCharacterLeft');
 charLeft.innerHTML = String(1000 - desc.value.length) + " Zeichen verbleibend";
+
+let rawDescription = document.getElementById('profileDescriptionRaw');
+let description = document.getElementById('profileDescription');
+
+if(rawDescription !== undefined) {
+    description.innerHTML = marked(rawDescription.innerHTML);
+}

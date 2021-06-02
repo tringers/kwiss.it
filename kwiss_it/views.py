@@ -264,11 +264,13 @@ def user_profile(request, username):
 			'requested': username,
 			'username': '',
 			'firstname': '',
-			'private': '',
+			'private': False,
 			'picture': '',
 			'description': '',
 			'registered': '',
 			'lastseen': '',
+			'registeredDisable': False,
+			'lastseenDisable': False,
 		},
 	}
 
@@ -303,7 +305,13 @@ def user_profile(request, username):
 		userprofile['lastseen'] = uls_obj.LastSeen.strftime("%Y-%m-%d %H:%M")
 
 	# Check for profile private
-	userprofile['private'] = len(profileDS) > 0
+	if len(profileDS) > 0:
+		profileD = profileDS[0]
+		userprofile['private'] = profileD.UPprivate
+		if profileD.UPregistered:
+			userprofile['registeredDisable'] = True
+		if profileD.UPlastseen:
+			userprofile['lastseenDisable'] = True
 
 	# Profile Picture
 	if len(profileBS) > 0:
@@ -329,11 +337,22 @@ def user_profile_post(request):
 	# - User Description
 	# - Email Address
 	# - User Password
-	buttonDescription = request.POST.get('inputChangeDescription')
-	buttonName = request.POST.get('inputChangeName')
+	buttonDescription = request.POST.get('inputChangeProfile')
 	buttonPassword = request.POST.get('inputChangePassword')
+	html = r'/(<([a-zA-Z \/!])+([^>])*)/'
+	errorMsg = ''
 
-	return ''
+	if buttonDescription:
+		inputName = request.POST.get('inputName')
+		inputDescription = request.POST.get('newDescription')
+		inputProfilePrivate = request.POST.get('checkProfilePrivate')
+		inputRegistered = request.POST.get('checkRegistered')
+		inputLastSeen = request.POST.get('checkLastSeen')
+		pass
+	elif buttonPassword:
+		pass
+
+	return errorMsg
 
 
 @ratelimit(key='ip', rate='6/m', method='POST')

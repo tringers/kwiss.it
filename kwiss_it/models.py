@@ -12,6 +12,9 @@ class Picture(models.Model):
 
 class UserPrivate(models.Model):
 	Uid = models.OneToOneField(User, on_delete=models.CASCADE)
+	UPprivate = models.BooleanField(default=False)
+	UPregistered = models.BooleanField(default=True)
+	UPlastseen = models.BooleanField(default=True)
 
 
 class UserDescription(models.Model):
