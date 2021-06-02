@@ -13,7 +13,7 @@
     </div>
 
     <div class="row col-lg-8 mx-auto p-3 disabled">
-        <form id="lobbyCreation" action="{% url 'createlobby' %}" method="post">
+        <form id="lobbyCreation" class="needs-validation" action="{% url 'createlobby' %}" method="post">
             {% comment %}<div class="mb-3 form-group form-floating">
                 <input type="text" class="form-control" id="createlobbyname" name="lobbyname" required maxlength="64" placeholder="Raumname">
                 <label for="createlobbyname">Raumname</label>
@@ -22,7 +22,7 @@
             {# Erstmal floating entfernt, da es kein einheitliches Design bietet (zu hoch) #}
             <div class="mb-4 form-group">
                 <label for="createlobbyname">Raumname:</label>
-                <input type="text" class="form-control" id="createlobbyname" name="lobbyname" maxlength="64" placeholder="{{ user.first_name }}'s Raum">
+                <input type="text" class="form-control" id="createlobbyname" name="lobbyname" maxlength="64" placeholder="{{ user.first_name }}'s Raum" value="{{ user.first_name }}'s Raum" required>
             </div>
 
             <div class="mb-4 form-group">

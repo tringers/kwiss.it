@@ -22,10 +22,11 @@ forbidden_usernames = [
 	'test',
 ]
 allow_chars_for_email = r'^[a-z0-9.!#$%&\'*+-/=?^_`{|}~@]+$'
-gamemodes={
+gamemodes = {
 	"gamerace",
 	"gamebasic"
 }
+
 
 def check_user_last_seen(request):
 	if not request.user.is_authenticated:
@@ -366,8 +367,7 @@ def user_profile_post(request):
 			return 'Benutzernamen beinhaltet nicht valide Zeichen.'
 
 		modelsetUser = User.objects.filter(username=request.user.username)
-		inputDescription=re.compile(html).sub('',inputDescription)
-
+		inputDescription = re.compile(html).sub('', inputDescription)
 
 		if len(modelsetUser) < 1:
 			return 'Kein Benutzer mit dem Benutzernamen gefunden.'
@@ -422,7 +422,7 @@ def login_view(request, args=None):
 		inputUsername = request.POST.get('inputUsername')
 		inputPassword = request.POST.get('inputPassword')
 		if not check_valid_chars(inputPassword):
-			args["errorMsg"]="Passwort beinhaltet nicht valide Zeichen"
+			args["errorMsg"] = "Passwort beinhaltet nicht valide Zeichen"
 			return render(request, 'kwiss_it/login.html', args)
 		if not check_valid_chars(inputUsername):
 			args["errorMsg"] = "Benutzernamen beinhaltet nicht valide Zeichen"
@@ -462,15 +462,13 @@ def logout_view(request):
 def review(request):
 	return render(request, 'kwiss_it/review.html')
 
+
 @ratelimit(key='ip', rate='6/m', method='POST')
-def createlobby_view(request,args=None):
-
-
-	if args is None or not args:
-		args = {
-			'errorMsg': '',
-			'infoMsg': ''
-		}
+def createlobby_view(request):
+	args = {
+		'errorMsg': '',
+		'infoMsg': ''
+	}
 
 	if request.method == 'POST':
 		lobby_create = request.POST.get('buttoncreate')
@@ -484,36 +482,37 @@ def createlobby_view(request,args=None):
 
 		if not request.user.is_authenticated:
 			args['errorMsg'] = 'User muss angemeldet sein um eine Lobby erstellen zu können'
-			return createlobby_end(request,args)
+			return createlobby_end(request, args)
 
 		if not lobby_create or not game_mode or not lobby_type or not question_amount or not time_amount or not lobby_type or not player_amount:
 			args['errorMsg'] = 'Eine der erforderlichen Felder wurde nicht ausgefüllt'
-			return createlobby_end(request,args)
-
+			return createlobby_end(request, args)
 
 		if not lobby_name:
-			lobby_name= f"{request.user.username}'s Raum"
+			lobby_name = f"{request.user.username}'s Raum"
 		else:
 			if not check_valid_chars(lobby_name):
 				args['errorMsg'] = 'Lobbyname enthält ungültige Zeigen'
-				createlobby_end(request,args)
-		if question_amount < 1 or question_amount >64:
+				createlobby_end(request, args)
+		if question_amount < 1 or question_amount > 64:
 			args['errorMsg'] = 'ungültige Fragenmenge'
-			return createlobby_end(request,args)
-		if player_amount <2 or player_amount >16:
+			return createlobby_end(request, args)
+		if player_amount < 2 or player_amount > 16:
 			args['errorMsg'] = 'ungültige Spielermenge'
-			return createlobby_end(request,args)
-		if not game_mode in gamemodes:
+			return createlobby_end(request, args)
+		if game_mode not in gamemodes:
 			args['errorMsg'] = 'ungültiger Spielemodus'
-			return createlobby_end(request,args)
+			return createlobby_end(request, args)
 		if not lobby_type == "Öffentlich" or lobby_type == "PRivat":
 			args['errorMsg'] = 'ungültiger Lobbytyp'
-			return createlobby_end(request,args)
+			return createlobby_end(request, args)
 		if not check_valid_chars(inputPassword):
 			args['errorMsg'] = 'Passwort enthält ungültige Zeigen'
-			return createlobby_end(request,args)
-	return render(request, 'kwiss_it/createlobby.html',args)
-def createlobby_end(request,args):
+			return createlobby_end(request, args)
+	return render(request, 'kwiss_it/createlobby.html', args)
+
+
+def createlobby_end(request, args):
 	if args is None or not args:
 		args = {
 			'errorMsg': '',
@@ -522,7 +521,7 @@ def createlobby_end(request,args):
 	return render(request, 'kwiss_it/createlobby.html', args)
 
 
-def check_valid_chars(inputStr:str) ->bool:
-	if not re.match("^[A-Za-z0-9 _!§$%&/()=?+#*'~,.;:-]*$",inputStr):
+def check_valid_chars(inputStr: str) -> bool:
+	if not re.match("^[A-Za-z0-9 _!§$%&/()=?+#*'~,.;:-]*$", inputStr):
 		return False
 	return True

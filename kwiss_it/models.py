@@ -128,6 +128,7 @@ class Lobby(models.Model):
 	Ltype = models.ForeignKey(LobbyType, on_delete=models.RESTRICT)
 	Lplayerlimit = models.PositiveSmallIntegerField(default=8)
 	Lcurrentplayer = models.PositiveSmallIntegerField(default=0)
+	Lplayerready = models.PositiveSmallIntegerField(default=0)
 	Lprivate = models.BooleanField(default=False)
 	Lpassword = models.CharField(max_length=128, help_text='250000 iterations of SHA256', null=True)
 	Lauthtoken = models.CharField(max_length=64, help_text='Auth token for Link join. Should be contained in link', null=True)
