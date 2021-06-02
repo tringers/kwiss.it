@@ -4,8 +4,8 @@ After changing code in here:
   Please run jsmin.bat or equivalent.
  */
 
-const qamax = 64;
-const qamin = 1;
+const qamax = 50;
+const qamin = 5;
 
 function reloadScoreboard() {
     let xhttp = new XMLHttpRequest();
@@ -20,15 +20,16 @@ function reloadScoreboard() {
         }
     }
 }
+
 let lobbytype = document.getElementById("lobbytype");
 let lobbypasswordfield = document.getElementById("lobbypasswordfield");
 
 function publiclobby() {
-    lobbypasswordfield.hidden=true;
+    lobbypasswordfield.hidden = true;
 }
 
 function privatelobby() {
-    lobbypasswordfield.hidden=false;
+    lobbypasswordfield.hidden = false;
 }
 
 lobbytype.addEventListener("change", function () {
@@ -40,19 +41,19 @@ lobbytype.addEventListener("change", function () {
 });
 
 
-let qaslider=document.getElementById("questionamountslider");
-let qafield=document.getElementById("questionamountfield");
-    qaslider.addEventListener("change",function(){
-        qafield.value = qaslider.value;
-    });
-    qafield.addEventListener("change",function (){
-        if(qafield.value> qamax){
-            qafield.value=qamax;
-        }else if(qafield.value < qamin){
-            qafield.value=qamin;
-        }
-        qaslider.value = qafield.value;
-    });
+let qaslider = document.getElementById("questionamountslider");
+let qafield = document.getElementById("questionamountfield");
+qaslider.addEventListener("change", function () {
+    qafield.value = qaslider.value;
+});
+qafield.addEventListener("change", function () {
+    if (qafield.value > qamax) {
+        qafield.value = qamax;
+    } else if (qafield.value < qamin) {
+        qafield.value = qamin;
+    }
+    qaslider.value = qafield.value;
+});
 if (document.getElementById("categorylist")) {
     reloadScoreboard();
 }

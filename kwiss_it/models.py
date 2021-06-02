@@ -132,6 +132,21 @@ class Lobby(models.Model):
 	Lpassword = models.CharField(max_length=128, help_text='250000 iterations of SHA256', null=True)
 	Lauthtoken = models.CharField(max_length=64, help_text='Auth token for Link join. Should be contained in link', null=True)
 	Lcreated = models.DateTimeField(auto_now=True)
+	Lstarted = models.BooleanField(default=False)
+# Player joining lobby -> currentplayer +1 -> load questions
+# Player leaving lobby/or timeout -> currentplayer -1 - unload questions
+# All player ready -> wait 5 seconds -> switch to game
+# After finished -> play again creates new lobby with same settings -> old lobby currentplayer set 0
+# New lobby keep old Uid
+# Remove old lobby if a new lobby is created or all player left/timeout
+
+
+class LobbyQuestions(models.Model):
+	Lid = models.ForeignKey(Lobby, on_delete=models.CASCADE)
+	Qid = models.ForeignKey(Question, on_delete=models.SET_NULL, null=True)
+
+	class Meta:
+		unique_together = ('Lid', 'Qid')
 
 
 class ReportType(models.Model):
