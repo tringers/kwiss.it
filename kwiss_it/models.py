@@ -127,8 +127,6 @@ class Lobby(models.Model):
 	Lname = models.CharField(max_length=64)
 	Ltype = models.ForeignKey(LobbyType, on_delete=models.RESTRICT)
 	Lplayerlimit = models.PositiveSmallIntegerField(default=8)
-	Lcurrentplayer = models.PositiveSmallIntegerField(default=0)
-	Lplayerready = models.PositiveSmallIntegerField(default=0)
 	Lprivate = models.BooleanField(default=False)
 	Lpassword = models.CharField(max_length=128, help_text='250000 iterations of SHA256', null=True)
 	Lauthtoken = models.CharField(max_length=64, help_text='Auth token for Link join. Should be contained in link', null=True)
@@ -140,6 +138,12 @@ class Lobby(models.Model):
 # After finished -> play again creates new lobby with same settings -> old lobby currentplayer set 0
 # New lobby keep old Uid
 # Remove old lobby if a new lobby is created or all player left/timeout
+
+
+class LobbyPlayer(models.Model):
+	Lid = models.ForeignKey(Lobby, on_delete=models.CASCADE)
+	Uid = models.ForeignKey(User, on_delete=models.CASCADE)
+	LPready = models.BooleanField(default=False)
 
 
 class LobbyQuestions(models.Model):

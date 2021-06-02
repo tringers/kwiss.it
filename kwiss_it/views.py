@@ -402,7 +402,7 @@ def user_profile_post(request):
 		modelDescription.Udescription = inputDescription
 		modelDescription.save()
 
-		modelPrivacy.UPprivate = inputProfilePrivate is None
+		modelPrivacy.UPprivate = inputProfilePrivate is not None
 		modelPrivacy.UPregistered = inputRegistered is None
 		modelPrivacy.UPlastseen = inputLastSeen is None
 		modelPrivacy.save()

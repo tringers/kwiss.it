@@ -10,7 +10,7 @@ function toggleLivePreview() {
     let checkbox = document.getElementById('descriptionPreviewCheckbox');
     let prev = document.getElementById('descriptionPreviewDiv');
     let prev2 = document.getElementById('descriptionPreviewP');
-    if(checkbox.checked) {
+    if (checkbox.checked) {
         preview = true;
         prev.hidden = false;
         livePreviewTrigger();
@@ -29,23 +29,30 @@ function livePreviewTrigger() {
     let html = /(<([a-zA-Z \/!])+([^>])*)/;
     let content = input.value.replace(html, '');
 
-    if(!preview) return;
+    if (!preview) return;
     output.innerHTML = marked(content);
 }
+
+marked.setOptions({
+    breaks: true,
+    highlight: function (code, lang, callback) {
+        /*require('pygmentize-bundled')({lang: lang, format: 'html'}, code, function (err, result) {
+            callback(err, result.toString());
+        });*/
+        return hljs.highlight(lang, code).value;
+    }
+});
 
 // Add Listener
 try {
     document.getElementById('descriptionPreviewCheckbox').addEventListener('click', toggleLivePreview);
     document.getElementById('newDescription').addEventListener('input', livePreviewTrigger);
 
-    marked.setOptions({
-        breaks: true
-    });
-
     let desc = document.getElementById('newDescription');
     let charLeft = document.getElementById('descriptionCharacterLeft');
     charLeft.innerHTML = String(1000 - desc.value.length) + " Zeichen verbleibend";
-} catch(ignore) {}
+} catch (ignore) {
+}
 
 // Wait for page fully loaded
 window.addEventListener("load", () => {
@@ -53,7 +60,7 @@ window.addEventListener("load", () => {
     let rawDescription = document.getElementById('profileDescriptionRaw');
     let description = document.getElementById('profileDescription');
 
-    if(rawDescription !== undefined) {
+    if (rawDescription !== undefined) {
         description.innerHTML = marked(rawDescription.innerHTML);
     }
 });

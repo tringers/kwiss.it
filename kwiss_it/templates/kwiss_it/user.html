@@ -1,6 +1,11 @@
 {% extends "kwiss_it/base.html" %}
 {% load static %}
 
+{% block headscript %}
+    <link rel="stylesheet" href="{% static 'highlight/styles/default.css' %}">
+    <script src="{% static 'highlight/highlight.min.js' %}"></script>
+{% endblock %}
+
 {% block content %}
 
     <div class="col-lg-8 mx-auto p-3">
@@ -86,7 +91,7 @@
                         {% if userprofile.description %}
                             <div class="row py-4" id="profileDescriptionRow">
                                 <p class="" id="profileDescriptionRaw" hidden>{{ userprofile.description }}</p>
-                                <p class="border-1 border rounded-1 pt-1" id="profileDescription"></p>
+                                <p class="border-1 border rounded-1 pt-2 word-break" id="profileDescription"></p>
                             </div>
                         {% endif %}
                     </div>
@@ -125,7 +130,7 @@
                                     </div>
                                 </div>
                                 <div class="row mx-0 pt-2" id="descriptionPreviewDiv" hidden>
-                                    <p class="border-2 border rounded-1 lh-1 mb-0 py-2" id="descriptionPreviewP"></p>
+                                    <p class="border-2 border rounded-1 lh-1 mb-0 pt-2 word-break no-scrollbar" id="descriptionPreviewP"></p>
                                 </div>
 
                                 <div class="row pt-3">
