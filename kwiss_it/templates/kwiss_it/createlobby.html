@@ -31,7 +31,7 @@
                         <label for="lobbytype" class="form-label my-auto">Lobbytyp:</label>
                     </div>
                     <div class="col-6 form-group">
-                        <select class="form-select" aria-label="" id="lobbytype">
+                        <select class="form-select" aria-label="" id="lobbytype" name="lobbytype">
                             <option>Öffentlich</option>
                             <option>Privat</option>
                         </select>
@@ -57,13 +57,13 @@
                     </div>
                     <div class="col-6 btn-group">
                         <div class="btn-group col-6" role="group">
-                            <input class="form-check-input btn-check" type="radio" name="gamemode" id="gamebasic" autocomplete="off" checked>
+                            <input class="form-check-input btn-check" type="radio" name="gamemode" value="basic" id="gamebasic" autocomplete="off" checked>
                             <label class="form-check-label btn btn-outline-primary" for="gamebasic">
                                 Basic
                             </label>
                         </div>
                         <div class="btn-group col-6" role="group">
-                            <input class="form-check-input btn-check" type="radio" name="gamemode" id="gamerace" autocomplete="off">
+                            <input class="form-check-input btn-check" type="radio" name="gamemode" value="race" id="gamerace" autocomplete="off">
                             <label class="form-check-label btn btn-outline-primary" for="gamerace">
                                 Race
                             </label>
