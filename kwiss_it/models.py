@@ -123,6 +123,7 @@ class LobbyType(models.Model):
 
 class Lobby(models.Model):
 	Lid = models.BigAutoField(primary_key=True)
+	Lkey = models.CharField(max_length=6, unique=True)
 	Uid = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 	Lname = models.CharField(max_length=64)
 	Ltype = models.ForeignKey(LobbyType, on_delete=models.RESTRICT)
