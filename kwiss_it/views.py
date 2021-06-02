@@ -1,17 +1,17 @@
+import base64
+import re
 import string
-import pytz
 from datetime import datetime
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect
-from django.template import loader
-from django.contrib.auth.models import User
-from .models import UserPrivate, UserPicture, UserDescription, Picture, UserLastSeen
+from urllib.parse import unquote
+
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
 # noinspection PyPackageRequirements
 from ratelimit.decorators import ratelimit
-from urllib.parse import unquote
-import re
-import base64
+
+from .models import UserPrivate, UserPicture, UserDescription, Picture, UserLastSeen
 
 forbidden_usernames = [
 	'user',
@@ -24,8 +24,8 @@ forbidden_usernames = [
 ]
 allow_chars_for_email = r'^[a-z0-9.!#$%&\'*+-/=?^_`{|}~@]+$'
 gamemodes = {
-	"gamerace",
-	"gamebasic"
+	"race",
+	"basic"
 }
 
 
@@ -474,14 +474,29 @@ def createlobby_view(request):
 	}
 
 	if request.method == 'POST':
-		lobby_create = request.POST.get('buttoncreate')
-		lobby_name = request.POST.get('createlobbyname')
-		question_amount = request.POST.get('questionamountfield')
-		lobby_type = request.POST.get('lobbytype')
-		game_mode = request.POST.get('gamemode')
-		inputPassword = request.POST.get('lobbypassword')
-		time_amount = request.POST.get('timeamountfield')
-		player_amount = request.POST.get('playeramountfield')
+		lobby_create: str = request.POST.get('buttoncreate')
+		lobby_name: str = request.POST.get('createlobbyname')
+		question_amount: str = request.POST.get('questionamountfield')
+		lobby_type: str = request.POST.get('lobbytype')
+		game_mode: str = request.POST.get('gamemode')
+		inputPassword: str = request.POST.get('lobbypassword')
+		time_amount: str = request.POST.get('timeamountfield')
+		player_amount: str = request.POST.get('playeramountfield')
+
+		if not time_amount.isnumeric():
+			args['errorMsg'] = 'Zeit muss eine Nummer sein'
+			return createlobby_end(request, args)
+		time_amount = int(time_amount)
+
+		if not player_amount.isnumeric():
+			args['errorMsg'] = 'Spielermenge muss eine Nummer sein'
+			return createlobby_end(request, args)
+		player_amount = int(player_amount)
+
+		if not question_amount.isnumeric():
+			args['errorMsg'] = 'Fragemenge muss eine Nummer sein'
+			return createlobby_end(request, args)
+		question_amount = int(question_amount)
 
 		if not request.user.is_authenticated:
 			args['errorMsg'] = 'User muss angemeldet sein um eine Lobby erstellen zu können'
@@ -506,12 +521,13 @@ def createlobby_view(request):
 		if game_mode not in gamemodes:
 			args['errorMsg'] = 'ungültiger Spielemodus'
 			return createlobby_end(request, args)
-		if not lobby_type == "Öffentlich" or lobby_type == "PRivat":
+		if lobby_type != "Öffentlich" and lobby_type != "Privat":
 			args['errorMsg'] = 'ungültiger Lobbytyp'
 			return createlobby_end(request, args)
 		if not check_valid_chars(inputPassword):
 			args['errorMsg'] = 'Passwort enthält ungültige Zeigen'
 			return createlobby_end(request, args)
+
 	return render(request, 'kwiss_it/createlobby.html', args)
 
 
