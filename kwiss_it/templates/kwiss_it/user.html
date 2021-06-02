@@ -55,30 +55,30 @@
                             <div class="col-9">
                                 {% if user.is_authenticated and userprofile.username == user.username %}
                                     <div class="row">
-                                        <div class="col-5">Name:</div>
-                                        <div class="col-7">{{ userprofile.firstname }}</div>
+                                        <div class="col-6">Name:</div>
+                                        <div class="col-6">{{ userprofile.firstname }}</div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-5">Email Adresse:</div>
-                                        <div class="col-7">{{ user.email }}</div>
+                                        <div class="col-6">Email Adresse:</div>
+                                        <div class="col-6">{{ user.email }}</div>
                                     </div>
                                 {% else %}
                                     <div class="row">
-                                        <div class="col-5">Name:</div>
-                                        <div class="col-7">{{ userprofile.firstname }}</div>
+                                        <div class="col-6">Name:</div>
+                                        <div class="col-6">{{ userprofile.firstname }}</div>
                                     </div>
                                 {% endif %}
                                 {# TODO: [Optional] Add badges like administrator, moderator, ... #}
                                 {% if userprofile.username == user.username and userprofile.registered != '' or not userprofile.registeredDisable and userprofile.registered != '' %}
                                     <div class="row">
-                                        <div class="col-5">Registriert seit:</div>
-                                        <div class="col-7">{{ userprofile.registered }}</div>
+                                        <div class="col-6">Registriert seit:</div>
+                                        <div class="col-6">{{ userprofile.registered }}</div>
                                     </div>
                                 {% endif %}
                                 {% if userprofile.username == user.username and userprofile.lastseen != '' or not userprofile.lastseenDisable and userprofile.lastseen != '' %}
                                     <div class="row">
-                                        <div class="col-5">Zuletzt gesehen:</div>
-                                        <div class="col-7">{{ userprofile.lastseen }}</div>
+                                        <div class="col-6">Zuletzt gesehen:</div>
+                                        <div class="col-6">{{ userprofile.lastseen }}</div>
                                     </div>
                                 {% endif %}
                             </div>
