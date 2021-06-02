@@ -11,6 +11,7 @@ from django.contrib.auth import authenticate, login, logout
 from ratelimit.decorators import ratelimit
 from urllib.parse import unquote
 import re
+import base64
 
 forbidden_usernames = [
 	'user',
@@ -336,7 +337,8 @@ def user_profile(request, username):
 	# User description
 	if len(profileCS) > 0:
 		profileC = profileCS[0]
-		userprofile['description'] = profileC.Udescription
+		description = base64.b64decode(profileC.Udescription.encode(encoding='utf-8')).decode(encoding='utf-8')
+		userprofile['description'] = description
 
 	args['userprofile'] = userprofile
 	return render(request, 'kwiss_it/user.html', args)
@@ -368,6 +370,7 @@ def user_profile_post(request):
 
 		modelsetUser = User.objects.filter(username=request.user.username)
 		inputDescription = re.compile(html).sub('', inputDescription)
+		inputDescription = base64.b64encode(inputDescription.encode(encoding='utf-8')).decode(encoding='utf-8')
 
 		if len(modelsetUser) < 1:
 			return 'Kein Benutzer mit dem Benutzernamen gefunden.'
