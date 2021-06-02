@@ -41,6 +41,7 @@ def generate_lobby_key():
 
 
 def check_user_last_seen(request):
+	##TODO guest
 	if not request.user.is_authenticated:
 		return
 
@@ -96,7 +97,7 @@ def register(request):
 		inputName = request.POST.get('inputName')
 		inputPassword = request.POST.get('inputPassword')
 		inputPassword2 = request.POST.get('inputPassword2')
-
+		##TODO guest
 		if request.user.is_authenticated:
 			args['errorMsg'] = 'Bereits angemeldet.'
 			return register_end(request, args)
@@ -269,6 +270,7 @@ def user_short(request, username):
 
 
 def user(request):
+	##TODO guest
 	if request.user.is_authenticated:
 		return redirect('/user/' + request.user.username)
 	else:
@@ -357,6 +359,7 @@ def user_profile_post(request):
 	# - User Description
 	# - Email Address
 	# - User Password
+	##TODO guest
 	if not request.user.is_authenticated:
 		return 'Benutzer nicht angemeldet. Ungültige Aktion'
 
@@ -436,6 +439,7 @@ def login_view(request, args=None):
 		if not check_valid_chars(inputUsername):
 			args["errorMsg"] = "Benutzernamen beinhaltet nicht valide Zeichen"
 			return render(request, 'kwiss_it/login.html', args)
+		##TODO guest
 		if request.user.is_authenticated:
 			args['errorMsg'] = 'Bereits angemeldet.'
 			return render(request, 'kwiss_it/login.html', args)
@@ -503,7 +507,7 @@ def createlobby_view(request):
 			args['errorMsg'] = 'Fragemenge muss eine Nummer sein'
 			return createlobby_end(request, args)
 		question_amount = int(question_amount)
-
+		##TODO guest
 		if not request.user.is_authenticated:
 			args['errorMsg'] = 'User muss angemeldet sein um eine Lobby erstellen zu können'
 			return createlobby_end(request, args)
