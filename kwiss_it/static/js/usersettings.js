@@ -33,6 +33,10 @@ function livePreviewTrigger() {
     output.innerHTML = marked(content);
 }
 
+// Add Listener
+document.getElementById('descriptionPreviewCheckbox').addEventListener('click', toggleLivePreview);
+document.getElementById('newDescription').addEventListener('input', livePreviewTrigger);
+
 marked.setOptions({
    breaks: true
 });

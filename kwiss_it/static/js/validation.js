@@ -67,6 +67,9 @@ function testUsername() {
         );
 }
 
+// Add Listener
+document.getElementById('regInputUsername').addEventListener('focusout', testUsername);
+
 let ePW = document.getElementsByClassName('validate-password');
 let ePWE = document.getElementsByClassName('validate-password-error');
 for (let i = 0; i < ePW.length; i++) {

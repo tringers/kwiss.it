@@ -15,10 +15,6 @@ if (process.argv.length < 4) {
             reserved: [ // TODO: Reservierte Funktionsnamen entfernen und dynamisch in JS die Listener usw. setzen
                 'validateEmailaddress',
                 'validateUsername',
-                'validatePassword',
-                'toggleLivePreview',
-                'livePreviewTrigger',
-                'testUsername',
             ]
         }
     });
