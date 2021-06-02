@@ -34,16 +34,18 @@ function livePreviewTrigger() {
 }
 
 // Add Listener
-document.getElementById('descriptionPreviewCheckbox').addEventListener('click', toggleLivePreview);
-document.getElementById('newDescription').addEventListener('input', livePreviewTrigger);
+try {
+    document.getElementById('descriptionPreviewCheckbox').addEventListener('click', toggleLivePreview);
+    document.getElementById('newDescription').addEventListener('input', livePreviewTrigger);
 
-marked.setOptions({
-   breaks: true
-});
+    marked.setOptions({
+        breaks: true
+    });
 
-let desc = document.getElementById('newDescription');
-let charLeft = document.getElementById('descriptionCharacterLeft');
-charLeft.innerHTML = String(1000 - desc.value.length) + " Zeichen verbleibend";
+    let desc = document.getElementById('newDescription');
+    let charLeft = document.getElementById('descriptionCharacterLeft');
+    charLeft.innerHTML = String(1000 - desc.value.length) + " Zeichen verbleibend";
+} catch(ignore) {}
 
 // Wait for page fully loaded
 window.addEventListener("load", () => {
