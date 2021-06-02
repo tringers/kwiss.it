@@ -596,8 +596,8 @@ def join_lobby(Lkey, user_obj: User, password=None, authtoken=None):
 	elif lobby.Lauthtoken is not None and lobby.Lauthtoken == authtoken and player_amount >= lobby.Lplayerlimit:
 		test_valid = True
 	if test_valid:
-		LobbyPlayer.objects.create(Lid=lobby, Uid=user_obj)
-		LobbyPlayer.save()
+		LPobj=LobbyPlayer.objects.create(Lid=lobby, Uid=user_obj)
+		LPobj.save()
 		return [True, 'Lobby erfolgreich beigetreten']
 	else:
 		return [False, 'Lobby konnte nicht beigetreten werden']
