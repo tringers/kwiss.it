@@ -3,6 +3,7 @@ import re
 import string
 from datetime import datetime
 from urllib.parse import unquote
+import random
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -22,11 +23,19 @@ forbidden_usernames = [
 	'moderator',
 	'test',
 ]
+
 allow_chars_for_email = r'^[a-z0-9.!#$%&\'*+-/=?^_`{|}~@]+$'
+
 gamemodes = {
 	"race",
 	"basic"
 }
+
+
+def generate_lobby_key():
+	key_int = random.randint(pow(16, 5), pow(16, 6)-1)
+	key = '{0:06x}'.format(key_int).upper()
+	return key
 
 
 def check_user_last_seen(request):
