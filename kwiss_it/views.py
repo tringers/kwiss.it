@@ -22,7 +22,10 @@ forbidden_usernames = [
 	'test',
 ]
 allow_chars_for_email = r'^[a-z0-9.!#$%&\'*+-/=?^_`{|}~@]+$'
-
+gamemodes={
+	"gamerace",
+	"gamebasic"
+}
 
 def check_user_last_seen(request):
 	if not request.user.is_authenticated:
@@ -98,7 +101,16 @@ def register(request):
 		# Set email and username lower
 		inputEmail = inputEmail.lower()
 		inputUsername = inputUsername.lower()
-
+		if not check_valid_chars(inputEmail):
+			return 'Email beinhaltet nicht valide Zeichen.'
+		if not check_valid_chars(inputName):
+			return 'Anzeigename beinhaltet nicht valide Zeichen.'
+		if not check_valid_chars(inputPassword):
+			return 'Passwort beinhaltet nicht valide Zeichen.'
+		if not check_valid_chars(inputPassword2):
+			return 'Passwort2 beinhaltet nicht valide Zeichen.'
+		if not check_valid_chars(inputUsername):
+			return 'Benutzername beinhaltet nicht valide Zeichen.'
 		# Check min max length of username, email address and password
 		if len(inputEmail) < 6 or len(inputEmail) > 320:
 			args['errorMsg'] = 'Bitte valide Email Adresse angeben.'
@@ -222,7 +234,8 @@ def register_checkusername(request, username):
 	# If user found, status 409 with appropriate msg
 	username = unquote(username)
 	user_objset = User.objects.filter(username=username)
-
+	if not check_valid_chars(username):
+		return register_checkusername_res(403, 'Benutzername "' + username + '" ist nicht erlaubt.')
 	if any(username.lower() in f for f in forbidden_usernames):
 		return register_checkusername_res(403, 'Benutzername "' + username + '" ist nicht erlaubt.')
 
@@ -340,7 +353,7 @@ def user_profile_post(request):
 
 	buttonDescription = request.POST.get('inputChangeProfile')
 	buttonPassword = request.POST.get('inputChangePassword')
-	html = r'/(<([a-zA-Z \/!])+([^>])*)/'
+	html = r'(<([a-zA-Z \/!])+([^>])*)'
 	errorMsg = ''
 
 	if buttonDescription:
@@ -349,8 +362,13 @@ def user_profile_post(request):
 		inputProfilePrivate = request.POST.get('checkProfilePrivate')
 		inputRegistered = request.POST.get('checkRegistered')
 		inputLastSeen = request.POST.get('checkLastSeen')
+		if not check_valid_chars(inputName):
+			return 'Benutzernamen beinhaltet nicht valide Zeichen.'
 
 		modelsetUser = User.objects.filter(username=request.user.username)
+		inputDescription=re.compile(html).sub('',inputDescription)
+
+
 		if len(modelsetUser) < 1:
 			return 'Kein Benutzer mit dem Benutzernamen gefunden.'
 		modelUser = modelsetUser[0]
@@ -403,7 +421,12 @@ def login_view(request, args=None):
 		buttonLogin = request.POST.get('buttonLogin')
 		inputUsername = request.POST.get('inputUsername')
 		inputPassword = request.POST.get('inputPassword')
-
+		if not check_valid_chars(inputPassword):
+			args["errorMsg"]="Passwort beinhaltet nicht valide Zeichen"
+			return render(request, 'kwiss_it/login.html', args)
+		if not check_valid_chars(inputUsername):
+			args["errorMsg"] = "Benutzernamen beinhaltet nicht valide Zeichen"
+			return render(request, 'kwiss_it/login.html', args)
 		if request.user.is_authenticated:
 			args['errorMsg'] = 'Bereits angemeldet.'
 			return render(request, 'kwiss_it/login.html', args)
@@ -439,11 +462,67 @@ def logout_view(request):
 def review(request):
 	return render(request, 'kwiss_it/review.html')
 
-
+@ratelimit(key='ip', rate='6/m', method='POST')
 def createlobby_view(request,args=None):
+
+
 	if args is None or not args:
 		args = {
 			'errorMsg': '',
 			'infoMsg': ''
 		}
-	return render(request, 'kwiss_it/createlobby.html')
+
+	if request.method == 'POST':
+		lobby_create = request.POST.get('buttoncreate')
+		lobby_name = request.POST.get('createlobbyname')
+		question_amount = request.POST.get('questionamountfield')
+		lobby_type = request.POST.get('lobbytype')
+		game_mode = request.POST.get('gamemode')
+		inputPassword = request.POST.get('lobbypassword')
+		time_amount = request.POST.get('timeamountfield')
+		player_amount = request.POST.get('playeramountfield')
+
+		if not request.user.is_authenticated:
+			args['errorMsg'] = 'User muss angemeldet sein um eine Lobby erstellen zu können'
+			return createlobby_end(request,args)
+
+		if not lobby_create or not game_mode or not lobby_type or not question_amount or not time_amount or not lobby_type or not player_amount:
+			args['errorMsg'] = 'Eine der erforderlichen Felder wurde nicht ausgefüllt'
+			return createlobby_end(request,args)
+
+
+		if not lobby_name:
+			lobby_name= f"{request.user.username}'s Raum"
+		else:
+			if not check_valid_chars(lobby_name):
+				args['errorMsg'] = 'Lobbyname enthält ungültige Zeigen'
+				createlobby_end(request,args)
+		if question_amount < 1 or question_amount >64:
+			args['errorMsg'] = 'ungültige Fragenmenge'
+			return createlobby_end(request,args)
+		if player_amount <2 or player_amount >16:
+			args['errorMsg'] = 'ungültige Spielermenge'
+			return createlobby_end(request,args)
+		if not game_mode in gamemodes:
+			args['errorMsg'] = 'ungültiger Spielemodus'
+			return createlobby_end(request,args)
+		if not lobby_type == "Öffentlich" or lobby_type == "PRivat":
+			args['errorMsg'] = 'ungültiger Lobbytyp'
+			return createlobby_end(request,args)
+		if not check_valid_chars(inputPassword):
+			args['errorMsg'] = 'Passwort enthält ungültige Zeigen'
+			return createlobby_end(request,args)
+	return render(request, 'kwiss_it/createlobby.html',args)
+def createlobby_end(request,args):
+	if args is None or not args:
+		args = {
+			'errorMsg': '',
+			'infoMsg': ''
+		}
+	return render(request, 'kwiss_it/createlobby.html', args)
+
+
+def check_valid_chars(inputStr:str) ->bool:
+	if not re.match("^[A-Za-z0-9 _!§$%&/()=?+#*'~,.;:-]*$",inputStr):
+		return False
+	return True
