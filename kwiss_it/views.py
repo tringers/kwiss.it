@@ -558,6 +558,7 @@ def createlobby_view(request):
 		                                 Lplayerlimit=player_amount,Lpassword=inputPassword,Lauthtoken=uuid_token,
 		                                 Lkey=lobby_key)
 		lobby_obj.save()
+		return redirect(f'/lobby/{lobby_obj.Lkey}/{uuid_token}/')
 
 	return render(request, 'kwiss_it/createlobby.html', args)
 
