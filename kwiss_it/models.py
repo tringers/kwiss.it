@@ -120,6 +120,9 @@ class LobbyType(models.Model):
 	LTname = models.CharField(max_length=32)
 	LTdescription = models.CharField(max_length=1000)
 
+	def __str__(self):
+		return self.LTdescription
+
 
 class Lobby(models.Model):
 	Lid = models.BigAutoField(primary_key=True)
