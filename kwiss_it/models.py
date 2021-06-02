@@ -144,6 +144,7 @@ class LobbyPlayer(models.Model):
 	Lid = models.ForeignKey(Lobby, on_delete=models.CASCADE)
 	Uid = models.ForeignKey(User, on_delete=models.CASCADE)
 	LPready = models.BooleanField(default=False)
+	LPLastHeartbeat = models.DateTimeField(auto_now_add=True)
 
 
 class LobbyQuestions(models.Model):
