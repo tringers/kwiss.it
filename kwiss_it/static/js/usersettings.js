@@ -45,9 +45,13 @@ let desc = document.getElementById('newDescription');
 let charLeft = document.getElementById('descriptionCharacterLeft');
 charLeft.innerHTML = String(1000 - desc.value.length) + " Zeichen verbleibend";
 
-let rawDescription = document.getElementById('profileDescriptionRaw');
-let description = document.getElementById('profileDescription');
+// Wait for page fully loaded
+window.addEventListener("load", () => {
+    // Show User description
+    let rawDescription = document.getElementById('profileDescriptionRaw');
+    let description = document.getElementById('profileDescription');
 
-if(rawDescription !== undefined) {
-    description.innerHTML = marked(rawDescription.innerHTML);
-}
+    if(rawDescription !== undefined) {
+        description.innerHTML = marked(rawDescription.innerHTML);
+    }
+});

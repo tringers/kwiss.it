@@ -337,6 +337,9 @@ def user_profile_post(request):
 	# - User Description
 	# - Email Address
 	# - User Password
+	if not request.user.is_authenticated:
+		return 'Benutzer nicht angemeldet. Ungültige Aktion'
+
 	buttonDescription = request.POST.get('inputChangeProfile')
 	buttonPassword = request.POST.get('inputChangePassword')
 	html = r'/(<([a-zA-Z \/!])+([^>])*)/'
@@ -348,7 +351,42 @@ def user_profile_post(request):
 		inputProfilePrivate = request.POST.get('checkProfilePrivate')
 		inputRegistered = request.POST.get('checkRegistered')
 		inputLastSeen = request.POST.get('checkLastSeen')
-		pass
+
+		modelsetUser = User.objects.filter(username=request.user.username)
+		if len(modelsetUser) < 1:
+			return 'Kein Benutzer mit dem Benutzernamen gefunden.'
+		modelUser = modelsetUser[0]
+
+		modelsetDescription = UserDescription.objects.filter(Uid=modelUser.id)
+		modelsetPrivacy = UserPrivate.objects.filter(Uid=modelUser.id)
+
+		# Check if model entries exist
+		# Else create
+		if len(modelsetDescription) > 0:
+			modelDescription = modelsetDescription[0]
+		else:
+			# Create Description
+			modelDescription = UserDescription.objects.create(Uid=modelUser, Udescription='')
+			modelDescription.save()
+
+		if len(modelsetPrivacy) > 0:
+			modelPrivacy = modelsetPrivacy[0]
+		else:
+			# Create Description
+			modelPrivacy = UserPrivate.objects.create(Uid=modelUser)
+			modelPrivacy.save()
+
+		# Set information
+		modelUser.first_name = inputName
+		modelUser.save()
+
+		modelDescription.Udescription = inputDescription
+		modelDescription.save()
+
+		modelPrivacy.UPprivate = inputProfilePrivate is None
+		modelPrivacy.UPregistered = inputRegistered is None
+		modelPrivacy.UPlastseen = inputLastSeen is None
+		modelPrivacy.save()
 	elif buttonPassword:
 		pass
 
