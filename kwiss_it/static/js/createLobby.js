@@ -15,7 +15,7 @@ let currentCategory = ""; //current viewing category
 function reloadScoreboard(lastcat = "") {
     let xhttp = new XMLHttpRequest();
     let url=""
-    if (lastcat != "") {
+    if (lastcat !== "") {
         url = "/api/category/?lastcat=" + lastcat;
     } else {
         url = "/api/category/";

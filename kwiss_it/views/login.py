@@ -13,6 +13,7 @@ def login_view(request, args=None):
 		buttonLogin = request.POST.get('buttonLogin')
 		inputUsername = request.POST.get('inputUsername')
 		inputPassword = request.POST.get('inputPassword')
+		inputStayloggedin = request.POST.get('stayloggedin')
 		if not check_valid_chars(inputPassword):
 			args["errorMsg"] = "Passwort beinhaltet nicht valide Zeichen"
 			return render(request, 'kwiss_it/login.html', args)
@@ -35,6 +36,12 @@ def login_view(request, args=None):
 		user_obj = authenticate(request, username=inputUsername.lower(), password=inputPassword)
 
 		if user_obj is not None:
+			# Set session expire
+			if inputStayloggedin is not None:
+				request.session.set_expiry(None)
+			else:
+				request.session.set_expiry(0)
+
 			# Redirect to a success page.
 			login(request, user_obj)
 			args['infoMsg'] = 'Login erfolgreich.'
