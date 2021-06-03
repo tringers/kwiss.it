@@ -29,6 +29,7 @@ def createlobby_view(request):
 	inputPlayeramount: str = request.POST.get('playeramountfield')
 	inputQuestionamount: str = request.POST.get('questionamountfield')
 
+
 	# Check if user is logged in
 	if not request.user.is_authenticated:
 		args['errorMsg'] = 'User muss angemeldet sein um eine Lobby erstellen zu können'
