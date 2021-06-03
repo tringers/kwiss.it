@@ -4,7 +4,77 @@
 
     <div class="col-lg-8 mx-auto p-3">
         <h1>LobbyList</h1>
-    </div>
-   {# ##TODO Lobbylist zum joinen von Lobby #}
 
+        <table class="table table-hover align-middle">
+            <thead>
+            <tr>
+                <th scope="col">&#128274</th>
+                <th scope="col">Lobbyname</th>
+                <th scope="col">Spieler</th>
+                <th scope="col">Spielmodus</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody id="table-body">
+            <tr id="table-row-template" hidden>
+                <td>&#128274</td>
+                <td>Lobbyname</td>
+                <td>1/8</td>
+                <td>Klassisch</td>
+                <td>
+                    <a href="#" class="btn btn-outline-primary btn-sm col-12" role="button">Beitreten</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    {# ##TODO Lobbylist zum joinen von Lobby #}
+
+{% endblock %}
+
+{% block bodyscript %}
+    <script>
+    fetch('/api/lobby/')
+    .then(data => data.json()
+        .then(json => {
+            let table_body = document.getElementById('table-body');
+
+            for(let i = 0; i < json.length; i++) {
+                let lobby = json[i];
+                let row = document.createElement('tr');
+
+                let lobby_private = document.createElement('td');
+                let lobby_name = document.createElement('td');
+                let lobby_player = document.createElement('td');
+                let lobby_mode = document.createElement('td');
+                let lobby_join = document.createElement('td');
+                let lobby_join_button = document.createElement('a');
+                lobby_join_button.innerHTML = 'Beitreten';
+                lobby_join_button.href = '/lobby/' + lobby.Lkey + '/';
+                lobby_join_button.classList.add('btn');
+                lobby_join_button.classList.add('btn-outline-primary');
+                lobby_join_button.classList.add('btn-sm');
+                lobby_join_button.classList.add('col-12');
+
+                lobby_private.innerHTML = lobby.Lprivate ? '&#128274' : '';
+                lobby_name.innerHTML = lobby.Lname;
+                lobby_player.innerHTML = '0 / ' + lobby.Lplayerlimit;
+                lobby_mode.innerHTML = lobby.Ltype;
+                lobby_join.appendChild(lobby_join_button);
+
+                row.appendChild(lobby_private);
+                row.appendChild(lobby_name);
+                row.appendChild(lobby_player);
+                row.appendChild(lobby_mode);
+                row.appendChild(lobby_join);
+                table_body.appendChild(row);
+            }
+        })
+    .catch(e => {
+        // Error parsing data to json
+    }))
+    .catch(e => {
+        // Error fetching data from api
+    })
+    </script>
 {% endblock %}
