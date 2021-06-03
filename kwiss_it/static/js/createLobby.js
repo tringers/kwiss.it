@@ -13,32 +13,52 @@ const pamax = 16;   //playeramountmax
 let lastCategory = ""; //last loaded category
 let currentCategory = ""; //current viewing category
 function reloadScoreboard(lastcat = "") {
-    let xhttp = new XMLHttpRequest();
-    let url=""
+    let url = ""
     if (lastcat !== "") {
         url = "/api/category/?lastcat=" + lastcat;
     } else {
         url = "/api/category/";
     }
-    xhttp.open("GET", url, true);
-    xhttp.responseType = "json";
-    xhttp.onload = function () {
-        if (xhttp.status === 200) {
-            let table = document.getElementById("categorylist");
-            let content = JSON.parse(this.responseText);
-            let tableNew = "";
-            for (let i = 0; i < content.entries.length; i++) {
-                tableNew += "<tr> <td>" + content.entries[i].Cname + "</td>" +
-                    " <td> TODO </td>" +
-                    " <td> <input class=\"form-check-input\" type=\"checkbox\" name=\"categorys\" value=\"" + content.entries[i].STid + "\"> </td> </tr>";
-            }
-            table.innerHTML = tableNew;
-            let length= content.entries.length;
-            if (length >= 1) {
-                currentCategory = content.entries[length-1].Cname;
-            }
-        }
-    }
+    fetch(url)
+        .then(data => data.json()
+            .then(json => {
+                let table = document.getElementById("categorylist");
+                for (let i = 0; i < json.length; i++) {
+                    let category = json[i];
+                    let row = document.createElement('tr');
+                    let category_name = document.createElement('td');
+                    let category_question_amount = document.createElement('td');
+                    let category_add_field = document.createElement('td');
+                    let category_add = document.createElement('input')
+
+                    category_name.innerHTML = category.Cname;
+                    category_question_amount.innerHTML = "TODO"; //TODO add question amount of category
+                    category_add.classList.add('form-check-input');
+                    category_add.type = 'checkbox';
+                    category_add.name = 'categorys';
+                    category_add.value = category.STid;
+
+                    category_add_field.appendChild(category_add);
+
+                    row.appendChild(category_name);
+                    row.appendChild(category_question_amount);
+                    row.appendChild(category_add_field);
+
+                    table.appendChild(row);
+                }
+                if (json.length >= 1) {
+                    currentCategory = lastCategory;
+                    lastCategory = content.entries[json.length - 1].Cname;
+                } else if (json.length == 0) {
+                    lastCategory = currentCategory;
+                }
+            })
+            .catch(e => {
+                // Error parsing data to json
+            }))
+        .catch(e => {
+            // Error fetching data from api
+        });
 }
 
 let lobbytype = document.getElementById("lobbytype");
@@ -106,5 +126,5 @@ pafield.addEventListener("change", function () {
 
 
 if (document.getElementById("categorylist")) {
-    let intervalId = setInterval(() => {reloadScoreboard(currentCategory)},2000);
+    reloadScoreboard(currentCategory)
 }
