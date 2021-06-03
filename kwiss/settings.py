@@ -35,8 +35,17 @@ except FileNotFoundError:
 DEBUG = True
 
 ALLOWED_HOSTS = [
+	'api.kwiss.it',
+	'www.kwiss.it',
+	'kwiss.it',
+	'localhost',
 	'127.0.0.1',
-	'10.150.1.6',
+	'10.150.0.8',
+	'10.150.0.50',
+	'10.150.0.51',
+	'10.150.0.54',
+	'10.150.0.55',
+	'10.150.0.56',
 ]
 
 
@@ -66,7 +75,7 @@ MIDDLEWARE = [
 
 REST_FRAMEWORK = {
 	'DEFAULT_PERMISSION_CLASSES': [
-		'rest_framework.permissions.DjangoModelPermissions'
+		'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
 	],
 	'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
