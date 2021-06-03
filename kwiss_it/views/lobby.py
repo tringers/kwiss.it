@@ -120,7 +120,7 @@ def createlobby_view(request):
 	lobby_obj = Lobby.objects.create(
 		Uid=request.user, Lname=inputLobbyname, Ltype=gamemode_objset[0],
 		Lplayerlimit=player_amount, Lpassword=password, Lauthtoken=uuid_token,
-		Lkey=lobby_key, Lprivate=inputLobbytype, Lquestionamount=inputQuestionamount,
+		Lkey=lobby_key, Lprivate=inputLobbytype, Lquestionamount=inputQuestionamount,Ltimeamount=inputTimeamount,
 	)
 	lobby_obj.save()
 
