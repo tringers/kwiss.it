@@ -1,5 +1,6 @@
 {% extends "kwiss_it/base.html" %}
 {% load static %}
+{% load i18n lazysignup_tags %}
 
 {% block headscript %}
     <link rel="stylesheet" href="{% static 'highlight/styles/default.css' %}">
@@ -22,8 +23,8 @@
         {% endif %}
 
         <h1>Profil von {{ userprofile.requested }}</h1>
-{# TODO guest #}
-        {% if user.is_authenticated and userprofile.username == user.username %}
+
+        {% if user.is_authenticated and userprofile.username == user.username and not user|is_lazy_user %}
             <ul class="nav nav-tabs pt-4" id="profileTab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="true">
@@ -58,8 +59,8 @@
                                 </div>
                             </div>
                             <div class="col-8 ms-3">
-                            {# TODO guest #}
-                                {% if user.is_authenticated and userprofile.username == user.username %}
+
+                                {% if user.is_authenticated and userprofile.username == user.username and not user|is_lazy_user %}
                                     <div class="row">
                                         <div class="col-6">Name:</div>
                                         <div class="col-6">{{ userprofile.firstname }}</div>
@@ -98,8 +99,8 @@
                     </div>
                 </div>
             {% endif %}
-        {# ##TODO guest #}
-            {% if user.is_authenticated and userprofile.username == user.username %}
+
+            {% if user.is_authenticated and userprofile.username == user.username and not user|is_lazy_user %}
                 <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
                     <div class="container py-2 mb-2">
                         <h4>Profileinstellungen:</h4>

@@ -16,11 +16,11 @@
     </div>
 
     <div class="row col-lg-8 mx-auto p-3 disabled">
-        <form class="needs-validation" id="registerForm" action="{% url 'register' %}" method="post">
+        <form class="needs-validation" id="registerForm" action="{% url 'lazysignup_convert' %}" method="post">
 
             <div class="mb-3 form-group">
                 <label for="regInputEmail" class="form-label">Email Adresse:</label>
-                <input type="email" class="form-control" name="inputEmail" id="regInputEmail" required maxlength="320">
+                <input type="email" class="form-control" name="email" id="regInputEmail" required maxlength="320">
             </div>
 
             <div class="form-group d-flex justify-content-between">
@@ -28,12 +28,12 @@
                 <b class="col-auto text-red px-2" id="usernameStatus"></b>
             </div>
             <div class="mb-3 form-group">
-                <input type="text" class="form-control" name="inputUsername" id="regInputUsername" required maxlength="64">
+                <input type="text" class="form-control" name="username" id="regInputUsername" required maxlength="64">
             </div>
 
             <div class="mb-3 form-group">
                 <label for="regInputName" class="form-label">Anzeigename:</label>
-                <input type="text" class="form-control" name="inputName" id="regInputName" required maxlength="32">
+                <input type="text" class="form-control" name="first_name" id="regInputName" required maxlength="32">
             </div>
 
             <div class="form-group d-flex justify-content-between">
@@ -41,7 +41,7 @@
                 <b class="col-auto text-red px-2 validate-password-error"></b>
             </div>
             <div class="mb-3 form-group">
-                <input type="password" class="form-control validate-password validate-password-identical-first" name="inputPassword" id="regInputPassword" required maxlength="64">
+                <input type="password" class="form-control validate-password validate-password-identical-first" name="password1" id="regInputPassword" required maxlength="64">
             </div>
 
             <div class="form-group d-flex justify-content-between">
@@ -49,19 +49,18 @@
                 <b class="col-auto text-red px-2 validate-password-identical-error"></b>
             </div>
             <div class="mb-3 form-group">
-                <input type="password" class="form-control validate-password-identical-second" name="inputPassword2" id="regInputPassword2" required maxlength="64">
+                <input type="password" class="form-control validate-password-identical-second" name="password1" id="regInputPassword2" required maxlength="64">
             </div>
 
             <div class="row justify-content-between pt-3">
                 <div class="col d-grid">
-                    <input type="submit" name="buttonRegister" class="btn btn-primary" value="Registrieren" {% if user.is_authenticated or user|is_lazy_user %}disabled{% endif %}>
+                    <input type="hidden" name="redirect_to" value="{{ redirect_to }}">
+                    <input type="submit" name="buttonRegister" class="btn btn-primary" value="{% trans "Submit" %}" {% if user.is_authenticated and not user|is_lazy_user %}disabled{% endif %}>
                 </div>
             </div>
 
             {% csrf_token %}
         </form>
-    </div>
-
 {% endblock %}
 
 {% block bodyscript %}

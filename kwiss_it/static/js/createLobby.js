@@ -53,9 +53,9 @@ function privatelobby() {
 }
 
 lobbytype.addEventListener("change", function () {
-    if (lobbytype.value == "Öffentlich") {
+    if (lobbytype.value === "Öffentlich" || lobbytype.value === 'public') {
         publiclobby();
-    } else if (lobbytype.value == "Privat") {
+    } else if (lobbytype.value === "Privat" || lobbytype.value === 'private') {
         privatelobby();
     }
 });
@@ -106,5 +106,5 @@ pafield.addEventListener("change", function () {
 
 
 if (document.getElementById("categorylist")) {
-    let intervalId = window.setInterval(reloadScoreboard(currentCategory),2000);
+    let intervalId = window.setInterval(() => {reloadScoreboard(currentCategory)},2000);
 }

@@ -137,6 +137,25 @@ class Lobby(models.Model):
 	Lcreated = models.DateTimeField(auto_now=True)
 	Lstarted = models.BooleanField(default=False)
 
+	def is_public_lobby(self):
+		return not self.Lprivate
+
+	def is_private_lobby(self):
+		return self.Lprivate and (self.Lpassword is not None and self.Lpassword != '')
+
+	def is_solo_lobby(self):
+		return self.Lprivate and (self.Lpassword is None or self.Lpassword == '')
+
+	def is_full(self):
+		lobbyplayer_objset = LobbyPlayer.objects.filter(Lid=self)
+		return self.Lplayerlimit <= len(lobbyplayer_objset)
+
+	def check_password(self, password):
+		return self.Lpassword == password
+
+	def check_authtoken(self, authtoken):
+		return self.Lauthtoken == authtoken
+
 
 # Player joining lobby -> currentplayer +1 -> load questions
 # Player leaving lobby/or timeout -> currentplayer -1 - unload questions

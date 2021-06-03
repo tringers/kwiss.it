@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="de">
-
 {% load static %}
+{% load i18n lazysignup_tags %}
 
 <head>
     <meta charset="UTF-8">
@@ -28,8 +28,7 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarContent">
-					{# ##TODO guest #}
-                    {% if user.is_authenticated %}
+                    {% if user.is_authenticated and not user|is_lazy_user %}
 
                         <div class="container-fluid">
                             <ul class="navbar-nav">
@@ -62,6 +61,49 @@
                                     <a href="{% url 'logout' %}" id="buttonLogout" class="col-12 btn btn-outline-danger px-6">Abmelden</a>
                                 </div>
                             </div>
+                        </div>
+
+                    {% elif user|is_lazy_user %}
+
+                        <div class="container-fluid">
+                            <ul class="navbar-nav">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">First</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Second</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Third</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="dropdown d-flex">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="loginButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                Guest User
+                            </button>
+
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="loginButton">
+                                <li>
+                                    <form id="loginForm" action="{% url 'login' %}" method="post">
+                                        <div class="dropdown-item form-group">
+                                            <!--suppress HtmlFormInputWithoutLabel -->
+                                            <input type="text" class="form-control" id="inputUsername" name="inputUsername" placeholder="Benutzername">
+                                        </div>
+                                        <div class="dropdown-item form-group">
+                                            <!--suppress HtmlFormInputWithoutLabel -->
+                                            <input type="password" class="form-control" id="inputPassword" name="inputPassword" placeholder="Passwort">
+                                        </div>
+                                        <div class="dropdown-item">
+                                            <input type="submit" name="buttonLogin" class="col-12 btn btn-outline-primary px-6" value="Anmelden">
+                                        </div>
+                                        <div class="dropdown-item">
+                                            <a href="{% url 'lazysignup_convert' %}" class="col-12 btn btn-outline-danger px-6" onclick="">Registrieren</a>
+                                        </div>
+                                        {% csrf_token %}
+                                    </form>
+                                </li>
+                            </ul>
                         </div>
 
                     {% else %}

@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
 	'rest_framework',
+	'lazysignup',
 ]
 
 MIDDLEWARE = [
@@ -69,6 +70,13 @@ REST_FRAMEWORK = {
 	],
 	'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
+
+AUTHENTICATION_BACKENDS = (
+	'django.contrib.auth.backends.ModelBackend',
+	'lazysignup.backends.LazySignupBackend',
+)
+
+LAZYSIGNUP_CUSTOM_USER_CREATION_FORM = 'kwiss_it.views.convert.UserCreationForm'
 
 ROOT_URLCONF = 'kwiss.urls'
 

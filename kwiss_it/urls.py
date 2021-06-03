@@ -1,8 +1,8 @@
 from django.urls import path, re_path, include
 from rest_framework import routers
-from . import views
+from django.views.generic import TemplateView
+from .views import static, register, login, user, lobby, convert
 from . import restapi
-
 
 router = routers.DefaultRouter()
 router.register(r'lobby', restapi.LobbyView)
@@ -11,33 +11,41 @@ router.register(r'category', restapi.CategoryView)
 router.register(r'question', restapi.QuestionView)
 router.register(r'questiontype', restapi.QuestionTypeView)
 
-
 urlpatterns = [
-	path('', views.index, name='index'),
-	path('datenschutz', views.datenschutz, name='datenschutz'),
-	path('impressum', views.impressum, name='impressum'),
+	# Static pages
+	path('', static.index, name='index'),
+	path('datenschutz', static.datenschutz, name='datenschutz'),
+	path('impressum', static.impressum, name='impressum'),
 
-	path('settings', views.settings, name='settings'),
-	path('review', views.review, name='review'),
+	# Without any usage atm
+	path('settings', static.settings, name='settings'),
+	path('review', static.review, name='review'),
 
-	path('login', views.login_view, name='login'),
-	path('logout', views.logout_view, name='logout'),
-	path('register', views.register, name='register'),
-	path('register/checkusername/', views.register_checkusername_short, name='register_checkusername_short'),
-	path('register/checkusername/<str:username>', views.register_checkusername, name='register_checkusername'),
-	path('password-reset', views.login, name='vergessen'),
+	# For new users
+	path('register', register.register, name='register'),
+	path('register/checkusername/', register.register_checkusername_short, name='register_checkusername_short'),
+	path('register/checkusername/<str:username>', register.register_checkusername, name='register_checkusername'),
+	#re_path(r'convert/$', convert.convert_view, name='lazysignup_convert_custom'),
 
-	path('u', views.user, name='userShort'),
-	path('u/', views.user, name='userShort'),
-	path('u/<str:username>', views.user_short, name='userShort'),
-	path('user', views.user, name='user'),
-	path('user/', views.user, name='user'),
-	path('user/<str:username>', views.user_profile, name='userProfile'),
+	# For registered users
+	path('login', login.login_view, name='login'),
+	path('logout', login.logout_view, name='logout'),
+	# TODO: Create forgot-password page (create model for confirmation links in mail)
+	# path('password-reset', login.login, name='vergessen'),
 
-	path('createlobby', views.createlobby_view, name='createlobby'),
-	path('lobbylist', views.lobbylist_view,name='lobbylist'),
-	re_path(r'lobby/(?P<lobby_key>[0-9A-F]{6})/$', views.lobby_view, name='lobby'),
-	re_path(r'lobby/(?P<lobby_key>[0-9A-F]{6})/(?P<auth_token>[0-9a-f\-]{0,36})/$', views.lobby_view, name='lobby'),
+	# For authenticated users
+	path('u', user.user_view, name='userShort'),
+	path('u/', user.user_view, name='userShort'),
+	path('u/<str:username>', user.user_short_view, name='userShort'),
+	path('user', user.user_view, name='user'),
+	path('user/', user.user_view, name='user'),
+	path('user/<str:username>', user.user_profile_view, name='userProfile'),
+
+	# Gameplay
+	path('createlobby', lobby.createlobby_view, name='createlobby'),
+	path('lobbylist', lobby.lobbylist_view, name='lobbylist'),
+	re_path(r'lobby/(?P<lobby_key>[0-9A-F]{6})/$', lobby.lobby_view, name='lobby'),
+	re_path(r'lobby/(?P<lobby_key>[0-9A-F]{6})/(?P<auth_token>[0-9a-f\-]{0,36})/$', lobby.lobby_view, name='lobby'),
 
 	path('api/', include(router.urls)),
 ]
