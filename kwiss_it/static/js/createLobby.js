@@ -10,56 +10,139 @@ const tamin = 10;  //timeamountmin
 const tamax = 124; //timeamountmax
 const pamin = 2;    //playeramountmin
 const pamax = 16;   //playeramountmax
-let lastCategory = ""; //last loaded category
-let currentCategory = ""; //current viewing category
-function reloadScoreboard(lastcat = "") {
-    let url = ""
-    if (lastcat !== "") {
-        url = "/api/category/?lastcat=" + lastcat;
-    } else {
-        url = "/api/category/";
+let maxpage = 1000;
+let page = 0;
+let categoryPages = new Map();
+let prevpage = 0;
+
+function toggle_list(list, on) {
+    console.log(list)
+    for (let i = 0; i < list.length; ++i) {
+        list[i].style.display = on ? '' : 'none';
+
     }
-    fetch(url)
-        .then(data => data.json()
-            .then(json => {
-                let table = document.getElementById("categorylist");
-                for (let i = 0; i < json.length; i++) {
-                    let category = json[i];
-                    let row = document.createElement('tr');
-                    let category_name = document.createElement('td');
-                    let category_question_amount = document.createElement('td');
-                    let category_add_field = document.createElement('td');
-                    let category_add = document.createElement('input')
-
-                    category_name.innerHTML = category.Cname;
-                    category_question_amount.innerHTML = "TODO"; //TODO add question amount of category
-                    category_add.classList.add('form-check-input');
-                    category_add.type = 'checkbox';
-                    category_add.name = 'categorys';
-                    category_add.value = category.STid;
-
-                    category_add_field.appendChild(category_add);
-
-                    row.appendChild(category_name);
-                    row.appendChild(category_question_amount);
-                    row.appendChild(category_add_field);
-
-                    table.appendChild(row);
-                }
-                if (json.length >= 1) {
-                    currentCategory = lastCategory;
-                    lastCategory = content.entries[json.length - 1].Cname;
-                } else if (json.length == 0) {
-                    lastCategory = currentCategory;
-                }
-            })
-            .catch(e => {
-                // Error parsing data to json
-            }))
-        .catch(e => {
-            // Error fetching data from api
-        });
 }
+
+let btnArray = new Array(5);
+btnArray[0] = document.getElementById("1");
+btnArray[1] = document.getElementById("2");
+btnArray[2] = document.getElementById("3");
+btnArray[3] = document.getElementById("4");
+btnArray[4] = document.getElementById("5");
+for (let btn of btnArray) {
+    btn.addEventListener("click", () => {
+        loadPage(btn.value - 1);
+    })
+}
+
+function renumberButtons() {
+    posArray = new Array(5);
+    posArray[0] = page <= 3 ? 1 : page - 2;
+    posArray[1] = page <= 3 ? 2 : page - 1;
+    posArray[2] = page <= 3 ? 3 : page;
+    posArray[3] = page <= 3 ? 4 : page + 1;
+    posArray[4] = page <= 3 ? 5 : page + 2;
+    for(let i= 0 ; i<5;i++){
+        btnArray[i].value=posArray[i];
+        btnArray[i].innerHTML=posArray[i];
+    }
+
+}
+
+function reloadScoreboard(reqpage = 0) {
+
+
+    let url = "/api/category/?page=" + reqpage;
+    let content = categoryPages.get(reqpage);
+    console.log(categoryPages);
+    if (content == undefined) {
+        fetch(url)
+            .then(data => data.json()
+                .then(json => {
+                    if (json.length<15){
+                        maxpage=reqpage;
+                    }
+                    if (json.length > 0) {
+                        let table = document.getElementById("categorylist");
+                        toggle_list(categoryPages.get(prevpage)|[],false);
+                        pagerows= new Set();
+                        for (let i = 0; i < json.length; i++) {
+                            let category = json[i];
+                            let row = document.createElement('tr');
+                            let category_name = document.createElement('td');
+                            let category_question_amount = document.createElement('td');
+                            let category_add_field = document.createElement('td');
+                            let category_add = document.createElement('input')
+
+                            category_name.innerHTML = category.Cname;
+                            category_question_amount.innerHTML = "TODO"; //TODO add question amount of category
+                            category_add.classList.add('form-check-input');
+                            category_add.type = 'checkbox';
+                            category_add.name = 'categorys';
+                            category_add_field.appendChild(category_add);
+                            row.classList.add(reqpage.toString())
+                            row.appendChild(category_name);
+                            row.appendChild(category_question_amount);
+                            row.appendChild(category_add_field);
+
+                            table.appendChild(row);
+                            pagerows.add(row);
+                        }
+                        categoryPages.set(reqpage, pagerows)
+                        prevpage = reqpage;
+                        renumberButtons();
+                    } else {
+                        page = prevpage;
+
+                    }
+
+                })
+                .catch(e => {
+                    // Error parsing data to json
+                }))
+            .catch(e => {
+                // Error fetching data from api
+            });
+    } else {
+        toggle_list(categoryPages.get(prevpage)|[],false)
+        toggle_list(categoryPages.get(reqpage)|[],true)
+        prevpage = reqpage;
+        renumberButtons();
+    }
+}
+
+function nextPage() {
+    if (page >= maxpage) {
+        page = maxpage;
+    } else {
+        page += 1;
+        reloadScoreboard(page);
+    }
+}
+
+function prevPage() {
+    if (page <= 0) {
+        page = 0;
+    } else {
+        page -= 1;
+        reloadScoreboard(page)
+    }
+}
+
+function loadPage(clickedPage) {
+    if (clickedPage >= maxpage) {
+        page = maxpage;
+    } else if (clickedPage <= 0) {
+        page = 0;
+    } else {
+        page = clickedPage;
+    }
+    reloadScoreboard(page)
+}
+
+document.getElementById("prev").addEventListener("click", prevPage)
+document.getElementById("next").addEventListener("click", nextPage)
+
 
 let lobbytype = document.getElementById("lobbytype");
 let lobbypasswordfield = document.getElementById("lobbypasswordfield");
@@ -124,7 +207,6 @@ pafield.addEventListener("change", function () {
     paslider.value = pafield.value;
 });
 
-
 if (document.getElementById("categorylist")) {
-    reloadScoreboard(currentCategory)
+    reloadScoreboard(0)
 }

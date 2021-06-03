@@ -28,7 +28,7 @@ def createlobby_view(request):
 	inputTimeamount: str = request.POST.get('timeamountfield')
 	inputPlayeramount: str = request.POST.get('playeramountfield')
 	inputQuestionamount: str = request.POST.get('questionamountfield')
-
+	inputCategorys=request.POST.get('categorys')
 
 	# Check if user is logged in
 	if not request.user.is_authenticated:
@@ -124,7 +124,6 @@ def createlobby_view(request):
 		Lkey=lobby_key, Lprivate=inputLobbytype, Lquestionamount=inputQuestionamount,Ltimeamount=inputTimeamount,
 	)
 	lobby_obj.save()
-
 	return redirect(f'/lobby/{lobby_obj.Lkey}/{uuid_token}/')
 
 

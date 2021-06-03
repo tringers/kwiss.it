@@ -73,3 +73,5 @@ def b64encode(text):
 
 def b64decode(text):
 	return base64.b64decode(text.encode(encoding='utf-8')).decode(encoding='utf-8')
+
+
