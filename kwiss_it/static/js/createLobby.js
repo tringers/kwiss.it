@@ -106,5 +106,5 @@ pafield.addEventListener("change", function () {
 
 
 if (document.getElementById("categorylist")) {
-    let intervalId = window.setInterval(() => {reloadScoreboard(currentCategory)},2000);
+    let intervalId = setInterval(() => {reloadScoreboard(currentCategory)},2000);
 }
