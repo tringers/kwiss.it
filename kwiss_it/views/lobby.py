@@ -82,10 +82,10 @@ def createlobby_view(request):
 		return createlobby_end(request, args)
 
 	# Check if lobby type is valid
-	if not inputLobbytype.lower() in ['public', 'private', 'öffentlich', 'privat']:
-		args['errorMsg'] = 'Lobbytyp nicht gültig.'
-		return createlobby_end(request, args)
-
+	if inputLobbytype.lower() in ['private', 'privat']:
+		inputLobbytype = True
+	else:
+		inputLobbytype = False
 	# Check if password is valid if password is defined
 	if inputPassword is not None and inputPassword != '':
 		if not check_valid_chars(inputPassword):
@@ -120,7 +120,7 @@ def createlobby_view(request):
 	lobby_obj = Lobby.objects.create(
 		Uid=request.user, Lname=inputLobbyname, Ltype=gamemode_objset[0],
 		Lplayerlimit=player_amount, Lpassword=password, Lauthtoken=uuid_token,
-		Lkey=lobby_key
+		Lkey=lobby_key, Lprivate=inputLobbytype, Lquestionamount=inputQuestionamount,
 	)
 	lobby_obj.save()
 
