@@ -54,6 +54,17 @@ class LobbyPlayerView(viewsets.ReadOnlyModelViewSet):
 		return queryset
 
 
+class LobbyTypeSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = LobbyType
+		fields = ['LTid', 'LTdescription']
+
+
+class LobbyTypeView(viewsets.ReadOnlyModelViewSet):
+	queryset = LobbyType.objects.all()
+	serializer_class = LobbyTypeSerializer
+
+
 # Category
 class CategorySerializer(serializers.ModelSerializer):
 	class Meta:

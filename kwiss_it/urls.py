@@ -7,6 +7,7 @@ from . import restapi
 router = routers.DefaultRouter()
 router.register(r'lobby', restapi.LobbyView)
 router.register(r'lobbyplayer', restapi.LobbyPlayerView)
+router.register(r'lobbytype', restapi.LobbyTypeView)
 router.register(r'category', restapi.CategoryView)
 router.register(r'question', restapi.QuestionView)
 router.register(r'questiontype', restapi.QuestionTypeView)
