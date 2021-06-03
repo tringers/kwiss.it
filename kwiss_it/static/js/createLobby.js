@@ -16,7 +16,6 @@ let categoryPages = new Map();
 let prevpage = 0;
 
 function toggle_list(list, on) {
-    console.log(list)
     for (let i = 0; i < list.length; ++i) {
         list[i].style.display = on ? '' : 'none';
 
@@ -54,7 +53,6 @@ function reloadScoreboard(reqpage = 0) {
 
     let url = "/api/category/?page=" + reqpage;
     let content = categoryPages.get(reqpage);
-    console.log(categoryPages);
     if (content == undefined) {
         fetch(url)
             .then(data => data.json()
@@ -78,7 +76,8 @@ function reloadScoreboard(reqpage = 0) {
                             category_question_amount.innerHTML = "TODO"; //TODO add question amount of category
                             category_add.classList.add('form-check-input');
                             category_add.type = 'checkbox';
-                            category_add.name = 'categorys';
+                            category_add.name = 'categories';
+                            category_add.value= category.Cid;
                             category_add_field.appendChild(category_add);
                             row.classList.add(reqpage.toString())
                             row.appendChild(category_name);

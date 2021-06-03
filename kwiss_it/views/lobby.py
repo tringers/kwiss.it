@@ -27,9 +27,8 @@ def createlobby_view(request):
 	inputPassword: str = request.POST.get('lobbypassword')
 	inputTimeamount: str = request.POST.get('timeamountfield')
 	inputPlayeramount: str = request.POST.get('playeramountfield')
-	inputQuestionamount: str = request.POST.get('questionamountfield')
-	inputCategorys=request.POST.get('categorys')
-
+	inputQuestionamount: list = request.POST.get('questionamountfield')
+	inputCategories=request.POST.getlist('categories')
 	# Check if user is logged in
 	if not request.user.is_authenticated:
 		args['errorMsg'] = 'User muss angemeldet sein um eine Lobby erstellen zu können'
@@ -61,8 +60,12 @@ def createlobby_view(request):
 	question_amount = int(inputQuestionamount)
 
 	# Check other inputs
-	if not inputGamemode or not inputLobbytype or not question_amount or not time_amount or not player_amount:
+	if not inputGamemode or not inputLobbytype or not question_amount or not time_amount or not player_amount or not inputCategories:
 		args['errorMsg'] = 'Eine der erforderlichen Felder wurde nicht ausgefüllt.'
+		return createlobby_end(request, args)
+
+	if len(inputCategories) <1:
+		args['errorMsg'] = 'Es muss mindestens eine Kategorie ausgewählt werden.'
 		return createlobby_end(request, args)
 
 	# Set default lobby name if nothing else was defined
@@ -117,13 +120,32 @@ def createlobby_view(request):
 				args["errorMsg"] = 'Es ist ein Fehler bei der Lobbyerstellung aufgetreten. Bitte in wenigen Minuten erneut probieren.'
 				return createlobby_end(request, args)
 
+	questions = Question.objects.all()
+	usedquestions =[]
+	for cat in inputCategories:
+		usedquestions.extend(questions.filter(Cid=cat).values_list('Qid', flat=True))
+	pass
+	usedquestions = random.choices(usedquestions, k=question_amount)
+
+	if len(usedquestions) < question_amount or len(usedquestions) > question_amount:
+		args["errorMsg"] = 'In den Ausgewählten Kategorien gibt es nicht genug Fragen um die gewollte Fragenmenge zu nutzen.'
+		return createlobby_end(request, args)
+
 	# Create lobby
 	lobby_obj = Lobby.objects.create(
 		Uid=request.user, Lname=inputLobbyname, Ltype=gamemode_objset[0],
 		Lplayerlimit=player_amount, Lpassword=password, Lauthtoken=uuid_token,
-		Lkey=lobby_key, Lprivate=inputLobbytype, Lquestionamount=inputQuestionamount,Ltimeamount=inputTimeamount,
+		Lkey=lobby_key, Lprivate=inputLobbytype, Lquestionamount=inputQuestionamount, Ltimeamount=inputTimeamount,
 	)
 	lobby_obj.save()
+
+	##TODO hier ändern aus irgendwelchen gründen sich die Qid die in usedQuestions sind und ich verstehe nicht why HELLLP
+	for q in usedquestions:
+		lq=LobbyQuestions.objects.create(Lid=lobby_obj,Qid= Question.objects.get(Qid=q))
+		lq.save()
+
+
+
 	return redirect(f'/lobby/{lobby_obj.Lkey}/{uuid_token}/')
 
 

@@ -69,7 +69,7 @@ class LobbyTypeView(viewsets.ReadOnlyModelViewSet):
 class CategorySerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Category
-		fields = ['Cname', 'Cdescription', 'STid', 'Cupvotes', 'Cdownvotes']
+		fields = ['Cname', 'Cdescription', 'STid', 'Cupvotes', 'Cdownvotes','Cid']
 
 
 class CategoryView(viewsets.ReadOnlyModelViewSet):
