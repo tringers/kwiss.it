@@ -131,12 +131,15 @@
                         <button type="button" class="btn btn-outline-primary" id="prev"><-</button>
                         <button type="button" class="btn btn-outline-primary " id="next">-></button>
                     </div>
-
                 </div>
             </div>
+
+            <div id="categorySelects" hidden>
+
+            </div>
+
             <div class="mb-4 form-group">
                 <input type="submit" name="buttoncreate" class="btn btn-primary" value="Lobby Erstellen">
-
             </div>
             {% csrf_token %}
         </form>
@@ -148,6 +151,7 @@
     <!--<script src="{% static 'js/createLobby.min.js' %}"></script>-->
     <script>
         const tbody = document.getElementById('categorylist');
+        const cat_selects = document.getElementById('categorySelects');
         let current_page = 1;
         let max_page = 1;
         let categories = {};
@@ -157,11 +161,12 @@
                 .then(data => data.json()
                     .then(json => {
                         // Get max pages
-                        max_pages = Math.ceil(json.count / 10);
+                        max_page = Math.ceil(json.count / 10);
 
                         for (let i = 0; i < json.results.length; i++) {
                             let cat = json.results[i];
-                            categories[cat.Cname] = cat;
+                            if(categories[cat.Cname] === undefined)
+                                categories[cat.Cname] = cat;
                         }
 
                         refreshCategoryAmount();
@@ -212,6 +217,18 @@
                 data_select_checkbox.classList.add("form-check-input");
                 data_select_checkbox.value = category.Cid.toString();
 
+                if(category.selected === undefined) {
+                    category.selected = false;
+                    categories[cat_names[i]].selected = false;
+                }
+
+                data_select_checkbox.checked = category.selected;
+
+                data_select_checkbox.addEventListener('change', () => {
+                    categories[cat_names[i]].selected = data_select_checkbox.checked;
+                    updateCategorySelect();
+                });
+
                 data_select.appendChild(data_select_checkbox);
 
                 row_data.appendChild(data_name);
@@ -232,9 +249,22 @@
 
                 tbody.appendChild(row_description);
 
-                row_data.addEventListener("click", () => {
+                row_data.addEventListener("click", (e) => {
+                    if(e.path[0].localName === 'input')
+                        return;
                     row_description.hidden = !row_description.hidden;
-                })
+                });
+            }
+        }
+
+        function updateCategorySelect() {
+            let cat_names = Object.keys(categories);
+            cat_selects.innerHTML = "";
+
+            for (let i = 0; i < cat_names.length; i++) {
+                let checkbox = document.createElement("input");
+                checkbox.value = categories[cat_names[i]].Cid.toString();
+                checkbox.checked = categories[cat_names[i]].selected;
             }
         }
 
