@@ -8,9 +8,11 @@ router = routers.DefaultRouter()
 router.register(r'lobby', restapi.LobbyView)
 router.register(r'lobbyuser', restapi.LobbyUserView)
 router.register(r'lobbytype', restapi.LobbyTypeView)
+router.register(r'lobbyquestions', restapi.LobbyQuestionsView)
 router.register(r'category', restapi.CategoryView)
 router.register(r'question', restapi.QuestionView)
 router.register(r'questiontype', restapi.QuestionTypeView)
+router.register(r'answer', restapi.AnswerView)
 
 urlpatterns = [
 	# Static pages
