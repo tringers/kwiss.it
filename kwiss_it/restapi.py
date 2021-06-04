@@ -36,7 +36,7 @@ class LobbyView(viewsets.ReadOnlyModelViewSet):
 
 
 class LobbyPlayerSerializer(serializers.ModelSerializer):
-	first_name = serializers.StringRelatedField(source='Uid', read_only=True)
+	first_name = serializers.SlugRelatedField(source='Uid', read_only=True, slug_field='first_name')
 
 	class Meta:
 		model = LobbyPlayer

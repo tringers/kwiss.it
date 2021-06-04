@@ -129,8 +129,7 @@ def createlobby_view(request):
 	questions_selected = choose_random(usedquestions, question_amount)
 
 	if len(usedquestions) < question_amount or len(usedquestions) > question_amount:
-		args[
-			"errorMsg"] = 'In den Ausgewählten Kategorien gibt es nicht genug Fragen um die gewollte Fragenmenge zu nutzen.'
+		args["errorMsg"] = 'In den Ausgewählten Kategorien gibt es nicht genug Fragen um die gewollte Fragenmenge zu nutzen.'
 		return createlobby_end(request, args)
 
 	# Create lobby
@@ -237,6 +236,16 @@ def lobby_heartbeat_view(request, lobby_key):
 def check_old_heartbeat():
 	# Check if someone is still in Lobby but heartbeat missing for 15s
 	# If thats the case remove user from lobby
-	lobbyplayer_objset = LobbyPlayer.objects.filter(LPLastHeartbeat__lt=(datetime.now() - timedelta(seconds=15)))
+	lobbyplayer_objset = LobbyPlayer.objects.filter(LPLastHeartbeat__lt=(datetime.now() - timedelta(seconds=10)))
 	lobbyplayer_objset.delete()
+	return
+
+
+def check_lazy_user(user_obj):
+	if not user_obj:
+		return
+
+	if not user_obj.first_name or user_obj.first_name == '':
+		user_obj.first_name = 'Guest ' + user_obj.username[0:6]
+		user_obj.save()
 	return
