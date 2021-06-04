@@ -49,3 +49,6 @@ td.selection-hover:hover {
   --bs-table-accent-bg: rgba(0, 0, 0, 0.12);
   color: #292d32;
 }
+.invisible{
+  height: 0 !important;
+}
