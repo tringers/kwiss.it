@@ -4,8 +4,8 @@ After changing code in here:
   Please run jsmin.bat or equivalent.
  */
 
-const qamax = 50;   //questionamountmax
 const qamin = 5;    //questionamountmin
+const qamax = 50;   //questionamountmax
 const tamin = 10;  //timeamountmin
 const tamax = 124; //timeamountmax
 const pamin = 2;    //playeramountmin
@@ -18,6 +18,7 @@ let max_page = 1;
 let categories = {};
 
 function fetchCategory() {
+    //todo add 2nd fetch for pending api request and merch that with other fetch
     fetch(api_url + '/category/?page=' + current_page)
         .then(data => data.json()
             .then(json => {
@@ -89,7 +90,7 @@ function refreshTable() {
         data_select_checkbox.checked = category.selected;
 
         data_select.addEventListener('click', (e) => {
-            if(e.path[0].localName === "input" ){
+            if (e.path[0].localName === "input") {
                 return
             }
             data_select_checkbox.checked = !data_select_checkbox.checked;
@@ -226,3 +227,10 @@ pafield.addEventListener("change", function () {
     }
     paslider.value = pafield.value;
 });
+
+let pending= document.getElementById("pending");
+pending.addEventListener("change",function (){
+    if(pending.checked){
+//todo fill out
+    }
+})
