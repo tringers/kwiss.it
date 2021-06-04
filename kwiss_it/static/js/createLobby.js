@@ -55,7 +55,7 @@ function renumberButtons() {
 function reloadCategory(reqpage = 0) {
     let url = "/api/category/?page=" + reqpage;
     console.log(pages)
-    if (pages.has(reqpage)) {
+    if (!pages.has(reqpage)) {
         fetch(url)
             .then(data => data.json()
                 .then(json => {
