@@ -30,7 +30,7 @@ function getLobbys() {
 
                     let lobby_private = document.createElement('td');
                     let lobby_name = document.createElement('td');
-                    let lobby_player = document.createElement('td');
+                    let lobby_user = document.createElement('td');
                     let lobby_mode = document.createElement('td');
                     let lobby_join = document.createElement('td');
                     let lobby_join_button = null;
@@ -66,13 +66,13 @@ function getLobbys() {
                     lobby_private.innerHTML = lobby.Lprivate ? '&#128274' : '';
                     lobby_name.innerHTML = lobby.Lname;
                     // TODO: Count player per lobby
-                    lobby_player.innerHTML = '0 / ' + lobby.Lplayerlimit;
+                    lobby_user.innerHTML = '0 / ' + lobby.Lplayerlimit;
                     lobby_mode.innerHTML = list_lobbytype[lobby.Ltype] ? list_lobbytype[lobby.Ltype] : lobby.Ltype;
                     lobby_join.appendChild(lobby_join_button);
 
                     row.appendChild(lobby_private);
                     row.appendChild(lobby_name);
-                    row.appendChild(lobby_player);
+                    row.appendChild(lobby_user);
                     row.appendChild(lobby_mode);
                     row.appendChild(lobby_join);
                     table_body.appendChild(row);

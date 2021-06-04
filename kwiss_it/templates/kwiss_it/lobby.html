@@ -47,16 +47,16 @@
                     })
                 })
                 .catch(() => heartbeat_error++);
-            fetch(api_url + '/lobbyplayer/?lkey=' + lobby_key)
+            fetch(api_url + '/lobbyuser/?lkey=' + lobby_key)
                 .then(data => data.json()
                     .then(json => {
                         const table_body = document.getElementById('table-body');
                         let cleared = false;
 
                         for (let i = 0; i < json.length; i++) {
-                            let lobbyplayer = json[i];
-                            let player_name = lobbyplayer.first_name;
-                            let ready = lobbyplayer.LPready;
+                            let lobbyuser = json[i];
+                            let player_name = lobbyuser.first_name;
+                            let ready = lobbyuser.LPready;
 
                             // Create children
                             let row = document.createElement('tr');

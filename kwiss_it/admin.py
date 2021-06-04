@@ -1,5 +1,5 @@
 from django.contrib import admin
-from kwiss_it.models import Picture, UserDescription, UserPicture, UserLastSeen, Score, State, Category, Score_Category, QuestionType, Question, Answer, ReportType, Report, DiscordRole,Lobby , LobbyType, LobbyCategory, LobbyPlayer
+from kwiss_it.models import Picture, UserDescription, UserPicture, UserLastSeen, Score, State, Category, Score_Category, QuestionType, Question, Answer, ReportType, Report, DiscordRole,Lobby , LobbyType, LobbyCategory, LobbyUser
 
 admin.site.register(Picture)
 admin.site.register(UserDescription)
@@ -17,5 +17,5 @@ admin.site.register(Report)
 admin.site.register(DiscordRole)
 admin.site.register(Lobby)
 admin.site.register(LobbyType)
-admin.site.register(LobbyPlayer)
+admin.site.register(LobbyUser)
 admin.site.register(LobbyCategory)

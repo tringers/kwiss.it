@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from rest_framework.pagination import PageNumberPagination
 
-from .models import LobbyType, Lobby, LobbyPlayer, LobbyQuestions, Category, QuestionType, Question, Answer
+from .models import LobbyType, Lobby, LobbyUser, LobbyQuestions, Category, QuestionType, Question, Answer
 from rest_framework import serializers, viewsets, mixins, generics
 
 
@@ -35,17 +35,17 @@ class LobbyView(viewsets.ReadOnlyModelViewSet):
 		return queryset
 
 
-class LobbyPlayerSerializer(serializers.ModelSerializer):
+class LobbyUserSerializer(serializers.ModelSerializer):
 	first_name = serializers.SlugRelatedField(source='Uid', read_only=True, slug_field='first_name')
 
 	class Meta:
-		model = LobbyPlayer
+		model = LobbyUser
 		fields = ['first_name', 'LPready']
 
 
-class LobbyPlayerView(viewsets.ReadOnlyModelViewSet):
-	queryset = LobbyPlayer.objects.all()
-	serializer_class = LobbyPlayerSerializer
+class LobbyUserView(viewsets.ReadOnlyModelViewSet):
+	queryset = LobbyUser.objects.all()
+	serializer_class = LobbyUserSerializer
 
 	def get_queryset(self):
 		lobby_key = self.request.query_params.get('lkey')
@@ -60,7 +60,7 @@ class LobbyPlayerView(viewsets.ReadOnlyModelViewSet):
 			# Lobby not found
 			return Lobby.objects.none()
 
-		queryset = LobbyPlayer.objects.filter(Lid=lobby_objset[0])
+		queryset = LobbyUser.objects.filter(Lid=lobby_objset[0])
 		return queryset
 
 
