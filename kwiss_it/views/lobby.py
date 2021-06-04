@@ -3,6 +3,7 @@ from .helper import *
 
 def lobbylist_view(request):
 	check_old_heartbeat()
+	check_old_lobbys()
 	args = {
 		'errorMsg': '',
 		'infoMsg': ''
@@ -238,6 +239,14 @@ def check_old_heartbeat():
 	# If thats the case remove user from lobby
 	lobbyplayer_objset = LobbyPlayer.objects.filter(LPLastHeartbeat__lt=(datetime.now() - timedelta(seconds=10)))
 	lobbyplayer_objset.delete()
+	return
+
+
+def check_old_lobbys():
+	lobbyplayer_objset = LobbyPlayer.objects.distinct()
+	lobby_objset = Lobby.objects.filter(~Q(Lid__in=lobbyplayer_objset))
+	#lobby_objset = Lobby.objects.difference(lobby_objset)
+	lobby_objset.delete()
 	return
 
 

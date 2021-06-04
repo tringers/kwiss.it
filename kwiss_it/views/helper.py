@@ -11,6 +11,7 @@ from django.http import JsonResponse, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
+from django.db.models import Q
 from ratelimit.decorators import ratelimit
 from lazysignup.decorators import allow_lazy_user, require_lazy_user, require_nonlazy_user
 from lazysignup.utils import is_lazy_user
