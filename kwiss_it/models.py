@@ -169,10 +169,12 @@ class Lobby(models.Model):
 # Remove old lobby if a new lobby is created or all player left/timeout
 
 class LobbyCategory(models.Model):
-	Lid =models.ForeignKey(Lobby, on_delete=models.CASCADE)
+	Lid = models.ForeignKey(Lobby, on_delete=models.CASCADE)
 	Cid = models.ForeignKey(Category, on_delete=models.CASCADE)
+
 	class Meta:
 		unique_together = ('Lid', 'Cid')
+
 
 class LobbyPlayer(models.Model):
 	Lid = models.ForeignKey(Lobby, on_delete=models.CASCADE)

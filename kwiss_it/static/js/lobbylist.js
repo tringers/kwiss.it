@@ -33,14 +33,35 @@ function getLobbys() {
                     let lobby_player = document.createElement('td');
                     let lobby_mode = document.createElement('td');
                     let lobby_join = document.createElement('td');
-                    let lobby_join_button = document.createElement('a');
-                    lobby_join_button.innerHTML = 'Beitreten';
-                    lobby_join_button.href = '/lobby/' + lobby.Lkey + '/';
-                    lobby_join_button.classList.add('btn');
-                    lobby_join_button.classList.add('btn-outline-primary');
-                    lobby_join_button.classList.add('btn-sm');
-                    lobby_join_button.classList.add('col-12');
-                    lobby_join_button.setAttribute('role', 'button');
+                    let lobby_join_button = null;
+
+                    if(lobby.Lprivate) {
+                        // If private Lobby, Button opens inputPassword window
+                        lobby_join_button = document.createElement('button');
+                        lobby_join_button.innerHTML = 'Beitreten';
+                        //lobby_join_button.href = '/lobby/' + lobby.Lkey + '/';
+                        lobby_join_button.classList.add('btn');
+                        lobby_join_button.classList.add('btn-outline-primary');
+                        lobby_join_button.classList.add('btn-sm');
+                        lobby_join_button.classList.add('col-12');
+                        lobby_join_button.setAttribute('role', 'button');
+                        lobby_join_button.setAttribute('data-bs-toggle', 'modal');
+                        lobby_join_button.setAttribute('data-bs-target', '#joinPrivate');
+                        lobby_join_button.addEventListener('click', () => {
+                            let passwd = document.getElementById('joinPrivate');
+                            passwd.setAttribute('data-lobbykey', lobby.Lkey);
+                        });
+                    } else {
+                        // If public Lobby, Button is a redirect
+                        lobby_join_button = document.createElement('a');
+                        lobby_join_button.innerHTML = 'Beitreten';
+                        lobby_join_button.href = '/lobby/' + lobby.Lkey + '/';
+                        lobby_join_button.classList.add('btn');
+                        lobby_join_button.classList.add('btn-outline-primary');
+                        lobby_join_button.classList.add('btn-sm');
+                        lobby_join_button.classList.add('col-12');
+                        lobby_join_button.setAttribute('role', 'button');
+                    }
 
                     lobby_private.innerHTML = lobby.Lprivate ? '&#128274' : '';
                     lobby_name.innerHTML = lobby.Lname;

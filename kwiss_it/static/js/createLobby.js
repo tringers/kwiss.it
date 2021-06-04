@@ -12,7 +12,7 @@ const pamin = 2;    //playeramountmin
 const pamax = 16;   //playeramountmax
 let maxpage = 1000;
 let page = 0;
-let pages = new Set();
+let categoryPages = new Map();
 let prevpage = 0;
 
 function toggle_page(pagereq, on) {
