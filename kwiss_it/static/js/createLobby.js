@@ -10,68 +10,93 @@ const tamin = 10;  //timeamountmin
 const tamax = 124; //timeamountmax
 const pamin = 2;    //playeramountmin
 const pamax = 16;   //playeramountmax
-let maxpage = 1000;
+let maxpage = 1;
 let page = 1;
 let pages = new Set();
 let prevpage = 1;
 
 function toggle_page(pagereq, on) {
     let rows = document.getElementsByClassName(pagereq.toString())
+    let descrows = document.getElementsByClassName("desc"+pagereq.toString())
     for (let i = 0; i < rows.length; i++) {
         if (on) {
             rows[i].setAttribute("hidden", "true");
+
         } else {
             rows[i].removeAttribute("hidden");
         }
     }
+    for (let i = 0; i< descrows.length; i++){
+        descrows[i].setAttribute("hidden", "true");
+    }
 }
-
-function tooltips() {
-    let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    })
+function show_desc(id){
+    let desc = document.getElementById(id);
+    desc.hidden = false;
 }
 
 function reloadCategory(reqpage = 1) {
-    let url = "/api/category/?page=" + reqpage;
-    console.log(pages);
+    if (reqpage>maxpage){
+        reqpage=maxpage;
+    } else if (reqpage <1){
+        reqpage = 1;
+    }
+    let url= api_url+ "/category/?page="+reqpage
     if (!pages.has(reqpage)) {
         fetch(url)
             .then(data => data.json()
                 .then(json => {
-                    if (json.results.length < 10) {
-                        maxpage = reqpage;
+                    if (maxpage == null) {
+                        if (json.count % 10 != 0) {
+                            maxpage = (json.count - (json.count % 10)) / 10 + 1;
+
+                        } else {
+                            maxpage = (json.count - (json.count % 10)) / 10
+                        }
                     }
                     if (json.results.length > 0) {
                         let table = document.getElementById("categorylist");
                         toggle_page(prevpage, false);
-                        let pagerows = new Set();
                         for (let i = 0; i < json.results.length; i++) {
                             let category = json.results[i];
-                            let row = document.createElement('tr');
-                            let category_name = document.createElement('td');
-                            let category_question_amount = document.createElement('td');
-                            let category_add_field = document.createElement('td');
-                            let category_add = document.createElement('input')
 
-                            category_name.innerHTML = category.Cname;
-                            category_question_amount.innerHTML = "TODO"; //TODO add question amount of category
-                            category_add.classList.add('form-check-input');
-                            category_add.type = 'checkbox';
-                            category_add.name = 'categories';
-                            category_add.value = category.Cid;
-                            category_add_field.appendChild(category_add);
-                            row.classList.add(reqpage.toString())
-                            row.appendChild(category_name);
-                            row.appendChild(category_question_amount);
-                            row.appendChild(category_add_field);
-                            row.setAttribute('data-bs-toggle', "tooltip")
-                            row.setAttribute("data-bs-placement", "top")
-                            row.setAttribute("title", category.Cdescription)
-                            table.appendChild(row);
-                            pagerows.add(row);
-                            tooltips();
+                            let row_content = document.createElement("tr");
+                            let row_desc = document.createElement("tr");
+
+                            row_content.classList.add(reqpage.toString());
+                            row_desc.classList.add("desc" + reqpage.toString());
+                            row_content.setAttribute("for_desc", "cat" + category.Cid.toString());
+                            row_desc.id = "cat" + category.Cid.toString();
+                            row_desc.hidden = true;
+
+                            let category_name = document.createElement("td");
+                            let category_qa = document.createElement("td");
+                            let category_choose = document.createElement("td");
+                            category_name.innerText = category.Cname;
+                            category_qa.innerText = "TODO"; //TODO add question amount to api
+
+                            let chk_choose = document.createElement("input");
+                            chk_choose.type = "checkbox";
+                            chk_choose.name = "categories";
+                            chk_choose.classList.add("form-check-input");
+                            chk_choose.value = category.Cid.toString();
+                            category_choose.appendChild(category_choose);
+
+                            row_content.appendChild(category_name);
+                            row_content.appendChild(category_qa);
+                            row_content.appendChild(category_choose);
+
+                            let td_desc = document.createElement("td");
+                            td_desc.setAttribute("colspan", "3");
+                            td_desc.innerText = category.Cdescription;
+                            row_desc.appendChild(td_desc);
+
+                            row_content.addEventListener("click", () => {
+                                show_desc(row_content.for_desc)
+                            })
+                            table.appendChild(row_content);
+                            table.appendChild(row_desc);
+
                         }
                         pages.add(reqpage)
                         prevpage = reqpage;

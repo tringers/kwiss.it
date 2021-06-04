@@ -115,9 +115,10 @@
 			{# Note: das soll durch JS mithilfe der API nachgefüllt werden. mir ist kein besseres format eingefallen, aber das ausfüllen kann ich erst machen wenn die grundlegende api steht [by Sascha] #}
 			<div class="mb-4 form-group">
 				<label>Frageauswahl:</label>
-				<table class="table table-striped">
+				<table class="table table-striped accordion">
 					<thead>
-					<tr>
+					<tr data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top">
+						<th></th>
 						<th scope="col">Kategorien Namen</th>
 						<th scope="col">Anzahl Fragen</th>
 						<th scope="col">Ausgewählt</th>
