@@ -158,6 +158,8 @@ class Lobby(models.Model):
 	def check_authtoken(self, authtoken):
 		return self.Lauthtoken == authtoken
 
+	def __str__(self):
+		return self.Lname
 
 # Player joining lobby -> currentplayer +1 -> load questions
 # Player leaving lobby/or timeout -> currentplayer -1 - unload questions

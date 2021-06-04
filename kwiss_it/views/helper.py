@@ -4,6 +4,7 @@ import re
 import string
 import uuid
 from datetime import datetime
+from typing import List, Union
 from urllib.parse import unquote
 
 from django.http import JsonResponse
@@ -14,7 +15,7 @@ from ratelimit.decorators import ratelimit
 from lazysignup.decorators import allow_lazy_user, require_lazy_user, require_nonlazy_user
 from lazysignup.utils import is_lazy_user
 
-from ..models import UserLastSeen, UserPrivate, UserPicture, UserDescription, Picture, Lobby, LobbyPlayer, LobbyType, Question, LobbyQuestions
+from ..models import UserLastSeen, UserPrivate, UserPicture, UserDescription, Picture, Lobby, LobbyPlayer, LobbyType, Question, LobbyQuestions,LobbyCategory,Category
 
 
 forbidden_usernames = [
@@ -35,6 +36,14 @@ def check_valid_chars(inputStr: str) -> bool:
 		return False
 	return True
 
+def choose_random(lst:List,k:int) -> Union[List,bool]:
+	if len(lst)<k:
+		return False
+	random.shuffle(lst)
+	res=[]
+	for i in range(k):
+		res.append(lst[i])
+	return res
 
 def generate_lobby_key():
 	key_int = random.randint(pow(16, 5), pow(16, 6) - 1)

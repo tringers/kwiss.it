@@ -120,12 +120,11 @@ def createlobby_view(request):
 				args["errorMsg"] = 'Es ist ein Fehler bei der Lobbyerstellung aufgetreten. Bitte in wenigen Minuten erneut probieren.'
 				return createlobby_end(request, args)
 
-	questions = Question.objects.all()
+
 	usedquestions =[]
 	for cat in inputCategories:
-		usedquestions.extend(questions.filter(Cid=cat).values_list('Qid', flat=True))
-	pass
-	usedquestions = random.choices(usedquestions, k=question_amount)
+		usedquestions.extend(Question.objects.filter(Cid=cat).values_list('Qid', flat=True))
+	questions_selected = choose_random(usedquestions,question_amount)
 
 	if len(usedquestions) < question_amount or len(usedquestions) > question_amount:
 		args["errorMsg"] = 'In den Ausgewählten Kategorien gibt es nicht genug Fragen um die gewollte Fragenmenge zu nutzen.'
@@ -138,9 +137,9 @@ def createlobby_view(request):
 		Lkey=lobby_key, Lprivate=inputLobbytype, Lquestionamount=inputQuestionamount, Ltimeamount=inputTimeamount,
 	)
 	lobby_obj.save()
-
-	##TODO hier ändern aus irgendwelchen gründen sich die Qid die in usedQuestions sind und ich verstehe nicht why HELLLP
-	for q in usedquestions:
+	for c in inputCategories:
+		lc = LobbyCategory.objects.create(Lid=lobby_obj,Cid=Category.objects.get(Cid=c))
+	for q in questions_selected:
 		lq=LobbyQuestions.objects.create(Lid=lobby_obj,Qid= Question.objects.get(Qid=q))
 		lq.save()
 
