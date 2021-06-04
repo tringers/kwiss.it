@@ -1,6 +1,6 @@
 from django.db.models import Q
 from .models import LobbyType, Lobby, LobbyPlayer, LobbyQuestions, Category, QuestionType, Question, Answer
-from rest_framework import serializers, viewsets
+from rest_framework import serializers, viewsets, mixins, generics
 
 
 # Lobby
@@ -69,40 +69,12 @@ class LobbyTypeView(viewsets.ReadOnlyModelViewSet):
 class CategorySerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Category
-		fields = ['Cname', 'Cdescription', 'STid', 'Cupvotes', 'Cdownvotes','Cid']
+		fields = ['Cname', 'Cdescription', 'STid', 'Cupvotes', 'Cdownvotes', 'Cid']
 
 
-class CategoryView(viewsets.ReadOnlyModelViewSet):
-	##TODO die apie anfrage zur category muss entweder die anzahl der fragen in der Kategorie ausgeben oder wir brauchen eine extra api anfrage /category/{{STid}} um mehr infos auslesen zu können über die kategorie
+class CategoryView(mixins.ListModelMixin, viewsets.GenericViewSet):
 	queryset = Category.objects.all()
 	serializer_class = CategorySerializer
-
-	def get_queryset(self):
-		page:str = self.request.query_params.get('page')
-		max=self.request.query_params.get('max')
-		last_cname = self.request.query_params.get('lastcat')
-		queryset = Category.objects.all().order_by('Cname')
-
-		length = queryset.count()
-		upperlimit = 15
-		lowerlimit = 0
-
-		if last_cname:
-			last_category = queryset.filter(Cname=last_cname)
-			if len(last_category):
-				queryset = queryset.filter(Cname__gt=last_cname)
-
-		if page:
-			if page.isnumeric():
-				page=int(page)
-				pageposition = page * 15;
-				if pageposition > length:
-					pageposition = length - (length % 15)
-				lowerlimit=pageposition
-				upperlimit=pageposition+15
-
-		queryset = queryset[lowerlimit:upperlimit]
-		return queryset
 
 
 # Questions
