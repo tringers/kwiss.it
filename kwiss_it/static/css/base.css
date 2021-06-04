@@ -44,3 +44,8 @@ p.word-break {
 .no-scrollbar > * {
   overflow: hidden;
 }
+
+td.selection-hover:hover {
+  --bs-table-accent-bg: rgba(0, 0, 0, 0.12);
+  color: #292d32;
+}

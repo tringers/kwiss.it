@@ -72,6 +72,9 @@ function refreshTable() {
 
         data_name.innerHTML = category.Cname;
         data_amount.innerHTML = category.Camount;
+        data_amount.classList.add('text-center');
+        data_select.classList.add('selection-hover');
+        data_select.classList.add('text-center');
 
         data_select_checkbox.type = "checkbox";
         data_select_checkbox.name = "categories";
@@ -93,6 +96,7 @@ function refreshTable() {
             categories[cat_names[i]].selected = data_select_checkbox.checked;
             updateCategorySelect();
         });
+
         data_select_checkbox.addEventListener('change', () => {
             categories[cat_names[i]].selected = data_select_checkbox.checked;
             updateCategorySelect();
@@ -124,8 +128,9 @@ function refreshTable() {
         data_amount.addEventListener("click", (e) => {
             row_description.hidden = !row_description.hidden;
         });
-        let row_filler =document.createElement("tr");
-        row_filler.hidden=true;
+
+        let row_filler = document.createElement("tr");
+        row_filler.hidden = true;
         tbody.appendChild(row_filler);
     }
 }
