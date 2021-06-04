@@ -248,7 +248,6 @@ def check_old_lobbys():
 		~Q(Lid__in=lobbyplayer_objset) &
 		Q(Lcreated__lte=(datetime.now() - timedelta(seconds=15)))
 	)
-	#lobby_objset = Lobby.objects.difference(lobby_objset)
 	lobby_objset.delete()
 	return
 

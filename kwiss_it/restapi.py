@@ -101,6 +101,7 @@ class QuestionView(viewsets.ReadOnlyModelViewSet):
 
 	def get_queryset(self):
 		question_id = self.request.query_params.get('qid')
+		category_id = self.request.query_params.get('cid')
 
 		if question_id:
 			# Return single question
@@ -108,6 +109,13 @@ class QuestionView(viewsets.ReadOnlyModelViewSet):
 			if len(queryset) < 1:
 				return Question.objects.none()
 			return queryset[0]
+
+		if category_id:
+			queryset = Question.objects.filter(Cid=category_id)
+			if len(queryset) < 1:
+				return Question.objects.none()
+			return queryset
+
 		return Question.objects.none()
 
 

@@ -17,7 +17,7 @@ let prevpage = 1;
 
 function toggle_page(pagereq, on) {
     let rows = document.getElementsByClassName(pagereq.toString())
-    let descrows = document.getElementsByClassName("desc"+pagereq.toString())
+    let descrows = document.getElementsByClassName("desc" + pagereq.toString())
     for (let i = 0; i < rows.length; i++) {
         if (on) {
             rows[i].setAttribute("hidden", "true");
@@ -26,22 +26,23 @@ function toggle_page(pagereq, on) {
             rows[i].removeAttribute("hidden");
         }
     }
-    for (let i = 0; i< descrows.length; i++){
+    for (let i = 0; i < descrows.length; i++) {
         descrows[i].setAttribute("hidden", "true");
     }
 }
-function show_desc(id){
+
+function show_desc(id) {
     let desc = document.getElementById(id);
     desc.hidden = false;
 }
 
 function reloadCategory(reqpage = 1) {
-    if (reqpage>maxpage){
-        reqpage=maxpage;
-    } else if (reqpage <1){
+    if (reqpage > maxpage) {
+        reqpage = maxpage;
+    } else if (reqpage < 1) {
         reqpage = 1;
     }
-    let url= api_url+ "/category/?page="+reqpage
+    let url = api_url + "/category/?page=" + reqpage
     if (!pages.has(reqpage)) {
         fetch(url)
             .then(data => data.json()
