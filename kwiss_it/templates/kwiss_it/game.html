@@ -1,0 +1,26 @@
+{% extends "kwiss_it/base.html" %}
+{% load static %}
+{% load i18n lazysignup_tags %}
+
+{% block content %}
+	<div class="container">
+		<div class="col-lg-8 mx-auto p-3 invisible">
+			<small class="" id="category"></small>
+		</div>
+		<div class="col-lg-8 mx-auto p-3 invisible">
+			<h3 id="question"></h3>
+		</div>
+		<div class=" container invisible">
+			<div id="answers"></div>
+		</div>
+		<div class="btn-group invisible" role="group">
+			<button type="button" class="btn btn-outline-danger" id="report">Melden</button>
+			<button type="button" class="btn btn-outline-success" id="upvote">&#x1f44d;</button>
+			<button type="button" class="btn btn-outline-danger" id="downvote">&#x1F44E;</button>
+		</div>
+	</div>
+{% endblock %}
+{& block script %}
+<script src="{% static 'js/game.min.js' %}"></script>
+
+{& endblock %}
