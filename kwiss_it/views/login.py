@@ -21,12 +21,13 @@ def login_view(request, args=None):
 			args["errorMsg"] = "Benutzernamen beinhaltet nicht valide Zeichen"
 			return render(request, 'kwiss_it/login.html', args)
 
+		if is_lazy_user(request.user):
+			logout(request)
+			# args['errorMsg'] = 'Mit temporärem Benutzer angemeldet. Bitte registrieren.'
+			# return render(request, 'kwiss_it/login.html', args)
+
 		if request.user.is_authenticated:
 			args['errorMsg'] = 'Bereits angemeldet.'
-			return render(request, 'kwiss_it/login.html', args)
-
-		if is_lazy_user(request.user):
-			args['errorMsg'] = 'Mit temporärem Benutzer angemeldet. Bitte registrieren.'
 			return render(request, 'kwiss_it/login.html', args)
 
 		if not buttonLogin or not inputUsername or not inputPassword:
