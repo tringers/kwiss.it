@@ -124,6 +124,9 @@ function refreshTable() {
         data_amount.addEventListener("click", (e) => {
             row_description.hidden = !row_description.hidden;
         });
+        let row_filler =document.createElement("tr");
+        row_filler.hidden=true;
+        tbody.appendChild(row_filler);
     }
 }
 
