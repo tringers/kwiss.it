@@ -32,6 +32,7 @@ def createlobby_view(request):
 	inputPlayeramount: str = request.POST.get('playeramountfield')
 	inputQuestionamount: list = request.POST.get('questionamountfield')
 	inputCategories = request.POST.getlist('categories')
+	inputPending = request.POST.get("pending")
 	# Check if user is logged in
 	if not request.user.is_authenticated:
 		args['errorMsg'] = 'User muss angemeldet sein um eine Lobby erstellen zu können'
@@ -125,8 +126,13 @@ def createlobby_view(request):
 				return createlobby_end(request, args)
 
 	usedquestions = []
+	stateapproved = State.objects.filter(STid=1)
+	statepending = State.objects.filter(~Q(STid=2))
 	for cat in inputCategories:
-		usedquestions.extend(Question.objects.filter(Cid=cat).values_list('Qid', flat=True))
+		if inputPending:
+			usedquestions.extend(Question.objects.filter(Q(Cid=cat) & Q(STid__in=statepending)).values_list('Qid', flat=True))
+		else:
+			usedquestions.extend(Question.objects.filter(Q(Cid=cat) & Q(STid__in=statepending)).filter().values_list('Qid', flat=True))
 	questions_selected = choose_random(usedquestions, question_amount)
 
 	if len(usedquestions) < question_amount or len(usedquestions) > question_amount:
@@ -230,8 +236,8 @@ def lobby_heartbeat_view(request, lobby_key):
 		})
 
 	return JsonResponse({
-			'status': 403
-		})
+		'status': 403
+	})
 
 
 def check_old_heartbeat():
