@@ -121,11 +121,36 @@ class CategoryView(mixins.ListModelMixin, viewsets.GenericViewSet):
 
 	def get_queryset(self):
 		state_id = self.request.query_params.get('stid')
+		approved = self.request.query_params.get('approved')
+		denied = self.request.query_params.get('denied')
+		pending = self.request.query_params.get('pending')
+
+		in_filter = []
+
+		queryset = Category.objects.all()
+
+		if approved is None:
+			approved = 'true'
+
+		if denied is None:
+			denied = 'false'
+
+		if pending is None:
+			pending = 'false'
 
 		if state_id:
-			return Category.objects.filter(STid=state_id)
+			queryset = queryset.filter(STid=state_id)
+		else:
+			if approved.lower() == 'true':
+				in_filter.append('1')
+			if denied.lower() == 'true':
+				in_filter.append('2')
+			if pending.lower() == 'true':
+				in_filter.append('3')
+			queryset = queryset.filter(STid__in=in_filter)
 
-		return Category.objects.filter(STid=1)
+		return queryset
+
 
 
 # Questions
