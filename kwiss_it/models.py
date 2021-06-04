@@ -177,7 +177,7 @@ class LobbyCategory(models.Model):
 		unique_together = ('Lid', 'Cid')
 
 
-class LobbyPlayer(models.Model):
+class LobbyUser(models.Model):
 	Lid = models.ForeignKey(Lobby, on_delete=models.CASCADE)
 	Uid = models.ForeignKey(User, on_delete=models.CASCADE)
 	LPready = models.BooleanField(default=False)

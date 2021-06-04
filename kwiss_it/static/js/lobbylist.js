@@ -1,7 +1,7 @@
 // Get Lobbytypes first
 list_lobbytype = [];
 
-fetch('/api/lobbytype/')
+fetch(api_url + '/lobbytype/')
     .then(data => data.json()
         .then(json => {
             for (let i = 0; i < json.length; i++) {
@@ -19,7 +19,7 @@ fetch('/api/lobbytype/')
     });
 
 function getLobbys() {
-    fetch('/api/lobby/')
+    fetch(api_url + '/lobby/')
         .then(data => data.json()
             .then(json => {
                 let table_body = document.getElementById('table-body');
@@ -65,6 +65,7 @@ function getLobbys() {
 
                     lobby_private.innerHTML = lobby.Lprivate ? '&#128274' : '';
                     lobby_name.innerHTML = lobby.Lname;
+                    // TODO: Count player per lobby
                     lobby_player.innerHTML = '0 / ' + lobby.Lplayerlimit;
                     lobby_mode.innerHTML = list_lobbytype[lobby.Ltype] ? list_lobbytype[lobby.Ltype] : lobby.Ltype;
                     lobby_join.appendChild(lobby_join_button);
