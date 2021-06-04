@@ -2,10 +2,19 @@
 
 {% block content %}
     <meta id="lobby-data" data-lobby-key="{{ lobby_key }}" data-auth-token="{{ auth_token }}">
-    <div id="question_data" hidden></div>
-    <div id="answer_data" hidden></div>
+    <div id="question-data" hidden></div>
+    <div id="answer-data" hidden></div>
 
     <div class="col-lg-8 mx-auto p-3" id="lobby">
+        <div class="alert alert-danger d-flex align-items-center" role="alert" hidden id="lobby-error">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+                <use xlink:href="#exclamation-triangle-fill"/>
+            </svg>
+            <div id="lobby-error-content">
+                An example danger alert with an icon
+            </div>
+        </div>
+
         <h1>Lobby: {{ lobby_name }}</h1>
 
         <table class="table table-hover align-middle">
@@ -22,7 +31,7 @@
             </tr>
             </tbody>
         </table>
-    {# TODO: Button for being ready and sending ready to server #}
+        {# TODO: Button for being ready and sending ready to server #}
     </div>
     {# TODO: Timedrift im Race Mode erzeugt Report, also wenn der Spieler viel schneller war als der Server #}
     {# TODO: Spieler sendet Ingame alle 50-100ms einen Heartbeat. Workaround für ohne Websocket #}
@@ -33,8 +42,8 @@
 {% block bodyscript %}
     <script>
         const lobby_key = document.getElementById('lobby-data').getAttribute('data-lobby-key');
-        const question_data = document.getElementById('question_data');
-        const answer_data = document.getElementById('answer_data');
+        const question_data = document.getElementById('question-data');
+        const answer_data = document.getElementById('answer-data');
         let first_name;
         let heartbeat_error = 0;
 
@@ -43,10 +52,16 @@
                 .then((data) => {
                     heartbeat_error = 0;
                     data.json().then(json => {
-                        if(parseInt(json.status) === 200) {
+                        if (parseInt(json.status) === 200) {
                             first_name = json.name;
                         } else {
-                            // TODO: Show error message and redirect to lobbylist
+                            let lobby_error = document.getElementById('lobby-error');
+                            let lobby_error_content = document.getElementById('lobby-error-content');
+                            lobby_error_content.innerHTML = "Verbindung unterbrochen. Zu lange keine Verbindung zur Lobby beibehalten. Leite zurück zur Lobbyliste.";
+                            lobby_error.hidden = false;
+                            setTimeout(() => {
+                                window.location.href = base_url + '/lobbylist';
+                            }, 5000);
                         }
                     })
                 })
@@ -73,9 +88,9 @@
                             row_ready.innerHTML = ready ? 'Bereit' : 'Nicht bereit';
 
                             // Set design
-                            if(player_name === first_name)
+                            if (player_name === first_name)
                                 row.classList.add('table-info');
-                            else if(ready)
+                            else if (ready)
                                 row.classList.add('table-success');
                             else
                                 row.classList.add('table-danger');
@@ -86,7 +101,7 @@
                             row.appendChild(row_name);
                             row.appendChild(row_ready);
 
-                            if(!cleared) {
+                            if (!cleared) {
                                 table_body.innerHTML = "";
                                 cleared = true;
                             }
@@ -97,43 +112,43 @@
 
         function fetchQuestions() {
             fetch(api_url + '/lobbyquestions/?lkey=' + lobby_key)
-            .then(data => data.json()
-            .then(json => {
-                for(let i = 0; i < json.length; i++) {
-                    let qid = json[i];
+                .then(data => data.json()
+                    .then(json => {
+                        for (let i = 0; i < json.length; i++) {
+                            let qid = json[i];
 
-                    fetch(api_url + '/question/?qid=' + qid)
-                    .then(qData => qData.json()
-                    .then(qJson => {
-                        let question = document.createElement('meta');
+                            fetch(api_url + '/question/?qid=' + qid)
+                                .then(qData => qData.json()
+                                    .then(qJson => {
+                                        let question = document.createElement('meta');
 
-                        question.id = 'question-' + i;
-                        question.classList.add('question-data');
-                        question.setAttribute('data-qid', qid);
-                        question.setAttribute('data-qtext', qJson[0].Qtext);
-                        question.setAttribute('data-qtype', qJson[0].QTid);
-                        question_data.appendChild(question);
+                                        question.id = 'question-' + i;
+                                        question.classList.add('question-data');
+                                        question.setAttribute('data-qid', qid);
+                                        question.setAttribute('data-qtext', qJson[0].Qtext);
+                                        question.setAttribute('data-qtype', qJson[0].QTid);
+                                        question_data.appendChild(question);
 
-                        fetch(api_url + '/answer/?qid=' + qid)
-                        .then(aData => aData.json()
-                        .then(aJson => {
-                            for(let j = 0; j < aJson.length; j++) {
-                                let answer = document.createElement('meta');
+                                        fetch(api_url + '/answer/?qid=' + qid)
+                                            .then(aData => aData.json()
+                                                .then(aJson => {
+                                                    for (let j = 0; j < aJson.length; j++) {
+                                                        let answer = document.createElement('meta');
 
-                                answer.id = 'answer-' + i + '-' + j;
-                                answer.classList.add('answer-data');
-                                answer.setAttribute('for', 'question-' + i);
-                                answer.setAttribute('data-qid', qid);
-                                answer.setAttribute('data-anum', aJson[j].Anum);
-                                answer.setAttribute('data-atext', aJson[j].Atext);
+                                                        answer.id = 'answer-' + i + '-' + j;
+                                                        answer.classList.add('answer-data');
+                                                        answer.setAttribute('for', 'question-' + i);
+                                                        answer.setAttribute('data-qid', qid);
+                                                        answer.setAttribute('data-anum', aJson[j].Anum);
+                                                        answer.setAttribute('data-atext', aJson[j].Atext);
 
-                                answer_data.appendChild(answer);
-                            }
-                        }));
+                                                        answer_data.appendChild(answer);
+                                                    }
+                                                }));
+                                    }));
+
+                        }
                     }));
-
-                }
-            }));
         }
 
         setTimeout(fetchQuestions, 2000);
