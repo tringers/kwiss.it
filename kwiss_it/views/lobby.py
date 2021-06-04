@@ -130,7 +130,7 @@ def createlobby_view(request):
 	questions_selected = choose_random(usedquestions, question_amount)
 
 	if len(usedquestions) < question_amount or len(usedquestions) > question_amount:
-		args["errorMsg"] = 'In den Ausgewählten Kategorien gibt es nicht genug Fragen um die gewollte Fragenmenge zu nutzen.'
+		args["errorMsg"] = 'Es stehen nicht genug Fragen durch die ausgewählten Kategorien zur Verfügung.'
 		return createlobby_end(request, args)
 
 	# Create lobby
