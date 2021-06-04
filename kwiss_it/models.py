@@ -138,6 +138,8 @@ class Lobby(models.Model):
 	Lauthtoken = models.CharField(max_length=64, help_text='Auth token for Link join. Should be contained in link', null=True)
 	Lcreated = models.DateTimeField(auto_now=True)
 	Lstarted = models.BooleanField(default=False)
+	LcurrentQuestion = models.PositiveIntegerField(default=0)
+	LcurrentCorrect = models.PositiveSmallIntegerField(default=0)
 
 	def is_public_lobby(self):
 		return not self.Lprivate
@@ -149,8 +151,8 @@ class Lobby(models.Model):
 		return self.Lprivate and (self.Lpassword is None or self.Lpassword == '')
 
 	def is_full(self):
-		lobbyplayer_objset = LobbyPlayer.objects.filter(Lid=self)
-		return self.Lplayerlimit <= len(lobbyplayer_objset)
+		lobbyuser_objset = LobbyUser.objects.filter(Lid=self)
+		return self.Lplayerlimit <= len(lobbyuser_objset)
 
 	def check_password(self, password):
 		return self.Lpassword == password
@@ -160,6 +162,7 @@ class Lobby(models.Model):
 
 	def __str__(self):
 		return self.Lname
+
 
 # Player joining lobby -> currentplayer +1 -> load questions
 # Player leaving lobby/or timeout -> currentplayer -1 - unload questions
@@ -177,14 +180,17 @@ class LobbyCategory(models.Model):
 		unique_together = ('Lid', 'Cid')
 
 
-class LobbyPlayer(models.Model):
+class LobbyUser(models.Model):
 	Lid = models.ForeignKey(Lobby, on_delete=models.CASCADE)
 	Uid = models.ForeignKey(User, on_delete=models.CASCADE)
 	LPready = models.BooleanField(default=False)
 	LPLastHeartbeat = models.DateTimeField(auto_now_add=True)
+	LPScore = models.IntegerField(default=0)
+	LPStreak = models.IntegerField(default=1)
 
 
 class LobbyQuestions(models.Model):
+	LQid = models.BigAutoField(primary_key=True)
 	Lid = models.ForeignKey(Lobby, on_delete=models.CASCADE)
 	Qid = models.ForeignKey(Question, on_delete=models.SET_NULL, null=True)
 

@@ -6,7 +6,7 @@ from . import restapi
 
 router = routers.DefaultRouter()
 router.register(r'lobby', restapi.LobbyView)
-router.register(r'lobbyplayer', restapi.LobbyPlayerView)
+router.register(r'lobbyuser', restapi.LobbyUserView)
 router.register(r'lobbytype', restapi.LobbyTypeView)
 router.register(r'category', restapi.CategoryView)
 router.register(r'question', restapi.QuestionView)
@@ -48,6 +48,5 @@ urlpatterns = [
 	re_path(r'lobby/(?P<lobby_key>[0-9A-F]{6})/$', lobby.lobby_view, name='lobby'),
 	re_path(r'lobby/(?P<lobby_key>[0-9A-F]{6})/(?P<auth_token>[0-9a-f\-]{0,36})/$', lobby.lobby_view, name='lobby'),
 	re_path(r'lobby/heartbeat/(?P<lobby_key>[0-9A-F]{6})/$', lobby.lobby_heartbeat_view, name='lobby_heartbeat'),
-
 	path('api/', include(router.urls)),
 ]

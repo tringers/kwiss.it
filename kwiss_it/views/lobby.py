@@ -166,8 +166,8 @@ def join_lobby(Lkey, user_obj: User, password=None, authtoken=None):
 		return [False, 'Lobby konnte nicht gefunden werden.']
 
 	# Get Lobbys of Player
-	lobbyplayer_objset = LobbyPlayer.objects.filter(Uid=user_obj)
-	if len(lobbyplayer_objset) > 0:
+	lobbyuser_objset = LobbyUser.objects.filter(Uid=user_obj)
+	if len(lobbyuser_objset) > 0:
 		return [False, 'Spieler ist bereits in einer Lobby.']
 
 	lobby_obj = lobby_objset[0]
@@ -182,8 +182,8 @@ def join_lobby(Lkey, user_obj: User, password=None, authtoken=None):
 		test_valid = (lobby_obj.check_password(password) or lobby_obj.check_authtoken(authtoken))
 
 	if test_valid:
-		lobbyplayer_obj = LobbyPlayer.objects.create(Lid=lobby_obj, Uid=user_obj)
-		lobbyplayer_obj.save()
+		lobbyuser_obj = LobbyUser.objects.create(Lid=lobby_obj, Uid=user_obj)
+		lobbyuser_obj.save()
 		return [True, 'Lobby erfolgreich beigetreten.']
 	else:
 		return [False, 'Lobby konnte nicht beigetreten werden.']
@@ -216,11 +216,11 @@ def lobby_heartbeat_view(request, lobby_key):
 	check_old_heartbeat()
 	user = request.user
 
-	lobbyplayer_objset = LobbyPlayer.objects.filter(Lid__Lkey=lobby_key, Uid=user)
-	if len(lobbyplayer_objset) > 0:
-		lobbyplayer_obj = lobbyplayer_objset[0]
-		lobbyplayer_obj.LPLastHeartbeat = datetime.now()
-		lobbyplayer_obj.save()
+	lobbyuser_objset = LobbyUser.objects.filter(Lid__Lkey=lobby_key, Uid=user)
+	if len(lobbyuser_objset) > 0:
+		lobbyuser_obj = lobbyuser_objset[0]
+		lobbyuser_obj.LPLastHeartbeat = datetime.now()
+		lobbyuser_obj.save()
 		name = user.username
 		if user.first_name != '':
 			name = user.first_name
@@ -237,15 +237,15 @@ def lobby_heartbeat_view(request, lobby_key):
 def check_old_heartbeat():
 	# Check if someone is still in Lobby but heartbeat missing for 15s
 	# If thats the case remove user from lobby
-	lobbyplayer_objset = LobbyPlayer.objects.filter(LPLastHeartbeat__lt=(datetime.now() - timedelta(seconds=10)))
-	lobbyplayer_objset.delete()
+	lobbyuser_objset = LobbyUser.objects.filter(LPLastHeartbeat__lt=(datetime.now() - timedelta(seconds=10)))
+	lobbyuser_objset.delete()
 	return
 
 
 def check_old_lobbys():
-	lobbyplayer_objset = LobbyPlayer.objects.distinct()
+	lobbyuser_objset = LobbyUser.objects.distinct()
 	lobby_objset = Lobby.objects.filter(
-		~Q(Lid__in=lobbyplayer_objset) &
+		~Q(Lid__in=lobbyuser_objset) &
 		Q(Lcreated__lte=(datetime.now() - timedelta(seconds=15)))
 	)
 	lobby_objset.delete()
