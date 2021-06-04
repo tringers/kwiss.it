@@ -2,8 +2,10 @@
 
 {% block content %}
     <meta id="lobby-data" data-lobby-key="{{ lobby_key }}" data-auth-token="{{ auth_token }}">
+    <div id="question_data" hidden></div>
+    <div id="answer_data" hidden></div>
 
-    <div class="col-lg-8 mx-auto p-3">
+    <div class="col-lg-8 mx-auto p-3" id="lobby">
         <h1>Lobby: {{ lobby_name }}</h1>
 
         <table class="table table-hover align-middle">
@@ -31,6 +33,8 @@
 {% block bodyscript %}
     <script>
         const lobby_key = document.getElementById('lobby-data').getAttribute('data-lobby-key');
+        const question_data = document.getElementById('question_data');
+        const answer_data = document.getElementById('answer_data');
         let first_name;
         let heartbeat_error = 0;
 
@@ -90,5 +94,49 @@
                         }
                     }));
         }, 500);
+
+        function fetchQuestions() {
+            fetch(api_url + '/lobbyquestions/?lkey=' + lobby_key)
+            .then(data => data.json()
+            .then(json => {
+                for(let i = 0; i < json.length; i++) {
+                    let qid = json[i];
+
+                    fetch(api_url + '/question/?qid=' + qid)
+                    .then(qData => qData.json()
+                    .then(qJson => {
+                        let question = document.createElement('meta');
+
+                        question.id = 'question-' + i;
+                        question.classList.add('question-data');
+                        question.setAttribute('data-qid', qid);
+                        question.setAttribute('data-qtext', qJson[0].Qtext);
+                        question.setAttribute('data-qtype', qJson[0].QTid);
+                        question_data.appendChild(question);
+
+                        fetch(api_url + '/answer/?qid=' + qid)
+                        .then(aData => aData.json()
+                        .then(aJson => {
+                            for(let j = 0; j < aJson.length; j++) {
+                                let answer = document.createElement('meta');
+
+                                answer.id = 'answer-' + i + '-' + j;
+                                answer.classList.add('answer-data');
+                                answer.setAttribute('for', 'question-' + i);
+                                answer.setAttribute('data-qid', qid);
+                                answer.setAttribute('data-anum', aJson[j].Anum);
+                                answer.setAttribute('data-atext', aJson[j].Atext);
+
+                                answer_data.appendChild(answer);
+                            }
+                        }));
+                    }));
+
+                }
+            }));
+        }
+
+        setTimeout(fetchQuestions, 2000);
+
     </script>
 {% endblock %}

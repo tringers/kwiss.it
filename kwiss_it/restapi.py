@@ -75,6 +75,27 @@ class LobbyTypeView(viewsets.ReadOnlyModelViewSet):
 	serializer_class = LobbyTypeSerializer
 
 
+class LobbyQuestionsSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = LobbyQuestions
+		fields = ['Qid']
+
+
+class LobbyQuestionsView(viewsets.ReadOnlyModelViewSet):
+	queryset = LobbyQuestions.objects.all()
+	serializer_class = LobbyQuestionsSerializer
+
+	def get_queryset(self):
+		lobby_key = self.request.query_params.get('lkey')
+		lobby_objset = Lobby.objects.filter(Lkey=lobby_key)
+
+		if len(lobby_objset) > 0:
+			queryset = LobbyQuestions.objects.filter(Lid=lobby_objset[0])
+			return queryset
+
+		return LobbyQuestions.objects.none()
+
+
 # Category
 class CategorySerializer(serializers.ModelSerializer):
 	class Meta:
@@ -108,7 +129,7 @@ class QuestionView(viewsets.ReadOnlyModelViewSet):
 			queryset = Question.objects.filter(Qid=question_id)
 			if len(queryset) < 1:
 				return Question.objects.none()
-			return queryset[0]
+			return queryset
 
 		if category_id:
 			queryset = Question.objects.filter(Cid=category_id)
@@ -134,4 +155,21 @@ class QuestionTypeView(viewsets.ReadOnlyModelViewSet):
 class AnswerSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Answer
-		fields = ['']
+		fields = ['Anum', 'Atext']
+
+
+class AnswerView(viewsets.ReadOnlyModelViewSet):
+	queryset = Answer.objects.all()
+	serializer_class = AnswerSerializer
+
+	def get_queryset(self):
+		question_id = self.request.query_params.get('qid')
+
+		if question_id:
+			# Return single question
+			queryset = Answer.objects.filter(Qid=question_id)
+			if len(queryset) < 2:
+				return Answer.objects.none()
+			return queryset
+
+		return Answer.objects.none()
