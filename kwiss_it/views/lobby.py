@@ -244,7 +244,10 @@ def check_old_heartbeat():
 
 def check_old_lobbys():
 	lobbyplayer_objset = LobbyPlayer.objects.distinct()
-	lobby_objset = Lobby.objects.filter(~Q(Lid__in=lobbyplayer_objset))
+	lobby_objset = Lobby.objects.filter(
+		~Q(Lid__in=lobbyplayer_objset) &
+		Q(Lcreated__lte=(datetime.now() - timedelta(seconds=15)))
+	)
 	#lobby_objset = Lobby.objects.difference(lobby_objset)
 	lobby_objset.delete()
 	return
