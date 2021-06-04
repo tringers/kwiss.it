@@ -1,9 +1,10 @@
 from django.contrib.auth.models import User
 from django.db.models import Q
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
 
 from .models import LobbyType, Lobby, LobbyUser, LobbyQuestions, Category, QuestionType, Question, Answer
-from rest_framework import serializers, viewsets, mixins, generics
+from rest_framework import serializers, viewsets, mixins, generics, pagination
 
 
 # Lobby
@@ -103,10 +104,28 @@ class CategorySerializer(serializers.ModelSerializer):
 		fields = ['Cname', 'Cdescription', 'STid', 'Cupvotes', 'Cdownvotes', 'Cid']
 
 
+class CustomPagination(pagination.PageNumberPagination):
+	def get_paginated_response(self, data):
+		return Response({
+			'count': self.page.paginator.count,
+			'next': self.get_next_link(),
+			'previous': self.get_previous_link(),
+			'results': data
+		})
+
+
 class CategoryView(mixins.ListModelMixin, viewsets.GenericViewSet):
-	queryset = Category.objects.all().order_by('Cname')
+	queryset = Category.objects.all().order_by('STid').order_by('Cname')
 	serializer_class = CategorySerializer
-	pagination_class = PageNumberPagination
+	pagination_class = CustomPagination
+
+	def get_queryset(self):
+		state_id = self.request.query_params.get('stid')
+
+		if state_id:
+			return Category.objects.filter(STid=state_id)
+
+		return Category.objects.filter(STid=1)
 
 
 # Questions

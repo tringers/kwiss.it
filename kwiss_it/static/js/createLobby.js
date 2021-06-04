@@ -4,8 +4,8 @@ After changing code in here:
   Please run jsmin.bat or equivalent.
  */
 
-const qamax = 50;   //questionamountmax
 const qamin = 5;    //questionamountmin
+const qamax = 50;   //questionamountmax
 const tamin = 10;  //timeamountmin
 const tamax = 124; //timeamountmax
 const pamin = 2;    //playeramountmin
