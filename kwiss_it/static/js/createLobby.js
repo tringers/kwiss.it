@@ -12,13 +12,17 @@ const pamin = 2;    //playeramountmin
 const pamax = 16;   //playeramountmax
 let maxpage = 1000;
 let page = 0;
-let categoryPages = new Map();
+let pages = new Set();
 let prevpage = 0;
 
-function toggle_list(list, on) {
-    for (let i = 0; i < list.length; ++i) {
-        list[i].style.display = on ? '' : 'none';
-
+function toggle_page(pagereq, on) {
+    let rows = document.getElementsByClassName(pagereq.toString())
+    for (let i = 0; i < rows.length; i++) {
+        if (on) {
+            rows[i].setAttribute("hidden", "true")
+        } else {
+            rows[i].removeAttribute("hidden")
+        }
     }
 }
 
@@ -41,29 +45,27 @@ function renumberButtons() {
     posArray[2] = page <= 3 ? 3 : page;
     posArray[3] = page <= 3 ? 4 : page + 1;
     posArray[4] = page <= 3 ? 5 : page + 2;
-    for(let i= 0 ; i<5;i++){
-        btnArray[i].value=posArray[i];
-        btnArray[i].innerHTML=posArray[i];
+    for (let i = 0; i < 5; i++) {
+        btnArray[i].value = posArray[i];
+        btnArray[i].innerHTML = posArray[i];
     }
 
 }
 
-function reloadScoreboard(reqpage = 0) {
-
-
+function reloadCategory(reqpage = 0) {
     let url = "/api/category/?page=" + reqpage;
-    let content = categoryPages.get(reqpage);
-    if (content == undefined) {
+    console.log(pages)
+    if (pages.has(reqpage)) {
         fetch(url)
             .then(data => data.json()
                 .then(json => {
-                    if (json.length<15){
-                        maxpage=reqpage;
+                    if (json.length < 15) {
+                        maxpage = reqpage;
                     }
                     if (json.length > 0) {
                         let table = document.getElementById("categorylist");
-                        toggle_list(categoryPages.get(prevpage)|[],false);
-                        pagerows= new Set();
+                        toggle_page(prevpage, false);
+                        let pagerows = new Set();
                         for (let i = 0; i < json.length; i++) {
                             let category = json[i];
                             let row = document.createElement('tr');
@@ -77,7 +79,7 @@ function reloadScoreboard(reqpage = 0) {
                             category_add.classList.add('form-check-input');
                             category_add.type = 'checkbox';
                             category_add.name = 'categories';
-                            category_add.value= category.Cid;
+                            category_add.value = category.Cid;
                             category_add_field.appendChild(category_add);
                             row.classList.add(reqpage.toString())
                             row.appendChild(category_name);
@@ -87,12 +89,11 @@ function reloadScoreboard(reqpage = 0) {
                             table.appendChild(row);
                             pagerows.add(row);
                         }
-                        categoryPages.set(reqpage, pagerows)
+                        pages.add(reqpage)
                         prevpage = reqpage;
                         renumberButtons();
                     } else {
                         page = prevpage;
-
                     }
 
                 })
@@ -103,8 +104,8 @@ function reloadScoreboard(reqpage = 0) {
                 // Error fetching data from api
             });
     } else {
-        toggle_list(categoryPages.get(prevpage)|[],false)
-        toggle_list(categoryPages.get(reqpage)|[],true)
+        toggle_page(prevpage, false)
+        toggle_page(reqpage, true)
         prevpage = reqpage;
         renumberButtons();
     }
@@ -115,7 +116,7 @@ function nextPage() {
         page = maxpage;
     } else {
         page += 1;
-        reloadScoreboard(page);
+        reloadCategory(page);
     }
 }
 
@@ -124,7 +125,7 @@ function prevPage() {
         page = 0;
     } else {
         page -= 1;
-        reloadScoreboard(page)
+        reloadCategory(page)
     }
 }
 
@@ -136,7 +137,7 @@ function loadPage(clickedPage) {
     } else {
         page = clickedPage;
     }
-    reloadScoreboard(page)
+    reloadCategory(page)
 }
 
 document.getElementById("prev").addEventListener("click", prevPage)
@@ -207,5 +208,5 @@ pafield.addEventListener("change", function () {
 });
 
 if (document.getElementById("categorylist")) {
-    reloadScoreboard(0)
+    reloadCategory(0)
 }
