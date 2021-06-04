@@ -10,136 +10,142 @@ const tamin = 10;  //timeamountmin
 const tamax = 124; //timeamountmax
 const pamin = 2;    //playeramountmin
 const pamax = 16;   //playeramountmax
-let maxpage = 1;
-let page = 1;
-let pages = new Set();
-let prevpage = 1;
 
-function toggle_page(pagereq, on) {
-    let rows = document.getElementsByClassName(pagereq.toString())
-    let descrows = document.getElementsByClassName("desc" + pagereq.toString())
-    for (let i = 0; i < rows.length; i++) {
-        if (on) {
-            rows[i].setAttribute("hidden", "true");
+const tbody = document.getElementById('categorylist');
+const cat_selects = document.getElementById('categorySelects');
+let current_page = 1;
+let max_page = 1;
+let categories = {};
 
-        } else {
-            rows[i].removeAttribute("hidden");
+function fetchCategory() {
+    fetch(api_url + '/category/?page=' + current_page)
+        .then(data => data.json()
+            .then(json => {
+                // Get max pages
+                max_page = Math.ceil(json.count / 10);
+
+                for (let i = 0; i < json.results.length; i++) {
+                    let cat = json.results[i];
+                    if (categories[cat.Cname] === undefined)
+                        categories[cat.Cname] = cat;
+                }
+
+                refreshCategoryAmount();
+                refreshTable();
+            }));
+}
+
+function refreshCategoryAmount() {
+    let cat_names = Object.keys(categories);
+
+    for (let i = 0; i < cat_names.length; i++) {
+        let category = categories[cat_names[i]];
+        if (category.Camount === undefined) {
+            fetch(api_url + '/question/?cid=' + category.Cid)
+                .then(data => data.json()
+                    .then(json => {
+                        if (json === undefined || json === [] || json.length <= 0) {
+                            categories[cat_names[i]].Camount = 0;
+                            refreshTable();
+                        } else {
+                            categories[cat_names[i]].Camount = json.length;
+                            refreshTable();
+                        }
+                    }));
         }
     }
-    for (let i = 0; i < descrows.length; i++) {
-        descrows[i].setAttribute("hidden", "true");
+}
+
+function refreshTable() {
+    let cat_names = Object.keys(categories);
+    tbody.innerHTML = "";
+
+    for (let i = (current_page - 1) * 10; i < Math.min(current_page * 10, cat_names.length); i++) {
+        let category = categories[cat_names[i]];
+
+        // Category data
+        let row_data = document.createElement('tr');
+        let data_name = document.createElement('td');
+        let data_amount = document.createElement('td');
+        let data_select = document.createElement('td');
+        let data_select_checkbox = document.createElement("input");
+
+        data_name.innerHTML = category.Cname;
+        data_amount.innerHTML = category.Camount;
+
+        data_select_checkbox.type = "checkbox";
+        data_select_checkbox.name = "categories";
+        data_select_checkbox.classList.add("form-check-input");
+        data_select_checkbox.value = category.Cid.toString();
+
+        if (category.selected === undefined) {
+            category.selected = false;
+            categories[cat_names[i]].selected = false;
+        }
+
+        data_select_checkbox.checked = category.selected;
+
+        data_select_checkbox.addEventListener('change', () => {
+            categories[cat_names[i]].selected = data_select_checkbox.checked;
+            updateCategorySelect();
+        });
+
+        data_select.appendChild(data_select_checkbox);
+
+        row_data.appendChild(data_name);
+        row_data.appendChild(data_amount);
+        row_data.appendChild(data_select);
+
+        tbody.appendChild(row_data);
+
+        // Category description
+        let row_description = document.createElement('tr');
+        let data_description = document.createElement('td');
+
+        row_description.hidden = true;
+        data_description.setAttribute("colspan", "3");
+        data_description.innerText = category.Cdescription;
+
+        row_description.appendChild(data_description);
+
+        tbody.appendChild(row_description);
+
+        row_data.addEventListener("click", (e) => {
+            if (e.path[0].localName === 'input')
+                return;
+            row_description.hidden = !row_description.hidden;
+        });
     }
 }
 
-function show_desc(id) {
-    let desc = document.getElementById(id);
-    desc.hidden = false;
+function updateCategorySelect() {
+    let cat_names = Object.keys(categories);
+    cat_selects.innerHTML = "";
+
+    for (let i = 0; i < cat_names.length; i++) {
+        let checkbox = document.createElement("input");
+        checkbox.value = categories[cat_names[i]].Cid.toString();
+        checkbox.checked = categories[cat_names[i]].selected;
+        cat_selects.appendChild(checkbox)
+    }
+
 }
 
-function reloadCategory(reqpage = 1) {
-    if (reqpage > maxpage) {
-        reqpage = maxpage;
-    } else if (reqpage < 1) {
-        reqpage = 1;
-    }
-    let url = api_url + "/category/?page=" + reqpage
-    if (!pages.has(reqpage)) {
-        fetch(url)
-            .then(data => data.json()
-                .then(json => {
-                    if (maxpage == null) {
-                        if (json.count % 10 != 0) {
-                            maxpage = (json.count - (json.count % 10)) / 10 + 1;
+fetchCategory();
 
-                        } else {
-                            maxpage = (json.count - (json.count % 10)) / 10
-                        }
-                    }
-                    if (json.results.length > 0) {
-                        let table = document.getElementById("categorylist");
-                        toggle_page(prevpage, false);
-                        for (let i = 0; i < json.results.length; i++) {
-                            let category = json.results[i];
+document.getElementById('prev').addEventListener('click', () => {
+    current_page--;
+    if (current_page < 1)
+        current_page = 1;
+    fetchCategory();
+});
 
-                            let row_content = document.createElement("tr");
-                            let row_desc = document.createElement("tr");
-
-                            row_content.classList.add(reqpage.toString());
-                            row_desc.classList.add("desc" + reqpage.toString());
-                            row_content.setAttribute("for_desc", "cat" + category.Cid.toString());
-                            row_desc.id = "cat" + category.Cid.toString();
-                            row_desc.hidden = true;
-
-                            let category_name = document.createElement("td");
-                            let category_qa = document.createElement("td");
-                            let category_choose = document.createElement("td");
-                            category_name.innerText = category.Cname;
-                            category_qa.innerText = "TODO"; //TODO add question amount to api
-
-                            let chk_choose = document.createElement("input");
-                            chk_choose.type = "checkbox";
-                            chk_choose.name = "categories";
-                            chk_choose.classList.add("form-check-input");
-                            chk_choose.value = category.Cid.toString();
-                            category_choose.appendChild(category_choose);
-
-                            row_content.appendChild(category_name);
-                            row_content.appendChild(category_qa);
-                            row_content.appendChild(category_choose);
-
-                            let td_desc = document.createElement("td");
-                            td_desc.setAttribute("colspan", "3");
-                            td_desc.innerText = category.Cdescription;
-                            row_desc.appendChild(td_desc);
-
-                            row_content.addEventListener("click", () => {
-                                show_desc(row_content.for_desc)
-                            })
-                            table.appendChild(row_content);
-                            table.appendChild(row_desc);
-
-                        }
-                        pages.add(reqpage)
-                        prevpage = reqpage;
-                    } else {
-                        page = prevpage;
-                    }
-
-                })
-                .catch(e => {
-                    // Error parsing data to json
-                }))
-            .catch(e => {
-                // Error fetching data from api
-            });
-    } else {
-        toggle_page(prevpage, false)
-        toggle_page(reqpage, true)
-        prevpage = reqpage;
-    }
-}
-
-function nextPage() {
-    if (page >= maxpage) {
-        page = maxpage;
-    } else {
-        page += 1;
-        reloadCategory(page);
-    }
-}
-
-function prevPage() {
-    if (page <= 0) {
-        page = 0;
-    } else {
-        page -= 1;
-        reloadCategory(page)
-    }
-}
-
-
-document.getElementById("prev").addEventListener("click", prevPage)
-document.getElementById("next").addEventListener("click", nextPage)
+document.getElementById('next').addEventListener('click', () => {
+    current_page++;
+    if (current_page > max_page)
+        current_page = max_page;
+    fetchCategory();
+});
 
 
 let lobbytype = document.getElementById("lobbytype");
@@ -204,7 +210,3 @@ pafield.addEventListener("change", function () {
     }
     paslider.value = pafield.value;
 });
-
-if (document.getElementById("categorylist")) {
-    reloadCategory(1)
-}
