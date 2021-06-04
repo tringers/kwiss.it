@@ -19,37 +19,18 @@ function toggle_page(pagereq, on) {
     let rows = document.getElementsByClassName(pagereq.toString())
     for (let i = 0; i < rows.length; i++) {
         if (on) {
-            rows[i].setAttribute("hidden", "true")
+            rows[i].setAttribute("hidden", "true");
         } else {
-            rows[i].removeAttribute("hidden")
+            rows[i].removeAttribute("hidden");
         }
     }
 }
 
-let btnArray = new Array(5);
-btnArray[0] = document.getElementById("1");
-btnArray[1] = document.getElementById("2");
-btnArray[2] = document.getElementById("3");
-btnArray[3] = document.getElementById("4");
-btnArray[4] = document.getElementById("5");
-for (let btn of btnArray) {
-    btn.addEventListener("click", () => {
-        loadPage(btn.value - 1);
+function tooltips() {
+    let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
     })
-}
-
-function renumberButtons() {
-    posArray = new Array(5);
-    posArray[0] = page <= 3 ? 1 : page - 2;
-    posArray[1] = page <= 3 ? 2 : page - 1;
-    posArray[2] = page <= 3 ? 3 : page;
-    posArray[3] = page <= 3 ? 4 : page + 1;
-    posArray[4] = page <= 3 ? 5 : page + 2;
-    for (let i = 0; i < 5; i++) {
-        btnArray[i].value = posArray[i];
-        btnArray[i].innerHTML = posArray[i];
-    }
-
 }
 
 function reloadCategory(reqpage = 0) {
@@ -85,13 +66,15 @@ function reloadCategory(reqpage = 0) {
                             row.appendChild(category_name);
                             row.appendChild(category_question_amount);
                             row.appendChild(category_add_field);
-
+                            row.setAttribute('data-bs-toggle', "tooltip")
+                            row.setAttribute("data-bs-placement", "top")
+                            row.setAttribute("title", category.Cdescription)
                             table.appendChild(row);
                             pagerows.add(row);
+                            tooltips();
                         }
                         pages.add(reqpage)
                         prevpage = reqpage;
-                        renumberButtons();
                     } else {
                         page = prevpage;
                     }
@@ -107,7 +90,6 @@ function reloadCategory(reqpage = 0) {
         toggle_page(prevpage, false)
         toggle_page(reqpage, true)
         prevpage = reqpage;
-        renumberButtons();
     }
 }
 
@@ -129,16 +111,6 @@ function prevPage() {
     }
 }
 
-function loadPage(clickedPage) {
-    if (clickedPage >= maxpage) {
-        page = maxpage;
-    } else if (clickedPage <= 0) {
-        page = 0;
-    } else {
-        page = clickedPage;
-    }
-    reloadCategory(page)
-}
 
 document.getElementById("prev").addEventListener("click", prevPage)
 document.getElementById("next").addEventListener("click", nextPage)
