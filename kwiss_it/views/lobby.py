@@ -2,6 +2,7 @@ from .helper import *
 
 
 def lobbylist_view(request):
+	check_old_heartbeat()
 	args = {
 		'errorMsg': '',
 		'infoMsg': ''
@@ -12,6 +13,7 @@ def lobbylist_view(request):
 
 @ratelimit(key='ip', rate='6/m', method='POST')
 def createlobby_view(request):
+	check_old_heartbeat()
 	args = {
 		'errorMsg': '',
 		'infoMsg': ''
@@ -28,7 +30,7 @@ def createlobby_view(request):
 	inputTimeamount: str = request.POST.get('timeamountfield')
 	inputPlayeramount: str = request.POST.get('playeramountfield')
 	inputQuestionamount: list = request.POST.get('questionamountfield')
-	inputCategories=request.POST.getlist('categories')
+	inputCategories = request.POST.getlist('categories')
 	# Check if user is logged in
 	if not request.user.is_authenticated:
 		args['errorMsg'] = 'User muss angemeldet sein um eine Lobby erstellen zu können'
@@ -64,7 +66,7 @@ def createlobby_view(request):
 		args['errorMsg'] = 'Eine der erforderlichen Felder wurde nicht ausgefüllt.'
 		return createlobby_end(request, args)
 
-	if len(inputCategories) <1:
+	if len(inputCategories) < 1:
 		args['errorMsg'] = 'Es muss mindestens eine Kategorie ausgewählt werden.'
 		return createlobby_end(request, args)
 
@@ -117,17 +119,18 @@ def createlobby_view(request):
 		else:
 			counter += 1
 			if counter >= 50:
-				args["errorMsg"] = 'Es ist ein Fehler bei der Lobbyerstellung aufgetreten. Bitte in wenigen Minuten erneut probieren.'
+				args[
+					"errorMsg"] = 'Es ist ein Fehler bei der Lobbyerstellung aufgetreten. Bitte in wenigen Minuten erneut probieren.'
 				return createlobby_end(request, args)
 
-
-	usedquestions =[]
+	usedquestions = []
 	for cat in inputCategories:
 		usedquestions.extend(Question.objects.filter(Cid=cat).values_list('Qid', flat=True))
-	questions_selected = choose_random(usedquestions,question_amount)
+	questions_selected = choose_random(usedquestions, question_amount)
 
 	if len(usedquestions) < question_amount or len(usedquestions) > question_amount:
-		args["errorMsg"] = 'In den Ausgewählten Kategorien gibt es nicht genug Fragen um die gewollte Fragenmenge zu nutzen.'
+		args[
+			"errorMsg"] = 'In den Ausgewählten Kategorien gibt es nicht genug Fragen um die gewollte Fragenmenge zu nutzen.'
 		return createlobby_end(request, args)
 
 	# Create lobby
@@ -138,12 +141,10 @@ def createlobby_view(request):
 	)
 	lobby_obj.save()
 	for c in inputCategories:
-		lc = LobbyCategory.objects.create(Lid=lobby_obj,Cid=Category.objects.get(Cid=c))
+		lc = LobbyCategory.objects.create(Lid=lobby_obj, Cid=Category.objects.get(Cid=c))
 	for q in questions_selected:
-		lq=LobbyQuestions.objects.create(Lid=lobby_obj,Qid= Question.objects.get(Qid=q))
+		lq = LobbyQuestions.objects.create(Lid=lobby_obj, Qid=Question.objects.get(Qid=q))
 		lq.save()
-
-
 
 	return redirect(f'/lobby/{lobby_obj.Lkey}/{uuid_token}/')
 
@@ -158,6 +159,7 @@ def createlobby_end(request, args):
 
 
 def join_lobby(Lkey, user_obj: User, password=None, authtoken=None):
+	check_old_heartbeat()
 	# Get Lobby
 	lobby_objset = Lobby.objects.filter(Lkey=Lkey)
 	if len(lobby_objset) < 1:
@@ -189,6 +191,7 @@ def join_lobby(Lkey, user_obj: User, password=None, authtoken=None):
 
 @allow_lazy_user
 def lobby_view(request, lobby_key, auth_token=None):
+	check_old_heartbeat()
 	args = {
 		'errorMsg': '',
 		'infoMsg': '',
@@ -200,7 +203,40 @@ def lobby_view(request, lobby_key, auth_token=None):
 	if result[0]:
 		args['auth_token'] = auth_token
 		args['lobby_key'] = lobby_key
+		args['lobby_name'] = Lobby.objects.get(Lkey=lobby_key).Lname
 		return render(request, 'kwiss_it/lobby.html', args)
 	else:
 		args['errorMsg'] = result[1]
+		# TODO: Instead of redirecting. If player is already in lobby -> do rejoining?
 		return render(request, 'kwiss_it/lobbylist.html', args)
+
+
+@allow_lazy_user
+def lobby_heartbeat_view(request, lobby_key):
+	check_old_heartbeat()
+	user = request.user
+
+	lobbyplayer_objset = LobbyPlayer.objects.filter(Lid__Lkey=lobby_key, Uid=user)
+	if len(lobbyplayer_objset) > 0:
+		lobbyplayer_obj = lobbyplayer_objset[0]
+		lobbyplayer_obj.LPLastHeartbeat = datetime.now()
+		lobbyplayer_obj.save()
+		name = user.username
+		if user.first_name != '':
+			name = user.first_name
+		return JsonResponse({
+			'status': 200,
+			'name': name
+		})
+
+	return JsonResponse({
+			'status': 403
+		})
+
+
+def check_old_heartbeat():
+	# Check if someone is still in Lobby but heartbeat missing for 15s
+	# If thats the case remove user from lobby
+	lobbyplayer_objset = LobbyPlayer.objects.filter(LPLastHeartbeat__lt=(datetime.now() - timedelta(seconds=15)))
+	lobbyplayer_objset.delete()
+	return

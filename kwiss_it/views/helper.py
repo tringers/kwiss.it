@@ -3,11 +3,11 @@ import base64
 import re
 import string
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Union
 from urllib.parse import unquote
 
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect

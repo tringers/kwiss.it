@@ -1,4 +1,7 @@
+from django.contrib.auth.models import User
 from django.db.models import Q
+from rest_framework.pagination import PageNumberPagination
+
 from .models import LobbyType, Lobby, LobbyPlayer, LobbyQuestions, Category, QuestionType, Question, Answer
 from rest_framework import serializers, viewsets, mixins, generics
 
@@ -15,22 +18,29 @@ class LobbyView(viewsets.ReadOnlyModelViewSet):
 	serializer_class = LobbySerializer
 
 	def get_queryset(self):
-		queryset = Lobby.objects.filter(
-			Q(Lstarted=False) &
-			(
-					Q(Lprivate=True) &
-					Q(Lpassword__isnull=False) |
-					Q(Lprivate=False)
+		lobby_key = self.request.query_params.get('lkey')
+
+		if not lobby_key:
+			queryset = Lobby.objects.filter(
+				Q(Lstarted=False) &
+				(
+						Q(Lprivate=True) &
+						Q(Lpassword__isnull=False) |
+						Q(Lprivate=False)
+				)
 			)
-		)
+		else:
+			queryset = Lobby.objects.filter(Lkey=lobby_key)
 
 		return queryset
 
 
 class LobbyPlayerSerializer(serializers.ModelSerializer):
+	first_name = serializers.StringRelatedField(source='Uid', read_only=True)
+
 	class Meta:
-		model = Lobby
-		fields = ['LPready']
+		model = LobbyPlayer
+		fields = ['first_name', 'LPready']
 
 
 class LobbyPlayerView(viewsets.ReadOnlyModelViewSet):
@@ -73,8 +83,9 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class CategoryView(mixins.ListModelMixin, viewsets.GenericViewSet):
-	queryset = Category.objects.all()
+	queryset = Category.objects.all().order_by('Cname')
 	serializer_class = CategorySerializer
+	pagination_class = PageNumberPagination
 
 
 # Questions

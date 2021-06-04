@@ -1,13 +1,94 @@
 {% extends "kwiss_it/base.html" %}
 
 {% block content %}
+    <meta id="lobby-data" data-lobby-key="{{ lobby_key }}" data-auth-token="{{ auth_token }}">
 
     <div class="col-lg-8 mx-auto p-3">
-        <h1>Lobby</h1>
+        <h1>Lobby: {{ lobby_name }}</h1>
+
+        <table class="table table-hover align-middle">
+            <thead>
+            <tr>
+                <th scope="col">Spieler</th>
+                <th scope="col" class="text-center">Bereit?</th>
+            </tr>
+            </thead>
+            <tbody id="table-body">
+            <tr id="table-row-template" hidden>
+                <td>Dummy</td>
+                <td>Nicht bereit!</td>
+            </tr>
+            </tbody>
+        </table>
+    {# TODO: Button for being ready and sending ready to server #}
     </div>
-	<meta auth_token={{ auth_token }}>
     {# TODO: Timedrift im Race Mode erzeugt Report, also wenn der Spieler viel schneller war als der Server #}
-    {# TODO: Spieler sendet sobald in Lobby alle 50-100ms einen Heartbeat. Workaround für ohne Websocket #}
+    {# TODO: Spieler sendet Ingame alle 50-100ms einen Heartbeat. Workaround für ohne Websocket #}
     {# TODO: Spieler warten nach Frage auf alle anderen Spieler. Spieler ohne Heartbeat für 10s wird gekickt. Spiel wird nicht gewertet für ihn #}
 
+{% endblock %}
+
+{% block bodyscript %}
+    <script>
+        const lobby_key = document.getElementById('lobby-data').getAttribute('data-lobby-key');
+        let first_name;
+        let heartbeat_error = 0;
+
+        let heartbeat = setInterval(() => {
+            fetch('/lobby/heartbeat/' + lobby_key)
+                .then((data) => {
+                    heartbeat_error = 0;
+                    data.json().then(json => {
+                        if(parseInt(json.status) === 200) {
+                            first_name = json.name;
+                        } else {
+                            // TODO: Show error message and redirect to lobbylist
+                        }
+                    })
+                })
+                .catch(() => heartbeat_error++);
+            fetch(api_url + '/lobbyplayer/?lkey=' + lobby_key)
+                .then(data => data.json()
+                    .then(json => {
+                        const table_body = document.getElementById('table-body');
+                        let cleared = false;
+
+                        for (let i = 0; i < json.length; i++) {
+                            let lobbyplayer = json[i];
+                            let player_name = lobbyplayer.first_name;
+                            let ready = lobbyplayer.LPready;
+
+                            // Create children
+                            let row = document.createElement('tr');
+
+                            let row_name = document.createElement('td');
+                            let row_ready = document.createElement('td');
+
+                            // Fill data
+                            row_name.innerHTML = player_name;
+                            row_ready.innerHTML = ready ? 'Bereit' : 'Nicht bereit';
+
+                            // Set design
+                            if(player_name === first_name)
+                                row.classList.add('table-info');
+                            else if(ready)
+                                row.classList.add('table-success');
+                            else
+                                row.classList.add('table-danger');
+
+                            row_ready.classList.add('text-center');
+
+                            // Append children
+                            row.appendChild(row_name);
+                            row.appendChild(row_ready);
+
+                            if(!cleared) {
+                                table_body.innerHTML = "";
+                                cleared = true;
+                            }
+                            table_body.appendChild(row);
+                        }
+                    }));
+        }, 500);
+    </script>
 {% endblock %}

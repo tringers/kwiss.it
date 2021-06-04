@@ -135,3 +135,4 @@ kwiss/my.cnf
 
 node_modules/
 package-lock.json
+/**/static_params.js

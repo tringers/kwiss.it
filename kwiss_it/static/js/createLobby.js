@@ -11,9 +11,9 @@ const tamax = 124; //timeamountmax
 const pamin = 2;    //playeramountmin
 const pamax = 16;   //playeramountmax
 let maxpage = 1000;
-let page = 0;
-let categoryPages = new Map();
-let prevpage = 0;
+let page = 1;
+let pages = new Set();
+let prevpage = 1;
 
 function toggle_page(pagereq, on) {
     let rows = document.getElementsByClassName(pagereq.toString())
@@ -33,22 +33,22 @@ function tooltips() {
     })
 }
 
-function reloadCategory(reqpage = 0) {
+function reloadCategory(reqpage = 1) {
     let url = "/api/category/?page=" + reqpage;
-    console.log(pages)
+    console.log(pages);
     if (!pages.has(reqpage)) {
         fetch(url)
             .then(data => data.json()
                 .then(json => {
-                    if (json.length < 15) {
+                    if (json.results.length < 10) {
                         maxpage = reqpage;
                     }
-                    if (json.length > 0) {
+                    if (json.results.length > 0) {
                         let table = document.getElementById("categorylist");
                         toggle_page(prevpage, false);
                         let pagerows = new Set();
-                        for (let i = 0; i < json.length; i++) {
-                            let category = json[i];
+                        for (let i = 0; i < json.results.length; i++) {
+                            let category = json.results[i];
                             let row = document.createElement('tr');
                             let category_name = document.createElement('td');
                             let category_question_amount = document.createElement('td');
@@ -180,5 +180,5 @@ pafield.addEventListener("change", function () {
 });
 
 if (document.getElementById("categorylist")) {
-    reloadCategory(0)
+    reloadCategory(1)
 }
