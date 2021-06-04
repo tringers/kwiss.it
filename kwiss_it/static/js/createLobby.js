@@ -85,7 +85,8 @@ function refreshTable() {
 
         data_select_checkbox.checked = category.selected;
 
-        data_select_checkbox.addEventListener('change', () => {
+        data_select.addEventListener('click', () => {
+            data_select_checkbox.checked = !data_select_checkbox.checked;
             categories[cat_names[i]].selected = data_select_checkbox.checked;
             updateCategorySelect();
         });
@@ -110,9 +111,10 @@ function refreshTable() {
 
         tbody.appendChild(row_description);
 
-        row_data.addEventListener("click", (e) => {
-            if (e.path[0].localName === 'input')
-                return;
+        data_name.addEventListener("click", (e) => {
+            row_description.hidden = !row_description.hidden;
+        });
+        data_amount.addEventListener("click", (e) => {
             row_description.hidden = !row_description.hidden;
         });
     }
@@ -128,7 +130,6 @@ function updateCategorySelect() {
         checkbox.checked = categories[cat_names[i]].selected;
         cat_selects.appendChild(checkbox)
     }
-
 }
 
 fetchCategory();
