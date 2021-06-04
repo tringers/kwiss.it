@@ -17,22 +17,32 @@ let current_page = 1;
 let max_page = 1;
 let categories = {};
 
-function fetchCategory() {
-    //todo add 2nd fetch for pending api request and merch that with other fetch
-    fetch(api_url + '/category/?page=' + current_page)
-        .then(data => data.json()
-            .then(json => {
-                // Get max pages
-                max_page = Math.ceil(json.count / 10);
+function fetchCategory(pending = false, clear = false) {
+    let fetch_param = '?approved=true' + (pending ? '&pending=true' : '');
 
-                for (let i = 0; i < json.results.length; i++) {
-                    let cat = json.results[i];
-                    if (categories[cat.Cname] === undefined)
-                        categories[cat.Cname] = cat;
-                }
+    if (clear) {
+        current_page = 1;
+        categories = {};
+    }
 
-                refreshCategoryAmount();
-                refreshTable();
+    // Get max page
+    fetch(api_url + '/category/' + fetch_param + '&page=0')
+        .then(pData => pData.json()
+            .then(pJson => {
+                max_page = Math.ceil(pJson.count / 10);
+
+                fetch(api_url + '/category/' + fetch_param + '&page=' + current_page)
+                    .then(data => data.json()
+                        .then(json => {
+                            for (let i = 0; i < json.results.length; i++) {
+                                let cat = json.results[i];
+                                if (categories[cat.Cname] === undefined)
+                                    categories[cat.Cname] = cat;
+                            }
+
+                            refreshCategoryAmount();
+                            refreshTable();
+                        }));
             }));
 }
 
@@ -187,50 +197,35 @@ lobbytype.addEventListener("change", function () {
 //questionamount
 let qaslider = document.getElementById("questionamountslider");
 let qafield = document.getElementById("questionamountfield");
-qaslider.addEventListener("change", function () {
-    qafield.value = qaslider.value;
-});
-qafield.addEventListener("change", function () {
-    if (qafield.value > qamax) {
-        qafield.value = qamax;
-    } else if (qafield.value < qamin) {
-        qafield.value = qamin;
-    }
-    qaslider.value = qafield.value;
-});
+addSliderListener(qaslider, qafield, qamin, qamax);
+
 //timeamount
 let taslider = document.getElementById("timeamountslider");
 let tafield = document.getElementById("timeamountfield");
-taslider.addEventListener("change", function () {
-    tafield.value = taslider.value;
-});
-tafield.addEventListener("change", function () {
-    if (tafield.value > tamax) {
-        tafield.value = tamax;
-    } else if (tafield.value < tamin) {
-        tafield.value = tamin;
-    }
-    taslider.value = tafield.value;
-});
+addSliderListener(taslider, tafield, tamin, tamax);
 
 //playeramount
 let paslider = document.getElementById("playeramountslider");
 let pafield = document.getElementById("playeramountfield");
-paslider.addEventListener("change", function () {
-    pafield.value = paslider.value;
-});
-pafield.addEventListener("change", function () {
-    if (pafield.value > pamax) {
-        pafield.value = pamax;
-    } else if (pafield.value < pamin) {
-        pafield.value = pamin;
-    }
-    paslider.value = pafield.value;
-});
+addSliderListener(paslider, pafield, pamin, pamax);
 
-let pending= document.getElementById("pending");
-pending.addEventListener("change",function (){
-    if(pending.checked){
-//todo fill out
+function addSliderListener(slider, field, min, max) {
+    let equalize = function(value) {
+        value = min(value, max);
+        value = max(value, min);
+        slider.value = value;
+        field.value = value;
+    }
+
+    slider.addEventListener("change", () => {equalize(slider.value)});
+    field.addEventListener("change", () => {equalize(field.value)});
+}
+
+let pending = document.getElementById("pending");
+pending.addEventListener("change", function () {
+    if (pending.checked) {
+        fetchCategory(true, false);
+    } else {
+        fetchCategory(false, true);
     }
 })
