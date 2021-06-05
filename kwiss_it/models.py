@@ -65,6 +65,15 @@ class Category(models.Model):
 		return self.Cname
 
 
+class CategoryVotes(models.Model):
+	Cid = models.ForeignKey(Category, on_delete=models.CASCADE)
+	Uid = models.ForeignKey(User, on_delete=models.CASCADE)
+	vote = models.SmallIntegerField(default=0)
+
+	class Meta:
+		unique_together = ('Qid', 'Uid')
+
+
 class Score_Category(models.Model):
 	Sid = models.ForeignKey(Score, on_delete=models.CASCADE, help_text="Score ID")
 	Cid = models.ForeignKey(Category, on_delete=models.CASCADE, help_text="Category ID")
@@ -93,9 +102,20 @@ class Question(models.Model):
 	Qplaycount = models.PositiveIntegerField(default=0)
 	Qupvotes = models.PositiveIntegerField(default=0)
 	Qdownvotes = models.PositiveIntegerField(default=0)
+	Qmodupvotes = models.PositiveIntegerField(default=0)
+	Qmoddownvotes = models.PositiveIntegerField(default=0)
 
 	def __str__(self):
 		return self.Qtext
+
+
+class QuestionVotes(models.Model):
+	Qid = models.ForeignKey(Question, on_delete=models.CASCADE)
+	Uid = models.ForeignKey(User, on_delete=models.CASCADE)
+	vote = models.SmallIntegerField(default=0)
+
+	class Meta:
+		unique_together = ('Qid', 'Uid')
 
 
 class Answer(models.Model):
@@ -191,6 +211,7 @@ class LobbyUser(models.Model):
 	LPLastHeartbeat = models.DateTimeField(auto_now_add=True)
 	LPScore = models.IntegerField(default=0)
 	LPStreak = models.IntegerField(default=1)
+	LPlastaddition = models.IntegerField(default=0)
 
 
 class LobbyQuestions(models.Model):

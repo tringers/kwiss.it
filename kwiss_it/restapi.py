@@ -36,6 +36,25 @@ class LobbyView(viewsets.ReadOnlyModelViewSet):
 		return queryset
 
 
+class LobbyDataSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Lobby
+		fields = ['Lkey', 'Lname', 'Ltype', 'Lplayerlimit', 'Lquestionamount', 'Ltimeamount', 'LcurrentQuestion', 'LcurrentCorrect']
+
+
+class LobbyDataView(viewsets.ReadOnlyModelViewSet):
+	queryset = Lobby.objects.filter(Lstarted=False)
+	serializer_class = LobbyDataSerializer
+
+	def get_queryset(self):
+		lobby_key = self.request.query_params.get('lkey')
+
+		if not lobby_key:
+			return Lobby.objects.none()
+		else:
+			return Lobby.objects.filter(Lkey=lobby_key)
+
+
 class LobbyUserSerializer(serializers.ModelSerializer):
 	first_name = serializers.SlugRelatedField(source='Uid', read_only=True, slug_field='first_name')
 
@@ -152,12 +171,13 @@ class CategoryView(mixins.ListModelMixin, viewsets.GenericViewSet):
 		return queryset
 
 
-
 # Questions
 class QuestionSerializer(serializers.ModelSerializer):
+	Cname = serializers.SlugRelatedField(source='Cid', read_only=True, slug_field='Cname')
+
 	class Meta:
 		model = Question
-		fields = ['Qid', 'Qtext', 'QTid', 'Qplaycount', 'Qupvotes', 'Qdownvotes']
+		fields = ['Qid', 'Cid', 'Cname', 'Qtext', 'QTid', 'Qplaycount', 'Qupvotes', 'Qdownvotes']
 
 
 class QuestionView(viewsets.ReadOnlyModelViewSet):

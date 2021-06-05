@@ -1,4 +1,24 @@
+class QTypes {
+    qtid = [];
+    qtname = [];
+    qtdescription = [];
+
+    addQuestionType(qtid, qtname, qtdescription) {
+        this.qtid.push(qtid);
+        this.qtname.push(qtname);
+        this.qtdescription.push(qtdescription);
+    }
+
+    getQuestionType(qtid) {
+        for (let i = 0; i < this.qtid.length; i++) {
+            if (this.qtid[i] === qtid)
+                return {name: this.qtname[i], description: this.qtdescription[i]};
+        }
+    }
+}
+
 const lobby_key = document.getElementById('lobby-data').getAttribute('data-lobby-key');
+const lobby_auth = document.getElementById('lobby-data').getAttribute('data-auth-token');
 const crypto_meta = document.getElementById('crypto');
 const question_data = document.getElementById('question-data');
 const answer_data = document.getElementById('answer-data');
@@ -6,8 +26,32 @@ const textenc = new TextEncoder();
 const textdec = new TextDecoder();
 const button_ready = document.getElementById('btnReady');
 const playeramount = document.getElementById('playeramount');
-let first_name;
+let first_name = '';
 let heartbeat_error = 0;
+let game = {
+    meta: {
+        maxQuestions: 0,
+        timeStarted: 0,
+        timePerQuestion: 20,
+        qTypes: new QTypes(),
+    },
+    interval: null,
+    processedQuestion: -1,
+    lastSubmitted: false,
+    scoresFetched: false,
+    gamedata: {
+        lastSubmissionCorrect: false,
+        streak: 1,
+        score: 0,
+        addition: 0,
+    }
+};
+const playerScoreTemplate = {
+    lastSubmissionCorrect: false,
+    streak: 1,
+    score: 0,
+    addition: 0,
+}
 
 button_ready.addEventListener('click', () => {
     switch (parseInt(button_ready.getAttribute('data-value'))) {
@@ -100,7 +144,11 @@ let heartbeat = setInterval(() => {
             heartbeat_error = 0;
             data.json().then(json => {
                 if (parseInt(json.status) === 200) {
-                    first_name = json.name;
+                    if (first_name === '') {
+                        first_name = json.name;
+                        game.playerScores = {};
+                        game.playerScores[first_name] = Object.assign({}, playerScoreTemplate);
+                    }
                 } else {
                     let lobby_error = document.getElementById('lobby-error');
                     let lobby_error_content = document.getElementById('lobby-error-content');
@@ -120,25 +168,16 @@ let heartbeat = setInterval(() => {
                 const table_body = document.getElementById('table-body');
                 let cleared = false;
                 playeramount.innerHTML = json.length;
-                /*
-                TODO: Alle ready? => Alten Heartbeat aus, button_ready deaktivieren => Neuen schnellen Heartbeat an
-                        Schneller Heartbeat 50-100ms // Wartet auf Start von Server
 
-                        Sobald Server startet => Game lokal starten und Zeitintervale einhalten
-                        Server startet Timer > +5s > Spiel startet mit erster Frage und sendet ggfs. Antwort
-                        > +Fragenzeit > Falls nicht geantwortet, sende Nachricht an Server
-                        > +15s für Fragen-Result Screen > Nächste Frage > +Fragenzeit > ...
-
-                        Falls Server nicht startet oder Abbruch meldet
-                        => Neuen Heartbeat aus
-                        => Langsamen Heartbeat an
-                        => button_ready aktivieren
-                */
+                let allReady = true;
 
                 for (let i = 0; i < json.length; i++) {
                     let lobbyuser = json[i];
                     let player_name = lobbyuser.first_name;
                     let ready = lobbyuser.LPready;
+
+                    if (!ready)
+                        allReady = false;
 
                     // Create children
                     let row = document.createElement('tr');
@@ -170,13 +209,59 @@ let heartbeat = setInterval(() => {
                     }
                     table_body.appendChild(row);
                 }
+
+                if (allReady) {
+                    /*
+                    TODO: Alle ready? => Alten Heartbeat aus, button_ready deaktivieren => Neuen schnellen Heartbeat an
+                            Schneller Heartbeat 50-100ms // Wartet auf Start von Server
+
+                            Sobald Server startet => Game lokal starten und Zeitintervale einhalten
+                            Server startet Timer > +5s > Spiel startet mit erster Frage und sendet ggfs. Antwort
+                            > +Fragenzeit > Falls nicht geantwortet, sende Nachricht an Server
+                            > +15s für Fragen-Result Screen > Nächste Frage > +Fragenzeit > ...
+
+                            Falls Server nicht startet oder Abbruch meldet
+                            => Neuen Heartbeat aus
+                            => Langsamen Heartbeat an
+                            => button_ready aktivieren
+                    */
+                    button_ready.disabled = true;
+                    prepGame();
+                }
             }));
-}, 500);
+}, 250);
+
+function stopHeartbeat() {
+    clearInterval(heartbeat);
+}
+
+function fetchLobbyData() {
+    fetch(api_url + '/lobbydata/?lkey=' + lobby_key)
+        .then(data => data.json()
+            .then(json => {
+                if (json.length < 1)
+                    return;
+
+                let lobby = json[0];
+                game.meta.timePerQuestion = parseInt(lobby.Ltimeamount);
+
+                //'Lkey', 'Lname', 'Ltype', 'Lplayerlimit', 'Lquestionamount', 'Ltimeamount', 'LcurrentQuestion', 'LcurrentCorrect'
+            }));
+}
 
 function fetchQuestions() {
+    fetch(api_url + '/questiontype/')
+        .then(data => data.json()
+            .then(json => {
+                for (let i = 0; i < json.length; i++) {
+                    game.meta.qTypes.addQuestionType(parseInt(json[i].QTid), json[i].QTname, json[i].QTdescription);
+                }
+            }));
+
     fetch(api_url + '/lobbyquestions/?lkey=' + lobby_key)
         .then(data => data.json()
             .then(json => {
+                game.meta.maxQuestions = json.length;
                 for (let i = 0; i < json.length; i++) {
                     let qid = json[i].Qid;
 
@@ -191,6 +276,8 @@ function fetchQuestions() {
                                         question.id = 'question-' + i;
                                         question.classList.add('question-data');
                                         question.setAttribute('data-qid', qid);
+                                        question.setAttribute('data-cid', qJson[0].Cid);
+                                        question.setAttribute('data-cname', qJson[0].Cname);
                                         //question.setAttribute('data-qtext', qJson[0].Qtext);
                                         question.setAttribute('data-qtext', cryptQ);
                                         question.setAttribute('data-qtype', qJson[0].QTid);
@@ -207,7 +294,7 @@ function fetchQuestions() {
 
                                                                 answer.id = 'answer-' + i + '-' + j;
                                                                 answer.classList.add('answer-data');
-                                                                answer.setAttribute('for', 'question-' + i);
+                                                                answer.classList.add('answer-question-' + i);
                                                                 answer.setAttribute('data-qid', qid);
                                                                 answer.setAttribute('data-anum', aJson[j].Anum);
                                                                 //answer.setAttribute('data-atext', aJson[j].Atext);
@@ -226,4 +313,5 @@ function fetchQuestions() {
             }));
 }
 
+setTimeout(fetchLobbyData, 1000);
 setTimeout(fetchQuestions, 2000);

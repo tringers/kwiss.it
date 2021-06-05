@@ -1,11 +1,12 @@
 from django.urls import path, re_path, include
 from rest_framework import routers
 from django.views.generic import TemplateView
-from .views import static, register, login, user, lobby, convert, content
+from .views import static, register, login, user, lobby, convert, content, game
 from . import restapi
 
 router = routers.DefaultRouter()
 router.register(r'lobby', restapi.LobbyView)
+router.register(r'lobbydata', restapi.LobbyDataView)
 router.register(r'lobbyuser', restapi.LobbyUserView)
 router.register(r'lobbytype', restapi.LobbyTypeView)
 router.register(r'lobbyquestions', restapi.LobbyQuestionsView)
@@ -51,5 +52,9 @@ urlpatterns = [
 	re_path(r'lobby/(?P<lobby_key>[0-9A-F]{6})/(?P<auth_token>[0-9a-f\-]{0,36})/$', lobby.lobby_view, name='lobby'),
 	re_path(r'lobby/heartbeat/(?P<lobby_key>[0-9A-F]{6})/$', lobby.lobby_heartbeat_view, name='lobby_heartbeat'),
 	path('lobby/ready/<str:lobbykey>/<str:ready>', lobby.lobby_ready_view, name='lobby_ready'),
+
+	path('game/<str:lobbykey>', game.game_update, name='game_update'),
+
+	# API access
 	path('api/', include(router.urls)),
 ]
