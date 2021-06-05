@@ -41,7 +41,7 @@ class LobbyUserSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = LobbyUser
-		fields = ['first_name', 'LPready']
+		fields = ['first_name', 'LPready', 'LPScore', 'LPStreak']
 
 
 class LobbyUserView(viewsets.ReadOnlyModelViewSet):
