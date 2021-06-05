@@ -1,7 +1,7 @@
 from django.urls import path, re_path, include
 from rest_framework import routers
 from django.views.generic import TemplateView
-from .views import static, register, login, user, lobby, convert
+from .views import static, register, login, user, lobby, convert, content
 from . import restapi
 
 router = routers.DefaultRouter()
@@ -33,6 +33,7 @@ urlpatterns = [
 	path('login', login.login_view, name='login'),
 	path('logout', login.logout_view, name='logout'),
 	# TODO: Create forgot-password page (create model for confirmation links in mail)
+	path('addcontent', content.add_content, name='addcontent'),
 	# path('password-reset', login.login, name='vergessen'),
 
 	# For authenticated users

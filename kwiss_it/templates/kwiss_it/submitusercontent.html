@@ -1,0 +1,95 @@
+{% extends "kwiss_it/base.html" %}
+{% load static %}
+{% block content %}
+	<div class="col-lg-8 mx-auto p-3">
+		<h1>Fragen erstellen</h1>
+		{% if infoMsg != '' and infoMsg != None %}
+			<div class="alert alert-info">{{ infoMsg }}</div>
+		{% endif %}
+		{% if errorMsg != '' and errorMsg != None %}
+			<div class="alert alert-danger">{{ errorMsg }}</div>
+		{% endif %}
+	</div>
+	<div id="template" hidden>
+		<div class="row col-lg-8 mx-auto p-3 form-group">
+			<div class="col-6 my-auto">
+				<label for="qtype" class="form-label my-auto">Fragenart:</label>
+			</div>
+			<div class="col-6 my-auto">
+				<select class="form-select form-select-lg mb-3" id="qtype">
+				</select>
+			</div>
+		</div>
+		<div class="row col-lg-8 mx-auto p-3 form-group">
+			<div class="col-6 my-auto">
+				<label for="answeramount" class="form-label my-auto">Fragenmenge:</label>
+			</div>
+			<div class="col-6 my-auto">
+				<select class="form-select form-select-lg mb-3" id="answeramount">
+				</select>
+			</div>
+		</div>
+		<div class="row col-lg-8 mx-auto p-3 form-group">
+			<div class="col-6 my-auto">
+				<label for="questiontext">Fragetext</label>
+			</div>
+			<div class="col-6 my-auto">
+				<textarea class="form-control" placeholder="Frage" id="questiontext" style="height: 100px" maxlength="256"></textarea>
+			</div>
+		</div>
+
+		<div class="row col-lg-8 mx-auto p-3 " id="answers">
+
+		</div>
+	</div>
+
+
+	<div class="row col-lg-8 mx-auto p-3 container-fluid">
+		<form id="lobbyCreation" class="needs-validation" action="{% url 'createlobby' %}" method="post">
+			<input hidden name="questionamount">
+			<div class="row col-lg-8 mx-auto p-3 form-group">
+				<div class="col-6 my-auto">
+					<label for="category" class="form-label my-auto">Kategorie:</label>
+				</div>
+				<div class="col-6 my-auto">
+					<select class="form-select form-select-lg mb-3" id="category">
+						<option value="new">Neue Kategorie erstellen</option>
+					</select>
+				</div>
+			</div>
+
+			<div id="createcat" class="row col-lg-8 mx-auto p-3 border " hidden>
+				<h5>Klasse erstellen</h5>
+				<div class="row col-lg-8 mx-auto p-3 form-group">
+					<div class="col-6 my-auto ">
+						<label for="catname">Kategorie Namen</label>
+					</div>
+					<div class="col-6 my-auto">
+						<input type="text" class="form-control" id="catname" name="catname" maxlength="128">
+					</div>
+				</div>
+				<div class="row col-lg-8 mx-auto p-3 form-group">
+					<div class="col-6 my-auto">
+						<label for="catdesc">Kategorie Beschreibung</label>
+					</div>
+					<div class="col-6 my-auto">
+						<textarea class="form-control" placeholder="Beschreibung" id="catdesc" style="height: 100px" maxlength="512"></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="mb-4 form-group row col-lg-8 mx-auto p-3">
+				<button type="button" class="btn btn-outline-primary" id="addquestion">Neue Frage</button>
+			</div>
+			<div id="questions">
+
+			</div>
+			<div class="mb-4 form-group row col-lg-8 mx-auto p-3">
+				<input type="submit" name="buttoncreate" class="btn btn-primary" value="Erstellen">
+			</div>
+			{% csrf_token %}
+		</form>
+	</div>
+{% endblock %}
+{% block bodyscript %}
+	<script src="{% static 'js/submitusercontent.min.js' %}"></script>
+{% endblock %}
