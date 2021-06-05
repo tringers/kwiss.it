@@ -211,7 +211,7 @@ def lobby_view(request, lobby_key, auth_token=None):
 		args['lobby_name'] = lobby.Lname
 		args['userlimit'] = lobby.Lplayerlimit
 		args['currentuser'] = len(LobbyUser.objects.filter(Lid=lobby))
-		return render(request, 'kwiss_it/lobby.html', args)
+		return render(request, 'kwiss_it/game.html', args)
 	else:
 		args['errorMsg'] = result[1]
 		# TODO: Instead of redirecting. If player is already in lobby -> do rejoining?
