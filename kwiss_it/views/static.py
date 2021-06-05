@@ -18,6 +18,5 @@ def settings(request):
 	return render(request, 'kwiss_it/settings.html')
 
 
-@require_nonlazy_user
 def review(request):
 	return render(request, 'kwiss_it/review.html')
