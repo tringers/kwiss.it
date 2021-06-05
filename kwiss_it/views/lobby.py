@@ -165,7 +165,6 @@ def createlobby_end(request, args):
 
 
 def join_lobby(Lkey, user_obj: User, password=None, authtoken=None):
-	check_old_heartbeat()
 	# Get Lobby
 	lobby_objset = Lobby.objects.filter(Lkey=Lkey)
 	if len(lobby_objset) < 1:
@@ -198,6 +197,7 @@ def join_lobby(Lkey, user_obj: User, password=None, authtoken=None):
 @allow_lazy_user
 def lobby_view(request, lobby_key, auth_token=None):
 	check_old_heartbeat()
+	check_old_lobbys()
 	args = {
 		'errorMsg': '',
 		'infoMsg': '',
