@@ -186,6 +186,8 @@ document.getElementById('next').addEventListener('click', () => {
 
 let lobbytype = document.getElementById("lobbytype");
 let lobbypasswordfield = document.getElementById("lobbypasswordfield");
+let lobbypasswordRaw = document.getElementById("lobbypasswordRaw");
+let lobbypassword = document.getElementById("lobbypassword");
 
 function publiclobby() {
     lobbypasswordfield.hidden = true;
@@ -194,6 +196,23 @@ function publiclobby() {
 function privatelobby() {
     lobbypasswordfield.hidden = false;
 }
+
+async function digestMessage(message, count) {
+    let hashArray = new TextEncoder().encode(message);
+    for (let i = 0; i < count; i++) {
+        const hashBuffer = await crypto.subtle.digest('SHA-256', hashArray);
+        hashArray = Array.from(new Uint8Array(hashBuffer));
+    }
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+lobbypasswordRaw.addEventListener('change', () => {
+    digestMessage(lobbypasswordRaw.value, 250000)
+        .then((hexHash) => {
+            // Send to server with Lobby Key
+            lobbypassword.value = hexHash;
+        });
+});
 
 lobbytype.addEventListener("change", function () {
     if (lobbytype.value === "Öffentlich" || lobbytype.value === 'public') {
