@@ -44,7 +44,24 @@
             </div>
         </div>
     </div>
+
+    {# Using .invisible and hidden, because that works the best #}
+    <div class="col-lg-8 mx-auto p-3 invisible" id="game" hidden>
+        {# TODO: BIG Todo for whole game frontend #}
+        {# Left area (6 out of 10) #}
+        {#   Question picture #}
+        {#   Smol category name #}
+        {#   Big Question #}
+        {#   Answer area #}
+        {#   Submit button #}
+        {#   "Time left" bar or something like that #}
+        {# Right area (4 out of 10) #}
+        {#   Current question number / questions left #}
+        {#   current user points and point streak #}
+        {#   lobby user list and lobby user points #}
+    </div>
     {# TODO: Timedrift im Race Mode erzeugt Report, also wenn der Spieler viel schneller war als der Server #}
+    {#          Also z.B. Spieler hat Frage 2 beantwortet, aber Server ist noch bei Frage 1 oder im Score Screen von Frage 1 #}
     {# TODO: Spieler sendet Ingame alle 50-100ms einen Heartbeat. Workaround für ohne Websocket #}
     {# TODO: Spieler warten nach Frage auf alle anderen Spieler. Spieler ohne Heartbeat für 10s wird gekickt. Spiel wird nicht gewertet für ihn #}
 
