@@ -155,9 +155,13 @@ class Lobby(models.Model):
 		return self.Lplayerlimit <= len(lobbyuser_objset)
 
 	def check_password(self, password):
+		if not password:
+			return False
 		return self.Lpassword == password
 
 	def check_authtoken(self, authtoken):
+		if not authtoken:
+			return False
 		return self.Lauthtoken == authtoken
 
 	def __str__(self):

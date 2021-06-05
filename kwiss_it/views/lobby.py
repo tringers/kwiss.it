@@ -202,9 +202,9 @@ def lobby_view(request, lobby_key, auth_token=None):
 		'errorMsg': '',
 		'infoMsg': '',
 	}
-	# TODO: Lobby joinen mit Passwort
-	request.GET.get('')
-	result = join_lobby(lobby_key, request.user, None, auth_token)
+	passhash = request.GET.get('passhash')
+
+	result = join_lobby(lobby_key, request.user, passhash, auth_token)
 
 	if result[0]:
 		args['auth_token'] = auth_token

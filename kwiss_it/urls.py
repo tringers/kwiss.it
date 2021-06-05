@@ -28,7 +28,6 @@ urlpatterns = [
 	path('register', register.register, name='register'),
 	path('register/checkusername/', register.register_checkusername_short, name='register_checkusername_short'),
 	path('register/checkusername/<str:username>', register.register_checkusername, name='register_checkusername'),
-	#re_path(r'convert/$', convert.convert_view, name='lazysignup_convert_custom'),
 
 	# For registered users
 	path('login', login.login_view, name='login'),

@@ -9,7 +9,7 @@ const qamax = 50;   //questionamountmax
 const tamin = 10;  //timeamountmin
 const tamax = 124; //timeamountmax
 const pamin = 2;    //playeramountmin
-const pamax = 16;   //playeramountmax
+const pamax = 30;   //playeramountmax
 
 const tbody = document.getElementById('categorylist');
 const cat_selects = document.getElementById('categorySelects');
@@ -227,10 +227,10 @@ function addSliderListener(slider, field, min, max) {
     }
 
     slider.addEventListener("change", () => {
-        equalize(slider.value)
+        equalize(slider.value);
     });
     field.addEventListener("change", () => {
-        equalize(field.value)
+        equalize(field.value);
     });
 }
 
@@ -241,4 +241,4 @@ pending.addEventListener("change", function () {
     } else {
         fetchCategory(false, true);
     }
-})
+});
