@@ -96,9 +96,6 @@ def createlobby_view(request):
 		inputLobbytype = False
 	# Check if password is valid if password is defined
 	if inputPassword is not None and inputPassword != '':
-		if not check_valid_chars(inputPassword):
-			args['errorMsg'] = 'Passwort enthält ungültige Zeichen.'
-			return createlobby_end(request, args)
 		password = inputPassword
 	else:
 		password = None
@@ -167,6 +164,7 @@ def createlobby_end(request, args):
 def join_lobby(Lkey, user_obj: User, password=None, authtoken=None):
 	check_old_heartbeat()
 	# Get Lobby
+	check_lazy_user(user_obj)
 	lobby_objset = Lobby.objects.filter(Lkey=Lkey)
 	if len(lobby_objset) < 1:
 		return [False, 'Lobby konnte nicht gefunden werden.']
@@ -280,11 +278,4 @@ def check_old_lobbys():
 	return
 
 
-def check_lazy_user(user_obj):
-	if not user_obj:
-		return
 
-	if not user_obj.first_name or user_obj.first_name == '':
-		user_obj.first_name = 'Guest ' + user_obj.username[0:6]
-		user_obj.save()
-	return

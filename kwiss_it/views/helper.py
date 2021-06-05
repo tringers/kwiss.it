@@ -84,4 +84,11 @@ def b64encode(text):
 def b64decode(text):
 	return base64.b64decode(text.encode(encoding='utf-8')).decode(encoding='utf-8')
 
+def check_lazy_user(user_obj):
+	if not user_obj:
+		return
 
+	if not user_obj.first_name or user_obj.first_name == '':
+		user_obj.first_name = 'Guest ' + user_obj.username[0:6]
+		user_obj.save()
+	return
