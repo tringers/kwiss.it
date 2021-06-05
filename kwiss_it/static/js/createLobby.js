@@ -26,7 +26,7 @@ function fetchCategory(pending = false, clear = false) {
     }
 
     // Get max page
-    fetch(api_url + '/category/' + fetch_param + '&page=0')
+    fetch(api_url + '/category/' + fetch_param + '&page=1')
         .then(pData => pData.json()
             .then(pJson => {
                 max_page = Math.ceil(pJson.count / 10);
@@ -68,6 +68,15 @@ function refreshCategoryAmount() {
 }
 
 function refreshTable() {
+    // Sort
+    categories = Object.keys(categories).sort().reduce(
+        (obj, key) => {
+            obj[key] = categories[key];
+            return obj;
+        },
+        {}
+    );
+
     let cat_names = Object.keys(categories);
     tbody.innerHTML = "";
 
@@ -210,15 +219,19 @@ let pafield = document.getElementById("playeramountfield");
 addSliderListener(paslider, pafield, pamin, pamax);
 
 function addSliderListener(slider, field, min, max) {
-    let equalize = function(value) {
-        value = min(value, max);
-        value = max(value, min);
+    let equalize = function (value) {
+        value = Math.min(value, max);
+        value = Math.max(value, min);
         slider.value = value;
         field.value = value;
     }
 
-    slider.addEventListener("change", () => {equalize(slider.value)});
-    field.addEventListener("change", () => {equalize(field.value)});
+    slider.addEventListener("change", () => {
+        equalize(slider.value)
+    });
+    field.addEventListener("change", () => {
+        equalize(field.value)
+    });
 }
 
 let pending = document.getElementById("pending");

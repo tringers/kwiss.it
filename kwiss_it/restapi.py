@@ -127,7 +127,7 @@ class CategoryView(mixins.ListModelMixin, viewsets.GenericViewSet):
 
 		in_filter = []
 
-		queryset = Category.objects.all()
+		queryset = Category.objects.all().order_by('STid').order_by('Cname')
 
 		if approved is None:
 			approved = 'true'

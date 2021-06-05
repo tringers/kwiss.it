@@ -209,7 +209,10 @@ def lobby_view(request, lobby_key, auth_token=None):
 	if result[0]:
 		args['auth_token'] = auth_token
 		args['lobby_key'] = lobby_key
-		args['lobby_name'] = Lobby.objects.get(Lkey=lobby_key).Lname
+		lobby = Lobby.objects.get(Lkey=lobby_key)
+		args['lobby_name'] = lobby.Lname
+		args['userlimit'] = lobby.Lplayerlimit
+		args['currentuser'] = len(LobbyUser.objects.filter(Lid=lobby))
 		return render(request, 'kwiss_it/lobby.html', args)
 	else:
 		args['errorMsg'] = result[1]
@@ -233,6 +236,25 @@ def lobby_heartbeat_view(request, lobby_key):
 		return JsonResponse({
 			'status': 200,
 			'name': name
+		})
+
+	return JsonResponse({
+		'status': 403
+	})
+
+@allow_lazy_user
+def lobby_ready_view(request, lobbykey, ready):
+	check_old_heartbeat()
+	user = request.user
+
+	lobbyuser_objset = LobbyUser.objects.filter(Lid__Lkey=lobbykey, Uid=user)
+	if len(lobbyuser_objset) > 0:
+		lobbyuser_obj = lobbyuser_objset[0]
+		lobbyuser_obj.LPLastHeartbeat = datetime.now()
+		lobbyuser_obj.LPready = (ready == 'true')
+		lobbyuser_obj.save()
+		return JsonResponse({
+			'status': 200
 		})
 
 	return JsonResponse({

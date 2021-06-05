@@ -50,5 +50,6 @@ urlpatterns = [
 	re_path(r'lobby/(?P<lobby_key>[0-9A-F]{6})/$', lobby.lobby_view, name='lobby'),
 	re_path(r'lobby/(?P<lobby_key>[0-9A-F]{6})/(?P<auth_token>[0-9a-f\-]{0,36})/$', lobby.lobby_view, name='lobby'),
 	re_path(r'lobby/heartbeat/(?P<lobby_key>[0-9A-F]{6})/$', lobby.lobby_heartbeat_view, name='lobby_heartbeat'),
+	path('lobby/ready/<str:lobbykey>/<str:ready>', lobby.lobby_ready_view, name='lobby_ready'),
 	path('api/', include(router.urls)),
 ]

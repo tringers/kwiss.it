@@ -1,12 +1,14 @@
 {% extends "kwiss_it/base.html" %}
+{% load static %}
 
 {% block content %}
     <meta id="lobby-data" data-lobby-key="{{ lobby_key }}" data-auth-token="{{ auth_token }}">
+    <meta id="crypto" data-iv="0">
     <div id="question-data" hidden></div>
     <div id="answer-data" hidden></div>
 
     <div class="col-lg-8 mx-auto p-3" id="lobby">
-        <div class="alert alert-danger d-flex align-items-center" role="alert" hidden id="lobby-error">
+        <div class="alert alert-danger d-flex align-items-center invisible" role="alert" hidden id="lobby-error">
             <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
                 <use xlink:href="#exclamation-triangle-fill"/>
             </svg>
@@ -15,13 +17,13 @@
             </div>
         </div>
 
-        <h1>Lobby: {{ lobby_name }}</h1>
+        <h1>Lobby: {{ lobby_name }} (<span id="playeramount">{{ currentuser }}</span>/{{ userlimit }} Spielern)</h1>
 
         <table class="table table-hover align-middle">
             <thead>
             <tr>
-                <th scope="col">Spieler</th>
-                <th scope="col" class="text-center">Bereit?</th>
+                <th scope="col" class="col-8">Spieler</th>
+                <th scope="col" class="col-4 text-center">Bereit?</th>
             </tr>
             </thead>
             <tbody id="table-body">
@@ -31,7 +33,16 @@
             </tr>
             </tbody>
         </table>
-        {# TODO: Button for being ready and sending ready to server #}
+        <div class="row">
+            <div class="col-4 pt-3">
+                <a class="col-12 btn btn-primary" href="{% url 'lobbylist' %}">Zurück zur Lobbyliste</a>
+            </div>
+            <div class="col-4 pt-3">
+            </div>
+            <div class="col-4 pt-3">
+                <input type="submit" class="col-12 btn btn-primary" id="btnReady" name="btnReady" data-value="0" value="Bereit">
+            </div>
+        </div>
     </div>
     {# TODO: Timedrift im Race Mode erzeugt Report, also wenn der Spieler viel schneller war als der Server #}
     {# TODO: Spieler sendet Ingame alle 50-100ms einen Heartbeat. Workaround für ohne Websocket #}
@@ -42,10 +53,100 @@
 {% block bodyscript %}
     <script>
         const lobby_key = document.getElementById('lobby-data').getAttribute('data-lobby-key');
+        const crypto_meta = document.getElementById('crypto');
         const question_data = document.getElementById('question-data');
         const answer_data = document.getElementById('answer-data');
+        const textenc = new TextEncoder();
+        const textdec = new TextDecoder();
+        const button_ready = document.getElementById('btnReady');
+        const playeramount = document.getElementById('playeramount');
         let first_name;
         let heartbeat_error = 0;
+
+        button_ready.addEventListener('click', () => {
+            switch (parseInt(button_ready.getAttribute('data-value'))) {
+                case 0:
+                    // Switch to "Ready"
+                    button_ready.value = "Nicht bereit";
+                    button_ready.setAttribute('data-value', "1");
+                    sendReadyStatus(true);
+                    break;
+                case 1:
+                    // Switch to "Not Ready"
+                    button_ready.value = "Bereit";
+                    button_ready.setAttribute('data-value', "0");
+                    sendReadyStatus(false);
+                    break;
+            }
+        })
+
+        function sendReadyStatus(ready) {
+            fetch('/lobby/ready/' + lobby_key + '/' + ready.toString());
+        }
+
+
+        if (parseInt(crypto_meta.getAttribute('data-iv')) === 0) {
+            // Generate IV for crypto
+            let iv = crypto.getRandomValues(new Uint8Array(16));
+            let data = iv.join(',');
+            crypto_meta.setAttribute('data-iv', data);
+        }
+
+        function getIV() {
+            let data = crypto_meta.getAttribute('data-iv');
+            let array_str = data.split(',');
+            let buffer = new ArrayBuffer(16);
+            let view = new Uint8Array(buffer);
+            for (let i = 0; i < array_str.length; i++)
+                view[i] = parseInt(array_str[i]);
+
+            return buffer;
+        }
+
+        async function encrypt(text, passwd) {
+            const data = textenc.encode(text);
+
+            const pw = textenc.encode(passwd);
+            const pwHash = await crypto.subtle.digest('SHA-256', pw);
+
+            const alg = {name: 'AES-GCM', iv: getIV()};
+            const key = await crypto.subtle.importKey('raw', pwHash, alg, false, ['encrypt']);
+            const encBuffer = await crypto.subtle.encrypt(alg, key, data);
+            return abtob64(encBuffer);
+        }
+
+        async function decrypt(b64, password) {
+            const pw = textenc.encode(password);
+            const pwHash = await crypto.subtle.digest('SHA-256', pw);
+
+            const alg = {name: 'AES-GCM', iv: getIV()};
+            const key = await crypto.subtle.importKey('raw', pwHash, alg, false, ['decrypt']);
+
+            const ctBuffer = b64toab(b64);
+            const ptBuffer = await crypto.subtle.decrypt(alg, key, ctBuffer);
+
+            return textdec.decode(ptBuffer);
+        }
+
+        function abtob64(buffer) {
+            let binary = '';
+            let bytes = new Uint8Array(buffer);
+            let len = bytes.byteLength;
+            for (let i = 0; i < len; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            return window.btoa(binary);
+        }
+
+        function b64toab(base64) {
+            let binary_string = window.atob(base64);
+            let len = binary_string.length;
+            let bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+                bytes[i] = binary_string.charCodeAt(i);
+            }
+            return bytes.buffer;
+        }
 
         let heartbeat = setInterval(() => {
             fetch('/lobby/heartbeat/' + lobby_key)
@@ -59,6 +160,7 @@
                             let lobby_error_content = document.getElementById('lobby-error-content');
                             lobby_error_content.innerHTML = "Verbindung unterbrochen. Zu lange keine Verbindung zur Lobby beibehalten. Leite zurück zur Lobbyliste.";
                             lobby_error.hidden = false;
+                            lobby_error.classList.remove('invisible');
                             setTimeout(() => {
                                 window.location.href = base_url + '/lobbylist';
                             }, 5000);
@@ -71,6 +173,21 @@
                     .then(json => {
                         const table_body = document.getElementById('table-body');
                         let cleared = false;
+                        playeramount.innerHTML = json.length;
+                        /*
+                        TODO: Alle ready? => Alten Heartbeat aus, button_ready deaktivieren => Neuen schnellen Heartbeat an
+                                Schneller Heartbeat 50-100ms // Wartet auf Start von Server
+
+                                Sobald Server startet => Game lokal starten und Zeitintervale einhalten
+                                Server startet Timer > +5s > Spiel startet mit erster Frage und sendet ggfs. Antwort
+                                > +Fragenzeit > Falls nicht geantwortet, sende Nachricht an Server
+                                > +15s für Fragen-Result Screen > Nächste Frage > +Fragenzeit > ...
+
+                                Falls Server nicht startet oder Abbruch meldet
+                                => Neuen Heartbeat aus
+                                => Langsamen Heartbeat an
+                                => button_ready aktivieren
+                        */
 
                         for (let i = 0; i < json.length; i++) {
                             let lobbyuser = json[i];
@@ -115,36 +232,48 @@
                 .then(data => data.json()
                     .then(json => {
                         for (let i = 0; i < json.length; i++) {
-                            let qid = json[i];
+                            let qid = json[i].Qid;
 
                             fetch(api_url + '/question/?qid=' + qid)
                                 .then(qData => qData.json()
                                     .then(qJson => {
-                                        let question = document.createElement('meta');
 
-                                        question.id = 'question-' + i;
-                                        question.classList.add('question-data');
-                                        question.setAttribute('data-qid', qid);
-                                        question.setAttribute('data-qtext', qJson[0].Qtext);
-                                        question.setAttribute('data-qtype', qJson[0].QTid);
-                                        question_data.appendChild(question);
+                                        encrypt(qJson[0].Qtext, lobby_key)
+                                            .then(cryptQ => {
+                                                let question = document.createElement('meta');
 
-                                        fetch(api_url + '/answer/?qid=' + qid)
-                                            .then(aData => aData.json()
-                                                .then(aJson => {
-                                                    for (let j = 0; j < aJson.length; j++) {
-                                                        let answer = document.createElement('meta');
+                                                question.id = 'question-' + i;
+                                                question.classList.add('question-data');
+                                                question.setAttribute('data-qid', qid);
+                                                //question.setAttribute('data-qtext', qJson[0].Qtext);
+                                                question.setAttribute('data-qtext', cryptQ);
+                                                question.setAttribute('data-qtype', qJson[0].QTid);
+                                                question_data.appendChild(question);
 
-                                                        answer.id = 'answer-' + i + '-' + j;
-                                                        answer.classList.add('answer-data');
-                                                        answer.setAttribute('for', 'question-' + i);
-                                                        answer.setAttribute('data-qid', qid);
-                                                        answer.setAttribute('data-anum', aJson[j].Anum);
-                                                        answer.setAttribute('data-atext', aJson[j].Atext);
+                                                fetch(api_url + '/answer/?qid=' + qid)
+                                                    .then(aData => aData.json()
+                                                        .then(aJson => {
+                                                            for (let j = 0; j < aJson.length; j++) {
 
-                                                        answer_data.appendChild(answer);
-                                                    }
-                                                }));
+                                                                encrypt(aJson[j].Atext, lobby_key)
+                                                                    .then(cryptA => {
+                                                                        let answer = document.createElement('meta');
+
+                                                                        answer.id = 'answer-' + i + '-' + j;
+                                                                        answer.classList.add('answer-data');
+                                                                        answer.setAttribute('for', 'question-' + i);
+                                                                        answer.setAttribute('data-qid', qid);
+                                                                        answer.setAttribute('data-anum', aJson[j].Anum);
+                                                                        //answer.setAttribute('data-atext', aJson[j].Atext);
+                                                                        answer.setAttribute('data-atext', cryptA);
+
+                                                                        answer_data.appendChild(answer);
+                                                                    });
+
+                                                            }
+                                                        }));
+                                            });
+
                                     }));
 
                         }
@@ -153,5 +282,8 @@
 
         setTimeout(fetchQuestions, 2000);
 
+        window.onbeforeunload = function () {
+            return "Möchtest du die Lobby wirklich verlassen?";
+        };
     </script>
 {% endblock %}
