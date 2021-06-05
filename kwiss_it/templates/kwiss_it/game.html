@@ -1,26 +1,47 @@
-{% extends "kwiss_it/base.html" %}
 {% load static %}
 {% load i18n lazysignup_tags %}
 
-{% block content %}
-	<div class="container">
-		<div class="col-lg-8 mx-auto p-3 invisible">
-			<small class="" id="category"></small>
-		</div>
-		<div class="col-lg-8 mx-auto p-3 invisible">
-			<h3 id="question"></h3>
-		</div>
-		<div class=" container invisible">
-			<div id="answers"></div>
-		</div>
-		<div class="btn-group invisible" role="group">
-			<button type="button" class="btn btn-outline-danger" id="report">Melden</button>
-			<button type="button" class="btn btn-outline-success" id="upvote">&#x1f44d;</button>
-			<button type="button" class="btn btn-outline-danger" id="downvote">&#x1F44E;</button>
+<div class="container">
+	<div class="col-lg-8 mx-auto p-3 invisible">
+		<div class="mb-4 form-group">
+				<div class="row pb-1 mb-1">
+					<div class="col-6 my-auto">
+						<small class="" id="category"></small>
+					</div>
+					<div class="col-6 my-auto" id="divquestionremaining">
+						<small id="curQuestion"> </small> / <small id="curQuestion"></small>
+					</div>
+					<div class="col-6 form-group">
+						<small class="" id="time"></small>
+					</div>
+				</div>
 		</div>
 	</div>
-{% endblock %}
-{% block script %}
-<script src="{% static 'js/game.min.js' %}"></script>
 
+	<div class="col-lg-8 mx-auto p-3 invisible">
+		<h3 id="question"></h3>
+	</div>
+	<div class="container invisible">
+		<div id="answers">
+			<div class="invisible" id="divcheck" hidden>
+
+			</div>
+			<div class="form-floating invisible" id="divnumber" hidden >
+				<input type="number" id="numinput">
+				<label for="numinput">Antwort</label>
+			</div>
+		</div>
+	</div>
+	<div class="invisible">
+		<button class="btn btn-outline-primary" id="submit">Antwort Senden</button>
+
+	</div>
+	<div class="btn-group invisible" role="group">
+		<button type="button" class="btn btn-outline-danger" id="report">Melden</button>
+		<button type="button" class="btn btn-outline-success" id="upvote">&#x1f44d;</button>
+		<button type="button" class="btn btn-outline-danger" id="downvote">&#x1F44E;</button>
+	</div>
+</div>
+{% block script %}
+	<script src="{% static 'js/game.min.js' %}"></script>
 {% endblock %}
