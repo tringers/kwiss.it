@@ -69,40 +69,37 @@ class WebsiteLoadTest(TestCase):
 
 class WebsiteTests(TestCase):
 
-	# def setUp(self):
-	# 	self.client = Client()
-	# 	self.user = User.objects.create_user(
-	# 		username='testinger', password='Passwort123'
-	# 	)
+	def setUp(self):
+		self.client = Client()
+		self.user = User.objects.create_user(
+			username='testi', password='Passwort123'
+		)
 
 	def test_login(self):
 		response = self.client.get(reverse('login'), follow=True)
 		self.assertEqual(response.status_code, 200)
 		response = self.client.post(reverse('login'), {
-			'inputUsername':	'testinger',
+			'inputUsername':	'testi',
 			'inputPassword':	'Passwort123',
 			'buttonLogin':		'buttonLogin'
 		}, follow=True)
 		self.assertContains(response, 'Login erfolgreich.')
 
 	# def test_register(self):
-	# 	response = self.client.post(reverse('register'),{
+	# 	response = self.client.post(reverse('register'), {
 	# 		'inputEmail':		'example@example.com',
-	# 		'inputUsername': 	'Testinger',
+	# 		'inputUsername': 	'Testi',
 	# 		'inputName': 		'Tester',
 	# 		'inputPassword':	'Passwort123',
 	# 		'inputPassword2':	'Passwort123',
 	# 		'buttonRegister':	'buttonRegister'
-	# 	})
+	# 	}, follow=True)
+	# 	print("Response: {}".format(response.content))
 	# 	self.assertEqual(response.status_code, 200)
-	# 	# self.assertContains(response, '')
 	# 	login = self.client.login(
-	# 		username='Testinger',
+	# 		username='Testi',
 	# 		password='Passwort123')
 	# 	self.assertTrue(login)
-	# 	response = self.client.get(reverse('index'))
-	# 	self.assertEqual(response.status_code, 200)
-	# 	self.assertContains(response, 'Spiel erstellen')
 
 	def test_create_lobby(self):
 		login = self.client.login(
@@ -121,11 +118,66 @@ class WebsiteTests(TestCase):
 			'categories':			'1',
 			'buttoncreate':			'buttoncreate'
 		}, follow=True)
-		print("Response: {}".format(response.content))
 		self.assertContains(response, 'Lobby:')
 
 	def test_join_game(self):
+		# TODO Selbsterklärend
 		pass
+
+	def test_insert_content_category(self):
+		login = self.client.login(
+			username='Testinger',
+			password='Passwort123',
+		)
+		self.assertTrue(login)
+		response = self.client.post(reverse('addcontent'), {
+			'category':		'new',
+			'catname':		'Test Name',
+			'catdesc':		'Test Description',
+			'buttoncreate':	'Erstellen'
+		})
+		self.assertEqual(response.status_code, 200)
+
+	def test_insert_content_question(self):
+		login = self.client.login(
+			username='Testinger',
+			password='Passwort123',
+		)
+		self.assertTrue(login)
+		response = self.client.post(reverse('addcontent'), {
+			'category':				'Karlsruhe',
+
+			'qtype1':				'number_excat',
+			'questiontext1':		'Example Question',
+			'question1answertext0':	'1234',
+			'question1correct':		'true',
+
+			'qtype2': 				'single',
+			'answeramount2':		'2',
+			'questiontext2': 		'Example Question2',
+			'question2answertext0': 'Example Answer 2dot1',
+			'question2answertext1':	'Example Answer 2dot2',
+			'question2correct0': 	'true',
+
+			'qtype3': 				'multiple',
+			'answeramount3': 		'2',
+			'questiontext3': 		'Example Question3',
+			'question3answertext0': 'Example Answer 3dot1',
+			'question3answertext1': 'Example Answer 3dot2',
+			'question3correct0': 	'true',
+			'question3correct1':	'true',
+
+			'qtype4': 				'number_deviation',
+			'questiontext4': 		'Example Question4',
+			'question4answertext0': '4321',
+			'question4correct0': 	'true',
+
+			'buttoncreate':			'buttoncreate'
+		})
+		self.assertEqual(response.status_code, 200)
+		self.assertContains(response, 'alert')
+
+
 
 
 # class DatabaseTest(TestCase):
