@@ -4,8 +4,13 @@ from .helper import *
 def voteCat(request, cat_id, vote):
 	if request.method != 'POST':
 		return redirect("index")
-	c_objs = Category.objects.filter(Cid=cat_id)
 	response_data = {}
+	if not cat_id.isnumeric() or not vote.isnumeric():
+		response_data['result'] = 400
+		response_data['message'] = "wrong data format used"
+		return JsonResponse(response_data)
+	c_objs = Category.objects.filter(Cid=cat_id)
+
 	if len(c_objs) != 1:
 		response_data['result'] = 404
 		response_data['message'] = "category not found"
@@ -27,8 +32,13 @@ def voteCat(request, cat_id, vote):
 def voteQuestion(request, q_id, vote):
 	if request.method != 'POST':
 		return redirect("index")
-	q_objs = Question.objects.filter(Qid=q_id)
 	response_data = {}
+	if not q_id.isnumeric() or not vote.isnumeric():
+		response_data['result'] = 400
+		response_data['message'] = "wrong data format used"
+		return JsonResponse(response_data)
+	q_objs = Question.objects.filter(Qid=q_id)
+
 	if len(q_objs) != 1:
 		response_data['result'] = 404
 		response_data['message'] = "category not found"
