@@ -80,8 +80,5 @@ def add_content(request, args=None):
 			q_obj.save()
 			for a_obj in answers:
 				a_obj.save()
-
-	"""for key, value in request.POST.items():
-		print(key)
-		print(value)"""
+		args["infoMsg"] = "Erfolgreich erstellt"
 	return render(request, 'kwiss_it/submitusercontent.html', args)
