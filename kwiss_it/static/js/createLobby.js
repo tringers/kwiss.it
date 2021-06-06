@@ -13,6 +13,7 @@ const pamax = 30;   //playeramountmax
 
 const tbody = document.getElementById('categorylist');
 const cat_selects = document.getElementById('categorySelects');
+const lobbytype = document.getElementById("lobbytype");
 let current_page = 1;
 let max_page = 1;
 let categories = {};
@@ -51,8 +52,12 @@ function refreshCategoryAmount() {
 
     for (let i = 0; i < cat_names.length; i++) {
         let category = categories[cat_names[i]];
+        let url= api_url + '/question/?cid=' + category.Cid
+        if(lobbytype.value == "single" || lobbytype.value =="Single"){
+            url+="&single=1"
+        }
         if (category.Camount === undefined) {
-            fetch(api_url + '/question/?cid=' + category.Cid)
+            fetch(url)
                 .then(data => data.json()
                     .then(json => {
                         if (json === undefined || json === [] || json.length <= 0) {
@@ -184,17 +189,45 @@ document.getElementById('next').addEventListener('click', () => {
 });
 
 
-let lobbytype = document.getElementById("lobbytype");
+
 let lobbypasswordfield = document.getElementById("lobbypasswordfield");
 let lobbypasswordRaw = document.getElementById("lobbypasswordRaw");
 let lobbypassword = document.getElementById("lobbypassword");
 
+let lobbynamefield= document.getElementById("lobbynamefield");
+let createlobbyname= document.getElementById("createlobbyname");
+
+let playeramountfielddiv= document.getElementById("playeramountfielddiv");
+
+let gamerace = document.getElementById("gamerace");
+let gamebasic = document.getElementById("gamebasic");
 function publiclobby() {
     lobbypasswordfield.hidden = true;
+    lobbynamefield.hidden = false;
+    playeramountfielddiv.hidden=false;
+
+    gamerace.removeAttribute("disabled")
 }
 
 function privatelobby() {
     lobbypasswordfield.hidden = false;
+    lobbynamefield.hidden = false;
+    playeramountfielddiv.hidden=false;
+
+    gamerace.removeAttribute("disabled")
+}
+function singlelobby(){
+    lobbypasswordfield.hidden = true;
+    lobbynamefield.hidden = true;
+    createlobbyname.value="";
+    playeramountfielddiv.setAttribute("hidden","true");
+    if (pending.checked) {
+        refreshCategoryAmount()
+    } else {
+        refreshCategoryAmount()
+    }
+    gamerace.setAttribute("disabled","true")
+    gamebasic.checked=true;
 }
 
 async function digestMessage(message, count) {
@@ -219,6 +252,8 @@ lobbytype.addEventListener("change", function () {
         publiclobby();
     } else if (lobbytype.value === "Privat" || lobbytype.value === 'private') {
         privatelobby();
+    }else if(lobbytype.value === "Single"||lobbytype.value === "single"){
+        singlelobby();
     }
 });
 

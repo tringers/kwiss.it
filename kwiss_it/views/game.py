@@ -59,7 +59,7 @@ def answerSubmit(request, lobby_key):
 			data['message'] = 'Exception: CHECK_find_question'
 		else:
 			lq_obj = lq_objset[a_question - 1]
-			q_obj = Question.objects.get(Qid=lq_obj.Qid)
+			q_obj = lq_obj.Qid
 			a_objset = Answer.objects.filter(Qid=q_obj, Acorrect=True)
 
 			if q_obj.QTid == 1:

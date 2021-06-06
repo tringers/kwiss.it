@@ -88,9 +88,11 @@ def createlobby_view(request):
 	if player_amount < 2 or player_amount > 16:
 		args['errorMsg'] = 'Spieleranzahl außerhalb des erlaubten Bereichs.'
 		return createlobby_end(request, args)
+	if inputLobbytype.lower() == 'single':
+		player_amount=1
 
 	# Check if lobby type is valid
-	if inputLobbytype.lower() in ['private', 'privat']:
+	if inputLobbytype.lower() in ['private', 'privat','single']:
 		inputLobbytype = True
 	else:
 		inputLobbytype = False

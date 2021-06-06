@@ -237,8 +237,10 @@ function fetchLobbyData() {
 
                 let lobby = json[0];
                 game.meta.timePerQuestion = parseInt(lobby.Ltimeamount);
+                game.meta.maxQuestions = parseInt(lobby.Lquestionamount);
 
-                //'Lkey', 'Lname', 'Ltype', 'Lplayerlimit', 'Lquestionamount', 'Ltimeamount', 'LcurrentQuestion', 'LcurrentCorrect'
+
+                //'Lkey', 'Lname', 'Ltype', 'Lplayerlimit', 'Lquestionamount', 'Ltimeamount', 'LcurrentQuestion', 'LcurrentCorrect' //todo
             }));
 }
 
@@ -306,5 +308,5 @@ function fetchQuestions() {
             }));
 }
 
-setTimeout(fetchLobbyData, 1000);
-setTimeout(fetchQuestions, 2000);
+setTimeout(fetchLobbyData, 100);
+setTimeout(fetchQuestions, 200);

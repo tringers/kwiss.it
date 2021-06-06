@@ -20,12 +20,12 @@
             </div>{% endcomment %}
 
 			{# Erstmal floating entfernt, da es kein einheitliches Design bietet (zu hoch) #}
-			<div class="mb-4 form-group">
+			<div class="mb-4 form-group" id="lobbynamefield">
 				<label for="createlobbyname">Raumname:</label>
-				<input type="text" class="form-control" id="createlobbyname" name="lobbyname" maxlength="64" placeholder="{{ user.first_name }}'s Raum" value="{{ user.first_name }}'s Raum" required>
+				<input type="text" class="form-control" id="createlobbyname" name="lobbyname" maxlength="64" placeholder="{{ user.first_name }}'s Raum" value="{{ user.first_name }}'s Raum">
 			</div>
 
-			<div class="mb-4 form-group">
+			<div class="mb-4 form-group" >
 				<div class="row pb-1 mb-1">
 					<div class="col-6 my-auto">
 						<label for="lobbytype" class="form-label my-auto">Lobbytyp:</label>
@@ -34,6 +34,7 @@
 						<select class="form-select" aria-label="" id="lobbytype" name="lobbytype">
 							<option value="public">Öffentlich</option>
 							<option value="private">Privat</option>
+							<option value="single">Einzelspieler</option>
 						</select>
 					</div>
 				</div>
@@ -82,7 +83,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="mb-4 form-group">
+			<div class="mb-4 form-group" id="playeramountfielddiv">
 				<div class="row pb-1 mb-1">
 					<div class="col-6 my-auto">
 						<label for="playeramountfield" class="form-label my-auto">Anzahl der Spieler:</label>
