@@ -1,0 +1,17 @@
+- model: kwiss_it.ReportType
+  pk: 1
+  fields:
+    RTname: "user"
+    RTdescription: "Benutzer melden"
+
+- model: kwiss_it.ReportType
+  pk: 2
+  fields:
+    RTname: "question"
+    RTdescription: "Frage melden"
+
+- model: kwiss_it.ReportType
+  pk: 3
+  fields:
+    RTname: "category"
+    RTdescription: "Kategorie melden"

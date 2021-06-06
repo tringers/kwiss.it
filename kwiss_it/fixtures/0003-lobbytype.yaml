@@ -1,0 +1,11 @@
+- model: kwiss_it.LobbyType
+  pk: 1
+  fields:
+    LTname: basic
+    LTdescription: "Klassisch"
+
+- model: kwiss_it.LobbyType
+  pk: 2
+  fields:
+    LTname: race
+    LTdescription: "Punkte für Geschwindigkeit"

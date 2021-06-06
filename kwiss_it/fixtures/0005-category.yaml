@@ -1,0 +1,7 @@
+- model: kwiss_it.Category
+  pk: 1
+  fields:
+    Uid: ~
+    Cname: "Approved"
+    Cdescription: "Approved"
+    STid: 1

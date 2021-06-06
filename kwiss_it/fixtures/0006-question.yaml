@@ -1,0 +1,109 @@
+- model: kwiss_it.Category
+  pk: 1
+  fields:
+    Cid: 1
+    Uid: ~
+    Pid: ~
+    STid: 1
+    QTid: 4
+    Qtext: "Wie lang gibt es die Stadt mit dem Namen Karlsruhe?"
+    Qplaycount: 0
+
+- model: kwiss_it.Category
+  pk: 2
+  fields:
+    Cid: 1
+    Uid: ~
+    Pid: ~
+    STid: 1
+    QTid:
+    Qtext: ""
+    Qplaycount: 0
+
+- model: kwiss_it.Category
+  pk: 3
+  fields:
+    Cid: 1
+    Uid: ~
+    Pid: ~
+    STid: 1
+    QTid:
+    Qtext: ""
+    Qplaycount: 0
+
+- model: kwiss_it.Category
+  pk: 4
+  fields:
+    Cid: 1
+    Uid: ~
+    Pid: ~
+    STid: 1
+    QTid:
+    Qtext: ""
+    Qplaycount: 0
+
+- model: kwiss_it.Category
+  pk: 5
+  fields:
+    Cid: 1
+    Uid: ~
+    Pid: ~
+    STid: 1
+    QTid:
+    Qtext: ""
+    Qplaycount: 0
+
+- model: kwiss_it.Category
+  pk: 6
+  fields:
+    Cid: 1
+    Uid: ~
+    Pid: ~
+    STid: 1
+    QTid:
+    Qtext: ""
+    Qplaycount: 0
+
+- model: kwiss_it.Category
+  pk: 7
+  fields:
+    Cid: 1
+    Uid: ~
+    Pid: ~
+    STid: 1
+    QTid:
+    Qtext: ""
+    Qplaycount: 0
+
+- model: kwiss_it.Category
+  pk: 8
+  fields:
+    Cid: 1
+    Uid: ~
+    Pid: ~
+    STid: 1
+    QTid:
+    Qtext: ""
+    Qplaycount: 0
+
+- model: kwiss_it.Category
+  pk: 9
+  fields:
+    Cid: 1
+    Uid: ~
+    Pid: ~
+    STid: 1
+    QTid:
+    Qtext: ""
+    Qplaycount: 0
+
+- model: kwiss_it.Category
+  pk: 10
+  fields:
+    Cid: 1
+    Uid: ~
+    Pid: ~
+    STid: 1
+    QTid:
+    Qtext: ""
+    Qplaycount: 0

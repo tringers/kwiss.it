@@ -1,0 +1,23 @@
+- model: kwiss_it.QuestionType
+  pk: 1
+  fields:
+    QTname: "number_exact"
+    QTdescription: "Genaue Zahleneingabe"
+
+- model: kwiss_it.QuestionType
+  pk: 2
+  fields:
+    QTname: "single"
+    QTdescription: "Eine korrekte Antwort"
+
+- model: kwiss_it.QuestionType
+  pk: 3
+  fields:
+    QTname: "multiple"
+    QTdescription: "Meherere korrekte Antworten"
+
+- model: kwiss_it.QuestionType
+  pk: 4
+  fields:
+    QTname: "number_deviation"
+    QTdescription: "Näheste Zahleneingabe"

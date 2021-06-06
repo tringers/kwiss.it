@@ -92,7 +92,7 @@ def createlobby_view(request):
 		player_amount=1
 
 	# Check if lobby type is valid
-	if inputLobbytype.lower() in ['private', 'privat','single']:
+	if inputLobbytype.lower() in ['private', 'privat', 'single']:
 		inputLobbytype = True
 	else:
 		inputLobbytype = False

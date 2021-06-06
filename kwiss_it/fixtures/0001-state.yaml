@@ -1,0 +1,14 @@
+- model: kwiss_it.State
+  pk: 1
+  fields:
+    Sdescription: "Approved"
+
+- model: kwiss_it.State
+  pk: 2
+  fields:
+    Sdescription: "Denied"
+
+- model: kwiss_it.State
+  pk: 3
+  fields:
+    Sdescription: "Pending"
