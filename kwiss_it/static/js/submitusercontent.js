@@ -87,10 +87,9 @@ function faddquestion() {
     questionNumber.id = "questionnumber" + maxquestion.toString();
     questionNumber.name = "questionnumber" + maxquestion.toString();
 
-    questionNumberField.id= "questionnumberfield" + maxquestion.toString();
-    questionNumberField.name= "questionnumberfield";
-    questionNumberField.value= maxquestion.toString();
-
+    questionNumberField.id = "questionnumberfield" + maxquestion.toString();
+    questionNumberField.name = "questionnumberfield";
+    questionNumberField.value = maxquestion.toString();
 
 
     for (let i = 0; i < questiontypes.length; i++) {
@@ -120,8 +119,8 @@ function faddquestion() {
         answeramount.setAttribute("hidden", "true");
         answeramountfield.value = "1";
     }
-    answeramount.addEventListener("change",function (){
-        answeramountfield.value=answeramount.value;
+    answeramount.addEventListener("change", function () {
+        answeramountfield.value = answeramount.value;
         answeramountfield.dispatchEvent(new Event("change"))
     })
     answeramountfield.addEventListener("change", function () {
@@ -139,6 +138,7 @@ function faddquestion() {
             let answernumberfield = document.getElementById("answernumberfield");
             let answertext = document.getElementById("answertext");
             let correct = document.getElementById("correct");
+            let correctdiv = document.getElementById("correctdiv");
 
             answernumber.innerText = "Antwort " + (i + 1).toString();
             answernumber.id = "question" + maxquestion.toString() + "answernumber" + i.toString()
@@ -147,22 +147,29 @@ function faddquestion() {
             answernumberfield.value = i.toString();
             answertext.id = "question" + maxquestion.toString() + "answertext" + i.toString();
             answertext.name = "question" + maxquestion.toString() + "answertext" + i.toString();
+            correctdiv.id = "question" + maxquestion.toString() + "correctdiv" + i.toString();
+
             correct.id = "question" + maxquestion.toString() + "correct" + i.toString();
+            correct.value = i.toString();
             if (qtype.value == "multiple") {
                 correct.name = "question" + maxquestion.toString() + "correct" + i.toString();
             } else if (qtype.value == "number_exact" | qtype.value == "number_deviation") {
                 correct.name = "question" + maxquestion.toString() + "correct";
                 correct.type = "radio";
-                //correct.setAttribute("hidden", "true");
+                correct.setAttribute("checked", "true")
+                correctdiv.setAttribute("hidden", "true");
                 answertext.type = "number"
             } else {
                 correct.name = "question" + maxquestion.toString() + "correct";
                 correct.type = "radio";
+
+                correct.setAttribute("checked", "true");
+
             }
         }
 
     })
-    answers.id="answers"+maxquestion.toString();
+    answers.id = "answers" + maxquestion.toString();
     answeramountfield.dispatchEvent(new Event("change"))
     answeramountfield.id = "answeramountfield" + maxquestion.toString();
     answeramountfield.name = "answeramountfield" + maxquestion.toString();
@@ -170,11 +177,11 @@ function faddquestion() {
     questiontext.name = "questiontext" + maxquestion.toString();
     removequestion.id = "removequestion" + maxquestion.toString();
     removequestion.addEventListener("click", function () {
-        questionsset.delete(divquestion.name.substring(1))
-        questionamount.value=questionsset.size.toString()
+        questionsset.delete(divquestion.id.replace("q", ""))
+        questionamount.value = questionsset.size.toString()
         divquestion.remove()
     })
-    questionamount.value=questionsset.size.toString()
+    questionamount.value = questionsset.size.toString()
 
 }
 
