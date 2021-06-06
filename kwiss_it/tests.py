@@ -145,32 +145,31 @@ class WebsiteTests(TestCase):
 		)
 		self.assertTrue(login)
 		response = self.client.post(reverse('addcontent'), {
-			'category':				'Karlsruhe',
+			'category':				'1',
 
-			'qtype1':				'number_excat',
+			'qtype1':				'number_exact',
 			'questiontext1':		'Example Question',
 			'question1answertext0':	'1234',
-			'question1correct':		'true',
+			'question1correct':		'0',
 
 			'qtype2': 				'single',
 			'answeramount2':		'2',
 			'questiontext2': 		'Example Question2',
 			'question2answertext0': 'Example Answer 2dot1',
 			'question2answertext1':	'Example Answer 2dot2',
-			'question2correct0': 	'true',
+			'question2correct': 	'0',
 
 			'qtype3': 				'multiple',
 			'answeramount3': 		'2',
 			'questiontext3': 		'Example Question3',
 			'question3answertext0': 'Example Answer 3dot1',
 			'question3answertext1': 'Example Answer 3dot2',
-			'question3correct0': 	'true',
-			'question3correct1':	'true',
+			'question3correct': 	'0',
 
 			'qtype4': 				'number_deviation',
 			'questiontext4': 		'Example Question4',
 			'question4answertext0': '4321',
-			'question4correct0': 	'true',
+			'question4correct': 	'0',
 
 			'buttoncreate':			'buttoncreate'
 		})
