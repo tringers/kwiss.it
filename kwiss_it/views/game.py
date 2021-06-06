@@ -50,55 +50,55 @@ def answerSubmit(request, lobby_key):
 		data['status'] = 400
 		data['message'] = 'Exception: CHECK_find_lobby'
 
-	lobby_obj = lobby_objset[0]
-	lq_objset = LobbyQuestions.objects.filter(Lid=lobby_obj)
-
-	if data['status'] != 400 and not lq_objset[a_question - 1]:
-		data['status'] = 400
-		data['message'] = 'Exception: CHECK_find_question'
-
 	if data['status'] != 400:
-		lq_obj = lq_objset[a_question - 1]
-		q_obj = Question.objects.get(Qid=lq_obj.Qid)
-		a_objset = Answer.objects.filter(Qid=q_obj, Acorrect=True)
+		lobby_obj = lobby_objset[0]
+		lq_objset = LobbyQuestions.objects.filter(Lid=lobby_obj)
 
-		if q_obj.QTid == 1:
-			# Number correct
-			if int(a_objset[0].Atext) == int(a_answer[0]):
-				data['lastSubmissionCorrect'] = True
-		elif q_obj.QTid == 2:
-			# Single correct
-			if int(a_objset[0].Anum) == int(a_answer[0]):
-				data['lastSubmissionCorrect'] = True
-		elif q_obj.QTid == 3:
-			# Multiple correct
-			correct = True
-			if len(a_objset) != len(a_answer):
-				correct = False
+		if not lq_objset[a_question - 1]:
+			data['status'] = 400
+			data['message'] = 'Exception: CHECK_find_question'
+		else:
+			lq_obj = lq_objset[a_question - 1]
+			q_obj = Question.objects.get(Qid=lq_obj.Qid)
+			a_objset = Answer.objects.filter(Qid=q_obj, Acorrect=True)
 
-			if correct:
-				for i in range(len(a_answer)):
-					userAnswer = a_answer[i]
-					found = False
+			if q_obj.QTid == 1:
+				# Number correct
+				if int(a_objset[0].Atext) == int(a_answer[0]):
+					data['lastSubmissionCorrect'] = True
+			elif q_obj.QTid == 2:
+				# Single correct
+				if int(a_objset[0].Anum) == int(a_answer[0]):
+					data['lastSubmissionCorrect'] = True
+			elif q_obj.QTid == 3:
+				# Multiple correct
+				correct = True
+				if len(a_objset) != len(a_answer):
+					correct = False
 
-					for j in range(len(a_objset)):
-						answer = a_objset[j]
-						if int(userAnswer) == int(answer.Anum):
-							found = True
+				if correct:
+					for i in range(len(a_answer)):
+						userAnswer = a_answer[i]
+						found = False
+
+						for j in range(len(a_objset)):
+							answer = a_objset[j]
+							if int(userAnswer) == int(answer.Anum):
+								found = True
+								break
+
+						if not found:
+							correct = False
 							break
 
-					if not found:
-						correct = False
-						break
-
-			data['lastSubmissionCorrect'] = correct
-		elif q_obj.QTid == 4:
-			# Deviation
-			data['lastSubmissionCorrect'] = True
-			if a_answer[0] == -1:
-				data['deviation'] = -1
-			else:
-				data['deviation'] = abs(int(a_objset[0].Atext) - int(a_answer[0]))
+				data['lastSubmissionCorrect'] = correct
+			elif q_obj.QTid == 4:
+				# Deviation
+				data['lastSubmissionCorrect'] = True
+				if a_answer[0] == -1:
+					data['deviation'] = -1
+				else:
+					data['deviation'] = abs(int(a_objset[0].Atext) - int(a_answer[0]))
 
 	if data['status'] != 400:
 		lq_obj = lq_objset[a_question - 1]
