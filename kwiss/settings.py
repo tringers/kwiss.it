@@ -188,3 +188,11 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+if DEBUG:
+    MIDDLEWARE = [
+        'whitenoise.middleware.WhiteNoiseMiddleware',
+    ] + MIDDLEWARE
+    INSTALLED_APPS = [
+        'whitenoise.runserver_nostatic',
+    ] + INSTALLED_APPS
