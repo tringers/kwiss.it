@@ -44,12 +44,10 @@ function startGame() {
     gameDiv.classList.remove('invisible');
     gameDiv.hidden = false;
     game.meta.timeStarted = getTimestamp_s();
-    stopHeartbeat();
     game.interval = setInterval(connectionHandle, 50);
 }
 
 function connectionHandle() {
-    sendHeartbeat();
     let questionNo = whichQuestion();
 
     if (questionNo === game.processedQuestion && !is_question()) {
