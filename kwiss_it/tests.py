@@ -1,6 +1,6 @@
 from django.test import TestCase, Client
 from django.urls import path
-from . models import Lobby
+from . models import Lobby, User
 from django.urls import reverse
 
 
@@ -51,11 +51,6 @@ class WebsiteLoadTest(TestCase):
 		response = client.get(reverse('register'))
 		self.assertEqual(200, response.status_code)
 
-	def test_load_password_reset_page(self):
-		client = Client()
-		response = client.get('/password-reset')
-		self.assertEqual(200, response.status_code)
-
 	def test_load_user_page(self):
 		client = Client()
 		response = client.get('/user/test')
@@ -74,42 +69,71 @@ class WebsiteLoadTest(TestCase):
 
 class WebsiteTests(TestCase):
 
+	# def setUp(self):
+	# 	self.client = Client()
+	# 	self.user = User.objects.create_user(
+	# 		username='testinger', password='Passwort123'
+	# 	)
+
 	def test_login(self):
-		client = Client()
-		response = client.get(reverse('login'), follow=True)
+		response = self.client.get(reverse('login'), follow=True)
 		self.assertEqual(response.status_code, 200)
-		response = client.post(reverse('login'), {
+		response = self.client.post(reverse('login'), {
 			'inputUsername':	'testinger',
 			'inputPassword':	'Passwort123',
 			'buttonLogin':		'buttonLogin'
 		}, follow=True)
-		print("Respsonse: {}".format(response.content))
-		self.assertContains(response, 'Login fehlgeschlagen.')
 		self.assertContains(response, 'Login erfolgreich.')
 
-	def test_register(self):
-		client = Client()
-		response = client.post(reverse('register'),{
-			'inputEmail':		'example@example.com',
-			'inputUsername': 	'Testinger',
-			'inputName': 		'Tester',
-			'inputPassword':	'Passwort123',
-			'inputPassword2':	'Passwort123'
-		})
-		self.assertEqual(response.status_code, 200)
-		self.assertContains(response, 'One of the required values were not present')
-		login = client.login(username='Testinger', password='Passwort123')
+	# def test_register(self):
+	# 	response = self.client.post(reverse('register'),{
+	# 		'inputEmail':		'example@example.com',
+	# 		'inputUsername': 	'Testinger',
+	# 		'inputName': 		'Tester',
+	# 		'inputPassword':	'Passwort123',
+	# 		'inputPassword2':	'Passwort123',
+	# 		'buttonRegister':	'buttonRegister'
+	# 	})
+	# 	self.assertEqual(response.status_code, 200)
+	# 	# self.assertContains(response, '')
+	# 	login = self.client.login(
+	# 		username='Testinger',
+	# 		password='Passwort123')
+	# 	self.assertTrue(login)
+	# 	response = self.client.get(reverse('index'))
+	# 	self.assertEqual(response.status_code, 200)
+	# 	self.assertContains(response, 'Spiel erstellen')
+
+	def test_create_lobby(self):
+		login = self.client.login(
+			username='Testinger',
+			password='Passwort123',
+		)
 		self.assertTrue(login)
-		response = client.get(reverse('index'))
-		self.assertEqual(response.status_code, 200)
-		self.assertContains(response, 'Spiel erstellen')
+		response = self.client.post(reverse('createlobby'), {
+			'createlobbyname':		'testname',
+			'lobbytype':			'public',
+			'gamemode':				'basic',
+			'pending':				'True',
+			'playeramountfield':	'4',
+			'questionamountfield':	'5',
+			'timeamountfield':		'10',
+			'categories':			'1',
+			'buttoncreate':			'buttoncreate'
+		}, follow=True)
+		print("Response: {}".format(response.content))
+		self.assertContains(response, 'Lobby:')
 
-class DatabaseTest(TestCase):
+	def test_join_game(self):
+		pass
 
-	def test_default_lobby_is_private(self):
-		lobby = Lobby()
-		self.assertIs(lobby.is_private_lobby(), False)
 
-	def test_lobby_is_public(self):
-		lobby = Lobby(Lprivate=True)
-		self.assertIs(lobby.is_private_lobby(), True)
+# class DatabaseTest(TestCase):
+#
+# 	def test_default_lobby_is_private(self):
+# 		lobby = Lobby()
+# 		self.assertIs(lobby.is_private_lobby(), False)
+#
+# 	def test_lobby_is_public(self):
+# 		lobby = Lobby(Lprivate=True)
+# 		self.assertIs(lobby.is_private_lobby(), True)
