@@ -132,7 +132,7 @@ def createlobby_view(request):
 			usedquestions.extend(Question.objects.filter(Q(Cid=cat) & Q(STid__in=statepending)).filter().values_list('Qid', flat=True))
 	questions_selected = choose_random(usedquestions, question_amount)
 
-	if len(usedquestions) < question_amount or len(usedquestions) > question_amount:
+	if len(questions_selected ) < question_amount or len(questions_selected ) > question_amount:
 		args["errorMsg"] = 'Es stehen nicht genug Fragen durch die ausgewählten Kategorien zur Verfügung.'
 		return createlobby_end(request, args)
 
