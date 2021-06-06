@@ -84,7 +84,7 @@
 				<label for="category" class="form-label my-auto">Kategorie:</label>
 			</div>
 			<div class="col-6 my-auto">
-				<select class="form-select form-select-lg mb-3" id="category">
+				<select class="form-select form-select-lg mb-3" id="category" name="category">
 					<option value="new">Neue Kategorie erstellen</option>
 				</select>
 			</div>
@@ -105,7 +105,7 @@
 					<label for="catdesc">Kategorie Beschreibung</label>
 				</div>
 				<div class="col-6 my-auto">
-					<textarea class="form-control" placeholder="Beschreibung" id="catdesc" style="height: 100px" maxlength="512"></textarea>
+					<textarea class="form-control" placeholder="Beschreibung" name="catdesc" id="catdesc" style="height: 100px" maxlength="512"></textarea>
 				</div>
 			</div>
 		</div>
@@ -123,5 +123,5 @@
 
 {% endblock %}
 {% block bodyscript %}
-	<script src="{% static 'js/submitusercontent.js' %}"></script>
+	<script src="{% static 'js/submitusercontent.min.js' %}"></script>
 {% endblock %}

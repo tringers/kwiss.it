@@ -71,7 +71,7 @@ class CategoryVotes(models.Model):
 	vote = models.SmallIntegerField(default=0)
 
 	class Meta:
-		unique_together = ('Qid', 'Uid')
+		unique_together = ('Cid', 'Uid')
 
 
 class Score_Category(models.Model):

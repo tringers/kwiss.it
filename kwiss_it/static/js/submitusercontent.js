@@ -21,7 +21,7 @@ function start() {
     getquestiontypes();
 }
 
-function categorylist(url = api_url + "/category/") {
+function categorylist(url = api_url + "/category/?approved=true&pending=true") {
     fetch(url)
         .then(data => data.json()
             .then(json => {
@@ -104,30 +104,30 @@ function faddquestion() {
     qtype.addEventListener("change", function () {
         if (qtype.value == "single" || qtype.value == "multiple") {
             answeramount.removeAttribute("hidden")
-            answeramountfield.innerText = answeramount.value;
+            answeramountfield.value = answeramount.value;
         } else {
             answeramount.setAttribute("hidden", "true");
-            answeramountfield.innerText = "1";
+            answeramountfield.value = "1";
         }
         answeramountfield.dispatchEvent(new Event("change"))
     });
     answeramount.id = "answeramount" + maxquestion.toString();
     if (qtype.value == "single" || qtype.value == "multiple") {
         answeramount.removeAttribute("hidden")
-        answeramountfield.innerText = answeramount.value;
+        answeramountfield.value = answeramount.value;
 
     } else {
         answeramount.setAttribute("hidden", "true");
-        answeramountfield.innerText = "1";
+        answeramountfield.value = "1";
     }
     answeramount.addEventListener("change",function (){
-        answeramountfield.innerText=answeramount.value;
+        answeramountfield.value=answeramount.value;
         answeramountfield.dispatchEvent(new Event("change"))
     })
     answeramountfield.addEventListener("change", function () {
 
         answers.innerHTML = "";
-        let amount = parseInt(answeramountfield.innerText);
+        let amount = parseInt(answeramountfield.value);
         for (let i = 0; i < amount; i++) {
             let divanswer = document.createElement("div");
             divanswer.innerHTML = answertemplate;
@@ -144,7 +144,7 @@ function faddquestion() {
             answernumber.id = "question" + maxquestion.toString() + "answernumber" + i.toString()
             answernumberfield.id = "question" + maxquestion.toString() + "answernumberfield" + i.toString()
             answernumberfield.name = "question" + maxquestion.toString() + "answernumberfield" + i.toString()
-            answernumberfield.innerText = i.toString();
+            answernumberfield.value = i.toString();
             answertext.id = "question" + maxquestion.toString() + "answertext" + i.toString();
             answertext.name = "question" + maxquestion.toString() + "answertext" + i.toString();
             correct.id = "question" + maxquestion.toString() + "correct" + i.toString();
@@ -162,6 +162,7 @@ function faddquestion() {
         }
 
     })
+    answers.id="answers"+maxquestion.toString();
     answeramountfield.dispatchEvent(new Event("change"))
     answeramountfield.id = "answeramountfield" + maxquestion.toString();
     answeramountfield.name = "answeramountfield" + maxquestion.toString();
@@ -169,11 +170,11 @@ function faddquestion() {
     questiontext.name = "questiontext" + maxquestion.toString();
     removequestion.id = "removequestion" + maxquestion.toString();
     removequestion.addEventListener("click", function () {
-        questionsset.delete(divquestion.substring(1))
-        questionamount.value=JSON.stringify(questionsset)
+        questionsset.delete(divquestion.name.substring(1))
+        questionamount.value=questionsset.size.toString()
         divquestion.remove()
     })
-    questionamount.value=JSON.stringify(questionsset)
+    questionamount.value=questionsset.size.toString()
 
 }
 
