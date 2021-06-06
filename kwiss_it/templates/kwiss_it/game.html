@@ -23,7 +23,7 @@
                     <h3 id="qhQuestion"></h3>
                 </div>
                 <div class="row pb-1 mb-1">
-                    <div class="col-6 my-auto">
+                    <div class="col-10 my-auto">
                         <h6 id="qhType"></h6>
                     </div>
                 </div>
@@ -72,14 +72,65 @@
         </div>
     </div>
     <div class="container">
-        <div class="row">
-            <div class="">
-                <button class="btn btn-primary" id="submitAnswer">Antwort senden</button>
+        <div class="row mb-5">
+            <div class="col-lg-10">
+                <table class="col-12">
+                    <thead>
+                    <tr>
+                        <th scope="col" class="col-3"></th>
+                        <th scope="col" class="col-2"></th>
+                        <th scope="col" class="col-7"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            {# TODO: Wird durch Text ersetzt beim Klicken #}
+                            {# TODO: Beim Klick erstellt es schon den Report Inhalt in einer Div #}
+                            {# TODO: Nach letzter Frage wird das Repooriting Div sichtbar #}
+                            {# TODO: Button um einzelne Reports zu löschen am Ende #}
+                            {# TODO: Button um alle sichtbaren Reports zu Senden am Ende #}
+                            <button class="btn btn-outline-danger col-12" id="report">MELDEN</button>
+                        </td>
+                        <td></td>
+                        <td>
+                            <button class="btn btn-primary col-12" id="submitAnswer">Antwort senden</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-outline-danger" id="report">Frage oder Antwort MELDEN</button>
-                <button type="button" class="btn btn-outline-success" id="upvote">&#x1f44d;</button>
-                <button type="button" class="btn btn-outline-danger" id="downvote">&#x1F44E;</button>
+        </div>
+        <div class="row">
+            <div class="col-lg-10">
+                <h5>Voting:</h5>
+                <table class="col-12">
+                    <thead>
+                    <tr>
+                        <th scope="col" class="col-6"></th>
+                        <th scope="col" class="col-2"></th>
+                        <th scope="col" class="col-4"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="border-bottom border-2">
+                        <td class="pb-2">Frage</td>
+                        <td></td>
+                        <td class="col-12 pb-2 my-auto btn-group" role="group">
+                            <button type="button" class="btn btn-outline-success col-6" id="question-upvote">&#x1f44d;</button>
+                            <button type="button" class="btn btn-outline-danger col-6" id="question-downvote">&#x1F44E;</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pt-2">Kategorie</td>
+                        <td></td>
+                        <td class="col-12 pt-2 my-auto btn-group" role="group">
+                            <button type="button" class="btn btn-outline-success col-6" id="category-upvote">&#x1f44d;</button>
+                            <button type="button" class="btn btn-outline-danger col-6" id="category-downvote">&#x1F44E;</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -87,24 +138,8 @@
     <div class="invisible" hidden>
         {% include 'kwiss_it/game_questiontypes.html' %}
     </div>
-
-    {# TODO: BIG Todo for whole game frontend #}
-    {# Left area (6 out of 10) #}
-    {#   Question picture #}
-    {#   Smol category name #}
-    {#   Big Question #}
-    {#   Answer area #}
-    {#   Submit button #}
-    {#   "Time left" bar or something like that #}
-    {# Right area (4 out of 10) #}
-    {#   Current question number / questions left #}
-    {#   current user points and point streak #}
-    {#   lobby user list and lobby user points #}
-    {# TODO: Timedrift im Race Mode erzeugt Report, also wenn der Spieler viel schneller war als der Server #}
-    {#          Also z.B. Spieler hat Frage 2 beantwortet, aber Server ist noch bei Frage 1 oder im Score Screen von Frage 1 #}
-    {# TODO: Spieler sendet Ingame alle 50-100ms einen Heartbeat. Workaround für ohne Websocket #}
-    {# TODO: Spieler warten nach Frage auf alle anderen Spieler. Spieler ohne Heartbeat für 10s wird gekickt. Spiel wird nicht gewertet für ihn #}
 {% endblock %}
 {% block gamescript %}
     <script src="{% static 'js/game.js' %}"></script>
+    <script src="{% static 'js/game_addition.js' %}"></script>
 {% endblock %}

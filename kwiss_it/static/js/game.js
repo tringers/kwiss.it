@@ -16,7 +16,7 @@ function prepGame() {
     if (game.meta.timeStarted === 0) {
         // Prepare game (5s delay)
         stopHeartbeat();
-        game.interval = setInterval(gameTick, 50);
+        heartbeat = setInterval(sendHeartbeat, 100);
         for (let i = 0; i < 6; i++) {
             setTimeout(() => {
                 let lobbyDelayTime = document.getElementById('lobbyDelayTime');
@@ -43,6 +43,7 @@ function startGame() {
     gameDiv.classList.remove('invisible');
     gameDiv.hidden = false;
     game.meta.timeStarted = getTimestamp_s();
+    stopHeartbeat();
     game.interval = setInterval(connectionHandle, 50);
 }
 
@@ -59,11 +60,11 @@ function connectionHandle() {
         // Disable Answer section and wait for server to send resolution
         if (!game.scoresFetched) {
             game.scoresFetched = true;
-            setTimeout(getStatus, 5000);
+            setTimeout(getStatus, 3000);
         }
     }
 
-    if (questionNo !== game.processedQuestion) {
+    if (questionNo !== game.processedQuestion && (questionNo + 1) < game.meta.maxQuestions) {
         hideQuestionResult();
         game.processedQuestion = questionNo;
         loadQuestion();
@@ -77,7 +78,7 @@ function connectionHandle() {
 }
 
 async function sendHeartbeat() {
-
+    // TODO: Implement new Heartbeat (or copy old one and strip it down)
 }
 
 async function loadQuestion() {
@@ -191,11 +192,13 @@ async function postData(url = '', data = {}) {
         method: 'POST',
         cache: 'no-cache',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value,
         },
+        credentials: 'same-origin',
         redirect: 'follow',
         referrerPolicy: 'no-referrer',
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
     });
     return response.json();
 }
@@ -218,13 +221,16 @@ function timeElapsed() {
     return Math.abs(game.meta.timeStarted - getTimestamp_s());
 }
 
-function answerSubmission(answer = "") {
+function answerSubmission(answer = [-1]) {
     postData(base_url + '/game/' + lobby_key, {
         lobbyAuth: lobby_auth,
+        name: first_name,
         qno: whichQuestion() + 1,
-        answer: answer
+        answer: answer,
     })
         .then(json => {
+            if(json.checkLater)
+                return;
             let myResult = document.getElementById('myResult');
             myResult.classList.remove('text-success');
             myResult.classList.remove('text-danger');

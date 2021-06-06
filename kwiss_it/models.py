@@ -58,8 +58,6 @@ class Category(models.Model):
 	Cname = models.CharField(max_length=128, unique=True)
 	Cdescription = models.CharField(max_length=512)
 	STid = models.ForeignKey(State, db_index=True, default=0, on_delete=models.RESTRICT, help_text="State ID")
-	Cupvotes = models.PositiveIntegerField(db_index=True, default=0)
-	Cdownvotes = models.PositiveIntegerField(db_index=True, default=0)
 
 	def __str__(self):
 		return self.Cname
@@ -100,10 +98,6 @@ class Question(models.Model):
 	STid = models.ForeignKey(State, db_index=True, default=0, on_delete=models.RESTRICT, help_text="State ID")
 	QTid = models.ForeignKey(QuestionType, db_index=True, on_delete=models.RESTRICT, help_text="QuestionType ID")
 	Qplaycount = models.PositiveIntegerField(default=0)
-	Qupvotes = models.PositiveIntegerField(default=0)
-	Qdownvotes = models.PositiveIntegerField(default=0)
-	Qmodupvotes = models.PositiveIntegerField(default=0)
-	Qmoddownvotes = models.PositiveIntegerField(default=0)
 
 	def __str__(self):
 		return self.Qtext
@@ -207,11 +201,14 @@ class LobbyCategory(models.Model):
 class LobbyUser(models.Model):
 	Lid = models.ForeignKey(Lobby, on_delete=models.CASCADE)
 	Uid = models.ForeignKey(User, on_delete=models.CASCADE)
+	LPquestionanswered = models.ForeignKey(Question, on_delete=models.RESTRICT)
 	LPready = models.BooleanField(default=False)
 	LPLastHeartbeat = models.DateTimeField(auto_now_add=True)
 	LPScore = models.IntegerField(default=0)
-	LPStreak = models.IntegerField(default=1)
+	LPStreak = models.IntegerField(default=0)
 	LPlastaddition = models.IntegerField(default=0)
+	LPdeviation = models.BigIntegerField(default=0)
+	LPwasdeviation = models.BooleanField(default=False)
 
 
 class LobbyQuestions(models.Model):

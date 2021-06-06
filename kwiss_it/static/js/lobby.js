@@ -211,20 +211,6 @@ let heartbeat = setInterval(() => {
                 }
 
                 if (allReady) {
-                    /*
-                    TODO: Alle ready? => Alten Heartbeat aus, button_ready deaktivieren => Neuen schnellen Heartbeat an
-                            Schneller Heartbeat 50-100ms // Wartet auf Start von Server
-
-                            Sobald Server startet => Game lokal starten und Zeitintervale einhalten
-                            Server startet Timer > +5s > Spiel startet mit erster Frage und sendet ggfs. Antwort
-                            > +Fragenzeit > Falls nicht geantwortet, sende Nachricht an Server
-                            > +15s für Fragen-Result Screen > Nächste Frage > +Fragenzeit > ...
-
-                            Falls Server nicht startet oder Abbruch meldet
-                            => Neuen Heartbeat aus
-                            => Langsamen Heartbeat an
-                            => button_ready aktivieren
-                    */
                     button_ready.disabled = true;
                     prepGame();
                 }

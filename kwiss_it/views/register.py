@@ -139,7 +139,7 @@ def register(request):
 		# TODO: Send mail to user
 		# TODO: After email validation: Set is_active to 1
 		# TODO: After email validation: Create all necessary model entries
-		user_obj.is_active = 0
+		user_obj.is_active = 1
 		user_obj.first_name = inputName
 		user_obj.save()
 		args['infoMsg'] = 'Bestätige deine Email Adresse, danach kannst du dich anmelden.'
