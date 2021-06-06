@@ -78,7 +78,11 @@ function connectionHandle() {
 }
 
 async function sendHeartbeat() {
-    // TODO: Implement new Heartbeat (or copy old one and strip it down)
+    fetch('/lobby/heartbeat/' + lobby_key)
+        .then((data) => {
+            heartbeat_error = 0;
+        })
+        .catch(() => heartbeat_error++);
 }
 
 async function loadQuestion() {
