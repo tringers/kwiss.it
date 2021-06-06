@@ -60,11 +60,15 @@ def add_content(request, args=None):
 			if not input_answernumberfield:
 				args["errorMsg"] = "Fehler in Antwortübertragung"
 				return render(request, 'kwiss_it/submitusercontent.html', args)
-			input_correct= request.POST.get("question"+i+"correct"+str(a))
-			if input_correct is None:
-				input_correct=False
+			input_correct=""
+			if qt_obj.QTname == "number_exact" or qt_obj.QTname == "number_deviation":
+				input_correct= request.POST.get("question"+i+"correct")
 			else:
+				input_correct = request.POST.get("question" + i + "correct"+str(a))
+			if input_correct == str(a) :
 				input_correct=True
+			else:
+				input_correct=False
 			input_answertext=request.POST.get("question"+i+"answertext"+str(a))
 			if not check_valid_chars(input_answertext):
 				args["errorMsg"] = f"Im Antworttext bei Frage {i} in Antwort {str(a)} sind nicht erlaubte Zeichen enthalten"

@@ -139,6 +139,7 @@ function faddquestion() {
             let answernumberfield = document.getElementById("answernumberfield");
             let answertext = document.getElementById("answertext");
             let correct = document.getElementById("correct");
+            let correctdiv= document.getElementById("correctdiv");
 
             answernumber.innerText = "Antwort " + (i + 1).toString();
             answernumber.id = "question" + maxquestion.toString() + "answernumber" + i.toString()
@@ -147,13 +148,17 @@ function faddquestion() {
             answernumberfield.value = i.toString();
             answertext.id = "question" + maxquestion.toString() + "answertext" + i.toString();
             answertext.name = "question" + maxquestion.toString() + "answertext" + i.toString();
+            correctdiv.id="question" + maxquestion.toString() + "correctdiv" + i.toString();
+
             correct.id = "question" + maxquestion.toString() + "correct" + i.toString();
+            correct.value=i.toString();
             if (qtype.value == "multiple") {
                 correct.name = "question" + maxquestion.toString() + "correct" + i.toString();
             } else if (qtype.value == "number_exact" | qtype.value == "number_deviation") {
                 correct.name = "question" + maxquestion.toString() + "correct";
                 correct.type = "radio";
-                //correct.setAttribute("hidden", "true");
+                correct.setAttribute("checked","true")
+                correctdiv.setAttribute("hidden", "true");
                 answertext.type = "number"
             } else {
                 correct.name = "question" + maxquestion.toString() + "correct";
@@ -170,7 +175,7 @@ function faddquestion() {
     questiontext.name = "questiontext" + maxquestion.toString();
     removequestion.id = "removequestion" + maxquestion.toString();
     removequestion.addEventListener("click", function () {
-        questionsset.delete(divquestion.name.substring(1))
+        questionsset.delete(divquestion.id.replace("q",""))
         questionamount.value=questionsset.size.toString()
         divquestion.remove()
     })
