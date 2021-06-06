@@ -98,7 +98,7 @@ def createlobby_view(request):
 		inputLobbytype = False
 	# Check if password is valid if password is defined
 	if inputPassword is not None and inputPassword != '':
-		password = inputPassword
+		password = b64encode(inputPassword)
 	else:
 		password = None
 
@@ -177,7 +177,10 @@ def join_lobby(Lkey, user_obj: User, password=None, authtoken=None):
 
 	lobby_obj = lobby_objset[0]
 	test_valid = False
+	if password:
+		password=unquote(password)
 
+		password=b64encode(password)
 	if lobby_obj.is_full():
 		return [False, 'Lobby ist bereits voll.']
 
@@ -185,7 +188,8 @@ def join_lobby(Lkey, user_obj: User, password=None, authtoken=None):
 		test_valid = True
 	elif lobby_obj.is_private_lobby():
 		test_valid = (lobby_obj.check_password(password) or lobby_obj.check_authtoken(authtoken))
-
+	elif lobby_obj.is_solo_lobby():
+		test_valid = lobby_obj.check_authtoken(authtoken)
 	if test_valid:
 		lobbyuser_obj = LobbyUser.objects.create(Lid=lobby_obj, Uid=user_obj)
 		lobbyuser_obj.save()
@@ -197,7 +201,7 @@ def join_lobby(Lkey, user_obj: User, password=None, authtoken=None):
 @allow_lazy_user
 def lobby_view(request, lobby_key, auth_token=None):
 	check_old_heartbeat()
-	check_old_lobbys()
+	#check_old_lobbys()
 	args = {
 		'errorMsg': '',
 		'infoMsg': '',

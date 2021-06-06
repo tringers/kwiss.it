@@ -108,21 +108,9 @@ submitLobbyPassword.addEventListener('click', () => {
     let password = inputLobbyPassword.value;
     let lobby_key = joinPrivate.getAttribute('data-lobbykey');
 
-    // Hash password
-    digestMessage(password, 250000)
-        .then((hexHash) => {
-            // Send to server with Lobby Key
-            window.location.href = base_url + '/lobby/' + lobby_key + '/?passhash=' + hexHash;
-        });
-});
+    password=encodeURI(password)
+    window.location.href = base_url + '/lobby/' + lobby_key + '/?passhash=' + password;
 
-async function digestMessage(message, count) {
-    let hashArray = new TextEncoder().encode(message);
-    for (let i = 0; i < count; i++) {
-        const hashBuffer = await crypto.subtle.digest('SHA-256', hashArray);
-        hashArray = Array.from(new Uint8Array(hashBuffer));
-    }
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
+});
 
 
