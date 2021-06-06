@@ -76,11 +76,16 @@ class WebsiteTests(TestCase):
 
 	def test_login(self):
 		client = Client()
+		response = client.get(reverse('login'), follow=True)
+		self.assertEqual(response.status_code, 200)
 		response = client.post(reverse('login'), {
-			'inputUsername':	'test',
-			'inputPassword':	'Test123'
-		})
-		self.assertContains(response, b'Login fehlgeschlagen.')
+			'inputUsername':	'testinger',
+			'inputPassword':	'Passwort123',
+			'buttonLogin':		'buttonLogin'
+		}, follow=True)
+		print("Respsonse: {}".format(response.content))
+		self.assertContains(response, 'Login fehlgeschlagen.')
+		self.assertContains(response, 'Login erfolgreich.')
 
 	def test_register(self):
 		client = Client()
@@ -91,10 +96,13 @@ class WebsiteTests(TestCase):
 			'inputPassword':	'Passwort123',
 			'inputPassword2':	'Passwort123'
 		})
-		self.assertEqual(200, response.status_code)
-		client.login(username='Testinger', password='Passwort123')
-		client.get(reverse('index'))
-		self.assertContains(client, b'Spiel erstellen')
+		self.assertEqual(response.status_code, 200)
+		self.assertContains(response, 'One of the required values were not present')
+		login = client.login(username='Testinger', password='Passwort123')
+		self.assertTrue(login)
+		response = client.get(reverse('index'))
+		self.assertEqual(response.status_code, 200)
+		self.assertContains(response, 'Spiel erstellen')
 
 class DatabaseTest(TestCase):
 
