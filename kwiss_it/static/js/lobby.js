@@ -141,7 +141,6 @@ function b64toab(base64) {
 let heartbeat = setInterval(() => {
     fetch('/lobby/heartbeat/' + lobby_key)
         .then((data) => {
-            heartbeat_error = 0;
             data.json().then(json => {
                 if (parseInt(json.status) === 200) {
                     if (first_name === '') {
@@ -149,19 +148,25 @@ let heartbeat = setInterval(() => {
                         game.gamedata = {};
                         game.gamedata[first_name] = Object.assign({}, playerScoreTemplate);
                     }
+                    heartbeat_error = 0;
                 } else {
-                    let lobby_error = document.getElementById('lobby-error');
-                    let lobby_error_content = document.getElementById('lobby-error-content');
-                    lobby_error_content.innerHTML = "Verbindung unterbrochen. Zu lange keine Verbindung zur Lobby beibehalten. Leite zurück zur Lobbyliste.";
-                    lobby_error.hidden = false;
-                    lobby_error.classList.remove('invisible');
-                    setTimeout(() => {
-                        window.location.href = base_url + '/lobbylist';
-                    }, 5000);
+                    heartbeat_error++;
                 }
             })
         })
-        .catch(() => heartbeat_error++);
+        .catch(() => {
+            heartbeat_error++;
+            if (heartbeat_error > 2) {
+                let lobby_error = document.getElementById('lobby-error');
+                let lobby_error_content = document.getElementById('lobby-error-content');
+                lobby_error_content.innerHTML = "Verbindung unterbrochen. Zu lange keine Verbindung zur Lobby beibehalten. Leite zurück zur Lobbyliste.";
+                lobby_error.hidden = false;
+                lobby_error.classList.remove('invisible');
+                setTimeout(() => {
+                    window.location.href = base_url + '/lobbylist';
+                }, 5000);
+            }
+        });
     fetch(api_url + '/lobbyuser/?lkey=' + lobby_key)
         .then(data => data.json()
             .then(json => {
