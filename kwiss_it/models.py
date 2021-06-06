@@ -24,7 +24,7 @@ class UserDescription(models.Model):
 
 class UserPicture(models.Model):
 	Uid = models.OneToOneField(User, on_delete=models.CASCADE)
-	Pid = models.OneToOneField(Picture, default=0, on_delete=models.SET_DEFAULT)
+	Pid = models.OneToOneField(Picture, default=1, on_delete=models.SET_DEFAULT)
 
 
 class UserLastSeen(models.Model):
@@ -57,7 +57,7 @@ class Category(models.Model):
 	Uid = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 	Cname = models.CharField(max_length=128, unique=True)
 	Cdescription = models.CharField(max_length=512)
-	STid = models.ForeignKey(State, db_index=True, default=0, on_delete=models.RESTRICT, help_text="State ID")
+	STid = models.ForeignKey(State, db_index=True, default=1, on_delete=models.RESTRICT, help_text="State ID")
 
 	def __str__(self):
 		return self.Cname
@@ -91,11 +91,11 @@ class QuestionType(models.Model):
 
 class Question(models.Model):
 	Qid = models.BigAutoField(primary_key=True)
-	Cid = models.ForeignKey(Category, db_index=True, default=0, on_delete=models.SET_DEFAULT, help_text="Category ID")
+	Cid = models.ForeignKey(Category, db_index=True, default=1, on_delete=models.SET_DEFAULT, help_text="Category ID")
 	Uid = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 	Pid = models.ForeignKey(Picture, null=True, blank=True, on_delete=models.SET_NULL, help_text="Picture ID")
 	Qtext = models.CharField(max_length=256)
-	STid = models.ForeignKey(State, db_index=True, default=0, on_delete=models.RESTRICT, help_text="State ID")
+	STid = models.ForeignKey(State, db_index=True, default=1, on_delete=models.RESTRICT, help_text="State ID")
 	QTid = models.ForeignKey(QuestionType, db_index=True, on_delete=models.RESTRICT, help_text="QuestionType ID")
 	Qplaycount = models.PositiveIntegerField(default=0)
 
