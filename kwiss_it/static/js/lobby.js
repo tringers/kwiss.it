@@ -170,6 +170,7 @@ let heartbeat = setInterval(() => {
                 playeramount.innerHTML = json.length;
 
                 let allReady = true;
+                let hasAnswer = false;
 
                 for (let i = 0; i < json.length; i++) {
                     let lobbyuser = json[i];
@@ -178,6 +179,7 @@ let heartbeat = setInterval(() => {
 
                     if (!ready)
                         allReady = false;
+                    hasAnswer = true;
 
                     // Create children
                     let row = document.createElement('tr');
@@ -210,7 +212,7 @@ let heartbeat = setInterval(() => {
                     table_body.appendChild(row);
                 }
 
-                if (allReady) {
+                if (allReady && hasAnswer) {
                     button_ready.disabled = true;
                     prepGame();
                 }
