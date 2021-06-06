@@ -1,7 +1,7 @@
 from django.urls import path, re_path, include
 from rest_framework import routers
 from django.views.generic import TemplateView
-from .views import static, register, login, user, lobby, convert, content, game
+from .views import static, register, login, user, lobby, convert, content, game,vote
 from . import restapi
 
 router = routers.DefaultRouter()
@@ -57,4 +57,8 @@ urlpatterns = [
 
 	# API access
 	path('api/', include(router.urls)),
+
+	#voting
+	path('vote/category/<int:cat_id>/<int:vote>', vote.voteCat,name='vote'),
+	path('vote/question/<int:q_id>/<int:vote>', vote.voteQuestion,name='vote'),
 ]

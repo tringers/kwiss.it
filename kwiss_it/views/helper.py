@@ -16,7 +16,7 @@ from ratelimit.decorators import ratelimit
 from lazysignup.decorators import allow_lazy_user, require_lazy_user, require_nonlazy_user
 from lazysignup.utils import is_lazy_user
 
-from ..models import UserLastSeen, UserPrivate, UserPicture, UserDescription, Picture, Lobby, LobbyUser, LobbyType, Question, LobbyQuestions, LobbyCategory, State, Category,Answer,QuestionType
+from ..models import UserLastSeen, UserPrivate, UserPicture, UserDescription, Picture, Lobby, LobbyUser, LobbyType, Question, LobbyQuestions, LobbyCategory, State, Category,Answer,QuestionType, CategoryVotes, QuestionVotes
 
 
 forbidden_usernames = [
