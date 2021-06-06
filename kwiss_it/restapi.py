@@ -192,6 +192,14 @@ class QuestionView(viewsets.ReadOnlyModelViewSet):
 		denied = self.request.query_params.get('denied')
 		pending = self.request.query_params.get('pending')
 		in_filter = []
+		if approved is None:
+			approved = 'true'
+
+		if denied is None:
+			denied = 'false'
+
+		if pending is None:
+			pending = 'false'
 		if approved.lower() == 'true':
 			in_filter.append('1')
 		if denied.lower() == 'true':
