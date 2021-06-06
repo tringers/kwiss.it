@@ -177,7 +177,8 @@ def getScores(request, lobby_key):
 	data = {
 		'status': 200,
 		'message': '',
-		'results': []
+		'deviation': False,
+		'results': [],
 	}
 	template = {
 		'name': '',

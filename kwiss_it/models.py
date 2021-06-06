@@ -201,7 +201,7 @@ class LobbyCategory(models.Model):
 class LobbyUser(models.Model):
 	Lid = models.ForeignKey(Lobby, on_delete=models.CASCADE)
 	Uid = models.ForeignKey(User, on_delete=models.CASCADE)
-	LPquestionanswered = models.ForeignKey(Question, on_delete=models.RESTRICT)
+	LPquestionanswered = models.ForeignKey(Question, on_delete=models.RESTRICT, null=True, default=None)
 	LPready = models.BooleanField(default=False)
 	LPLastHeartbeat = models.DateTimeField(auto_now_add=True)
 	LPScore = models.IntegerField(default=0)

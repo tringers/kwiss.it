@@ -120,7 +120,7 @@ class LobbyQuestionsView(viewsets.ReadOnlyModelViewSet):
 class CategorySerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Category
-		fields = ['Cname', 'Cdescription', 'STid', 'Cid',]
+		fields = ['Cname', 'Cdescription', 'STid', 'Cid']
 
 
 class CustomPagination(pagination.PageNumberPagination):
@@ -177,7 +177,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Question
-		fields = ['Qid', 'Cid', 'Cname', 'Qtext', 'QTid', 'Qplaycount',]
+		fields = ['Qid', 'Cid', 'Cname', 'Qtext', 'QTid', 'Qplaycount']
 
 
 class QuestionView(viewsets.ReadOnlyModelViewSet):
