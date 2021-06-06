@@ -146,8 +146,8 @@ let heartbeat = setInterval(() => {
                 if (parseInt(json.status) === 200) {
                     if (first_name === '') {
                         first_name = json.name;
-                        game.playerScores = {};
-                        game.playerScores[first_name] = Object.assign({}, playerScoreTemplate);
+                        game.gamedata = {};
+                        game.gamedata[first_name] = Object.assign({}, playerScoreTemplate);
                     }
                 } else {
                     let lobby_error = document.getElementById('lobby-error');

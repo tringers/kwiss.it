@@ -13,6 +13,7 @@ const qResult = document.getElementById('qResult');
 
 function prepGame() {
     qhMaxQuestion.innerHTML = game.meta.maxQuestions;
+
     if (game.meta.timeStarted === 0) {
         // Prepare game (5s delay)
         stopHeartbeat();
@@ -78,11 +79,7 @@ function connectionHandle() {
 }
 
 async function sendHeartbeat() {
-    fetch('/lobby/heartbeat/' + lobby_key)
-        .then((data) => {
-            heartbeat_error = 0;
-        })
-        .catch(() => heartbeat_error++);
+    await fetch('/lobby/heartbeat/' + lobby_key);
 }
 
 async function loadQuestion() {
@@ -222,7 +219,8 @@ function is_question() {
 }
 
 function timeElapsed() {
-    return Math.abs(game.meta.timeStarted - getTimestamp_s());
+    // Between starttime of question and current timestamp
+    return Math.abs(game.meta.timeStarted + (whichQuestion * (game.meta.timePerQuestion + 15)) - getTimestamp_s());
 }
 
 function answerSubmission(answer = [-1]) {
