@@ -187,7 +187,17 @@ class QuestionView(viewsets.ReadOnlyModelViewSet):
 	def get_queryset(self):
 		question_id = self.request.query_params.get('qid')
 		category_id = self.request.query_params.get('cid')
-		single= self.request.query_params.get('single')
+		single = self.request.query_params.get('single')
+		approved = self.request.query_params.get('approved')
+		denied = self.request.query_params.get('denied')
+		pending = self.request.query_params.get('pending')
+		in_filter = []
+		if approved.lower() == 'true':
+			in_filter.append('1')
+		if denied.lower() == 'true':
+			in_filter.append('2')
+		if pending.lower() == 'true':
+			in_filter.append('3')
 		if question_id:
 			# Return single question
 			queryset = Question.objects.filter(Qid=question_id)
@@ -197,12 +207,11 @@ class QuestionView(viewsets.ReadOnlyModelViewSet):
 
 		if category_id:
 
-
 			if single:
-				filter=['1','2','3']
-				queryset= Question.objects.all().filter(Q(QTid__in=filter) & Q(Cid=category_id))
+				filter = ['1', '2', '3']
+				queryset = Question.objects.all().filter(Q(QTid__in=filter) & Q(Cid=category_id) & Q(STid__in=in_filter))
 			else:
-				queryset = Question.objects.filter(Cid=category_id)
+				queryset = Question.objects.filter(Q(Cid=category_id) & Q(STid__in=in_filter))
 			if len(queryset) < 1:
 				return Question.objects.none()
 			return queryset
