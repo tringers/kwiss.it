@@ -177,7 +177,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Question
-		fields = ['Qid', 'Cid', 'Cname', 'Qtext', 'QTid', 'Qplaycount', 'Qupvotes', 'Qdownvotes']
+		fields = ['Qid', 'Cid', 'Cname', 'Qtext', 'QTid', 'Qplaycount',]
 
 
 class QuestionView(viewsets.ReadOnlyModelViewSet):
