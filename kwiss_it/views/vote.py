@@ -14,7 +14,7 @@ def voteCat(request, cat_id, vote):
 	CV_objs = CategoryVotes.objects.filter(Q(Uid=request.user) & Q(Cid=c_objs))
 	CV_len = len(CV_objs)
 	if CV_len < 1:
-		obj = QuestionVotes.objects.create(Cid=c_objs, Uid=request.user, vote=vote - 10)
+		obj = CategoryVotes.objects.create(Cid=c_objs, Uid=request.user, vote=vote - 10)
 		obj.save()
 	elif CV_len == 1:
 		CV_objs.vote = vote - 10
