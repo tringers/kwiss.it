@@ -1,6 +1,6 @@
 from django.test import TestCase, Client
 from django.urls import path
-from . models import Lobby, User
+from . models import Lobby, User, Question, Answer
 from django.urls import reverse
 
 
@@ -85,21 +85,20 @@ class WebsiteTests(TestCase):
 		}, follow=True)
 		self.assertContains(response, 'Login erfolgreich.')
 
-	# def test_register(self):
-	# 	response = self.client.post(reverse('register'), {
-	# 		'inputEmail':		'example@example.com',
-	# 		'inputUsername': 	'Testi',
-	# 		'inputName': 		'Tester',
-	# 		'inputPassword':	'Passwort123',
-	# 		'inputPassword2':	'Passwort123',
-	# 		'buttonRegister':	'buttonRegister'
-	# 	}, follow=True)
-	# 	print("Response: {}".format(response.content))
-	# 	self.assertEqual(response.status_code, 200)
-	# 	login = self.client.login(
-	# 		username='Testi',
-	# 		password='Passwort123')
-	# 	self.assertTrue(login)
+	def test_register(self):
+		response = self.client.post(reverse('register'), {
+			'inputEmail':		'example@example.com',
+			'inputUsername': 	'Testi',
+			'inputName': 		'Tester',
+			'inputPassword':	'Passwort123',
+			'inputPassword2':	'Passwort123',
+			'buttonRegister':	'Registrieren'
+		}, follow=True)
+		self.assertEqual(response.status_code, 200)
+		login = self.client.login(
+			username='Testi',
+			password='Passwort123')
+		self.assertTrue(login)
 
 	def test_create_lobby(self):
 		login = self.client.login(
@@ -146,11 +145,12 @@ class WebsiteTests(TestCase):
 		self.assertTrue(login)
 		response = self.client.post(reverse('addcontent'), {
 			'category':				'1',
+			'catname':				'',
+			'catdesc':				'',
 
 			'qtype1':				'number_exact',
 			'questiontext1':		'Example Question',
 			'question1answertext0':	'1234',
-			'question1correct':		'0',
 
 			'qtype2': 				'single',
 			'answeramount2':		'2',
@@ -164,18 +164,19 @@ class WebsiteTests(TestCase):
 			'questiontext3': 		'Example Question3',
 			'question3answertext0': 'Example Answer 3dot1',
 			'question3answertext1': 'Example Answer 3dot2',
-			'question3correct': 	'0',
+			'question3correct0': 	'1',
+			'question3correct1':	'1',
 
 			'qtype4': 				'number_deviation',
 			'questiontext4': 		'Example Question4',
 			'question4answertext0': '4321',
-			'question4correct': 	'0',
 
 			'buttoncreate':			'buttoncreate'
 		})
 		self.assertEqual(response.status_code, 200)
-		self.assertContains(response, 'alert')
 
+		questions = Question.objects.order_by('-Qid')[:4]
+		print("Questions: {}".format(questions))
 
 
 
