@@ -275,7 +275,7 @@ def lobby_ready_view(request, lobbykey, ready):
 def check_old_heartbeat():
 	# Check if someone is still in Lobby but heartbeat missing for 15s
 	# If thats the case remove user from lobby
-	lobbyuser_objset = LobbyUser.objects.filter(LPLastHeartbeat__lt=(datetime.now() - timedelta(seconds=10)))
+	lobbyuser_objset = LobbyUser.objects.filter(LPLastHeartbeat__lt=(datetime.now() - timedelta(seconds=15)))
 	if len(lobbyuser_objset) > 0:
 		print("Deleted LobbyUser: " + str(len(lobbyuser_objset)))
 	lobbyuser_objset.delete()
@@ -283,10 +283,11 @@ def check_old_heartbeat():
 
 
 def check_old_lobbys():
+	return
 	lobbyuser_objset = LobbyUser.objects.distinct()
 	lobby_objset = Lobby.objects.filter(
 		~Q(Lid__in=lobbyuser_objset) &
-		Q(Lcreated__lte=(datetime.now() - timedelta(seconds=15)))
+		Q(Lcreated__lte=(datetime.now() - timedelta(seconds=30)))
 	)
 	if len(lobby_objset) > 0:
 		print("Deleted lobbys: " + str(len(lobby_objset)))
