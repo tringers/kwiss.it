@@ -73,7 +73,13 @@ function connectionHandle() {
         game.scoresFetched = false;
     }
 
-    timeBar.style.width = Math.round(100 - timeElapsed() * 100 / game.meta.timePerQuestion) + '%';
+    if((questionNo + 1) === game.meta.maxQuestions && !is_question()) {
+        clearInterval(game.interval);
+        clearInterval(heartbeat);
+        setTimeout(getEndscreen, 10000);
+    } else {
+        timeBar.style.width = Math.round(100 - timeElapsed() * 100 / game.meta.timePerQuestion) + '%';
+    }
 }
 
 async function sendHeartbeat() {
@@ -126,7 +132,7 @@ function loadAnswers(qtid, answers) {
 
             qt1_copy.id = 'qtype_1_1';
             qt1_copy.classList.remove('template');
-            qt1_copy.innerHTML.replace('temp1', '1_1');
+            qt1_copy.innerHTML = qt1_copy.innerHTML.replaceAll('temp1', '1_1');
 
             answerRow.appendChild(qt1_copy);
             break;
@@ -141,7 +147,7 @@ function loadAnswers(qtid, answers) {
 
                 qt2_copy.id = 'qtype_2_' + i;
                 qt2_copy.classList.remove('template');
-                qt2_copy.innerHTML.replace('temp2', '2_' + i);
+                qt2_copy.innerHTML = qt2_copy.innerHTML.replaceAll('temp2', '2_' + i);
 
                 answerRow.appendChild(qt2_copy);
 
@@ -162,7 +168,7 @@ function loadAnswers(qtid, answers) {
 
                 qt3_copy.id = 'qtype_3_' + i;
                 qt3_copy.classList.remove('template');
-                qt3_copy.innerHTML.replace('temp3', '3_' + i);
+                qt3_copy.innerHTML = qt3_copy.innerHTML.replaceAll('temp3', '3_' + i);
 
                 answerRow.appendChild(qt3_copy);
 
@@ -179,7 +185,7 @@ function loadAnswers(qtid, answers) {
 
             qt4_copy.id = 'qtype_4_1';
             qt4_copy.classList.remove('template');
-            qt4_copy.innerHTML.replace('temp4', '4_1');
+            qt4_copy.innerHTML = qt4_copy.innerHTML.replaceAll('temp4', '4_1');
 
             answerRow.appendChild(qt4_copy);
             break;
@@ -316,6 +322,12 @@ function getStatus() {
 
                 showQuestionResult();
             }));
+}
+
+function getEndscreen() {
+    // TODO: Show placement of all player
+    // TODO: Show created reports
+    alert("DONE");
 }
 
 submitAnswer.addEventListener('click', () => {
