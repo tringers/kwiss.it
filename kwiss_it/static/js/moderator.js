@@ -168,7 +168,7 @@ function addanswers(i, q,qid) {
 
                     answers.id="c"+i+"q"+q+"answer"+a.toString();
                     answers.innerHTML=json[a].Atext;
-                    correct.id="c"+i+"q"+q+"correct"+a.toString()
+                    correct.id="c"+i+"q"+q+"correct"+a.toString();
                 }
 
             })

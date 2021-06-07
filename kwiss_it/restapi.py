@@ -255,10 +255,10 @@ class AnswerView(viewsets.ReadOnlyModelViewSet):
 		if question_id:
 			# Return single question
 			queryset = Answer.objects.filter(Qid=question_id)
+			if self.request.user.is_staff:
+				return queryset
 			if len(queryset) < 2:
 				return Answer.objects.none()
 			return queryset
 
 		return Answer.objects.none()
-
-
