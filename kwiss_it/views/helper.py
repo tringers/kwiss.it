@@ -17,8 +17,8 @@ from ratelimit.decorators import ratelimit
 from lazysignup.decorators import allow_lazy_user, require_lazy_user, require_nonlazy_user
 from lazysignup.utils import is_lazy_user
 
-from ..models import UserLastSeen, UserPrivate, UserPicture, UserDescription, Picture, Lobby, LobbyUser, LobbyType, Question, LobbyQuestions, LobbyCategory, State, Category,Answer,QuestionType, CategoryVotes, QuestionVotes
-
+from ..models import UserLastSeen, UserPrivate, UserPicture, UserDescription, Picture, Lobby, LobbyUser, LobbyType, \
+	Question, LobbyQuestions, LobbyCategory, State, Category, Answer, QuestionType, CategoryVotes, QuestionVotes
 
 forbidden_usernames = [
 	'user',
@@ -38,14 +38,16 @@ def check_valid_chars(inputStr: str) -> bool:
 		return False
 	return True
 
-def choose_random(lst:List,k:int) -> Union[List,bool]:
-	if len(lst)<k:
+
+def choose_random(lst: List, k: int) -> Union[List, bool]:
+	if len(lst) < k:
 		return False
 	random.shuffle(lst)
-	res=[]
+	res = []
 	for i in range(k):
 		res.append(lst[i])
 	return res
+
 
 def generate_lobby_key():
 	key_int = random.randint(pow(16, 5), pow(16, 6) - 1)
@@ -84,6 +86,7 @@ def b64encode(text):
 
 def b64decode(text):
 	return base64.b64decode(text.encode(encoding='utf-8')).decode(encoding='utf-8')
+
 
 def check_lazy_user(user_obj):
 	if not user_obj:

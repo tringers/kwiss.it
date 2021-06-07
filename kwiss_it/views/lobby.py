@@ -134,7 +134,7 @@ def createlobby_view(request):
 			usedquestions.extend(Question.objects.filter(Q(Cid=cat) & Q(STid__in=statepending)).filter().values_list('Qid', flat=True))
 	questions_selected = choose_random(usedquestions, question_amount)
 
-	if len(questions_selected ) < question_amount or len(questions_selected ) > question_amount:
+	if len(questions_selected) < question_amount or len(questions_selected) > question_amount:
 		args["errorMsg"] = 'Es stehen nicht genug Fragen durch die ausgewählten Kategorien zur Verfügung.'
 		return createlobby_end(request, args)
 
@@ -270,6 +270,8 @@ def check_old_heartbeat():
 	# Check if someone is still in Lobby but heartbeat missing for 15s
 	# If thats the case remove user from lobby
 	lobbyuser_objset = LobbyUser.objects.filter(LPLastHeartbeat__lt=(datetime.now() - timedelta(seconds=10)))
+	if len(lobbyuser_objset) > 0:
+		print("Deleted LobbyUser: " + str(len(lobbyuser_objset)))
 	lobbyuser_objset.delete()
 	return
 
@@ -280,6 +282,8 @@ def check_old_lobbys():
 		~Q(Lid__in=lobbyuser_objset) &
 		Q(Lcreated__lte=(datetime.now() - timedelta(seconds=15)))
 	)
+	if len(lobby_objset) > 0:
+		print("Deleted lobbys: " + str(len(lobby_objset)))
 	lobby_objset.delete()
 	return
 

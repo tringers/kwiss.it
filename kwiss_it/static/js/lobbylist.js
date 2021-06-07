@@ -110,7 +110,4 @@ submitLobbyPassword.addEventListener('click', () => {
 
     password=encodeURI(password)
     window.location.href = base_url + '/lobby/' + lobby_key + '/?passhash=' + password;
-
 });
-
-

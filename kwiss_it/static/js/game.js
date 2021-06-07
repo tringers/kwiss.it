@@ -10,6 +10,7 @@ const timeBar = document.getElementById('timeBar');
 const submitAnswer = document.getElementById('submitAnswer');
 const answerRow = document.getElementById('answers');
 const qResult = document.getElementById('qResult');
+let doneMessage = false;
 
 function prepGame() {
     qhMaxQuestion.innerHTML = game.meta.maxQuestions;
@@ -76,7 +77,10 @@ function connectionHandle() {
     if((questionNo + 1) === game.meta.maxQuestions && !is_question()) {
         clearInterval(game.interval);
         clearInterval(heartbeat);
-        setTimeout(getEndscreen, 10000);
+        if(!doneMessage) {
+            doneMessage = true;
+            setTimeout(getEndscreen, 10000);
+        }
     } else {
         timeBar.style.width = Math.round(100 - timeElapsed() * 100 / game.meta.timePerQuestion) + '%';
     }
