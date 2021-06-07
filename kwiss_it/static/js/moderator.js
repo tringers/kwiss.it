@@ -196,7 +196,7 @@ function stateEvent(e, path, id) {
     let element = e.currentTarget;
 
 
-    postVote(base_url + '/state/' + path + '/' + id + '/' + element.value);
+    postState(base_url + '/state/' + path + '/' + id + '/' + element.value);
 }
 
 async function postState(url = '') {
