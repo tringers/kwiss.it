@@ -1,73 +1,74 @@
 {% extends "kwiss_it/base.html" %}
 {% load static %}
 {% block content %}
-	<div class="invisible" hidden id="templateaccordionitemclass">
-		<div class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" id="accordionheader">
-			<table class="table table-borderless">
-				<tbody>
-				<tr>
-					<td id="catname"></td>
-					<td id="catdesc"></td>
-					<td id="catstate"></td>
-					<td>
-						<button class="btn btn-outline-dark" id="promote"></button>
-					</td>
-					<td>
-						<button class="btn btn-outline-dark" id="demote"></button>
-					</td>
-				</tr>
-				</tbody>
-			</table>
-		</div>
-		<div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordioncat">
-			<div class="accordion-body">
-				<div class="accordion" id="accordionquestions">
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="invisible" hidden id="templateaccordionitemquestion">
-		<div class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInner"  id="accordionheaderquestion">
-			<table class="table">
-				<tbody>
-				<tr>
-					<td id="question"></td>
-					<td id="questiontype"></td>
-					<td id="questionstate"></td>
-					<td>
-						<button class="btn btn-outline-dark" id="qpromote"></button>
-					</td>
-					<td>
-						<button class="btn btn-outline-dark" id="qdemote"></button>
-					</td>
-				</tr>
-				</tbody>
-			</table>
-		</div>
-		<div id="collapseInner" class="accordion-collapse collapse"  data-bs-parent="#accordionquestions">
-			<div class="accordion-body">
-				<table class="table table-borderless">
-					<tbody id="answers">
+    <div class="invisible" hidden id="templateaccordionitemclass">
+        <div class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" id="accordionheader">
+            <table class="table table-borderless">
+                <tbody>
+                <tr>
+                    <td id="catname"></td>
+                    <td id="catdesc"></td>
+                    <td id="catstate"></td>
+                    <td>
+                        <button class="btn btn-outline-dark" id="promote"></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-dark" id="demote"></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordioncat">
+            <div class="accordion-body">
+                <div class="accordion" id="accordionquestions">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="invisible" hidden id="templateaccordionitemquestion">
+        <div class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInner" id="accordionheaderquestion">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td class="col-4" id="question"></td>
+                    <td class="col-2" id="questiontype"></td>
+                    <td class="col-2" id="questionstate"></td>
+                    <td class="col-2">
+                        <button class="col-12 btn btn-outline-dark" id="qpromote"></button>
+                    </td>
+                    <td class="col-2">
+                        <button class="col-12 btn btn-outline-dark" id="qdemote"></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="collapseInner" class="accordion-collapse collapse" data-bs-parent="#accordionquestions">
+            <div class="accordion-body">
+                <table class="table table-borderless">
+                    <tbody id="answers">
 
-					</tbody>
-				</table>
-			</div>
-		</div>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="invisible" hidden id="templateanswer">
+        <tr>
+            <td id="answer"></td>
+            <td id="correct"></td>
+        </tr>
+    </div>
+    <div class="col-lg-8 mx-auto p-3">
+        <h1>Moderator</h1>
+    </div>
+    <div class="col-lg-8 mx-auto p-3">
+        <div class="accordion" id="accordioncat">
 
-	</div>
-	<div class="invisible" hidden id="templateanswer">
-		<tr>
-			<td id="answer"></td>
-			<td id="correct"></td>
-		</tr>
-	</div>
-	<div class="col-lg-8 mx-auto p-3">
-		<h1>Moderator</h1>
-	</div>
-	<div class="accordion" id="accordioncat">
-
-	</div>
+        </div>
+    </div>
 {% endblock %}
 {% block bodyscript %}
-	<script src="{% static 'js/moderator.js' %}"></script>
+    <script src="{% static 'js/moderator.js' %}"></script>
 {% endblock %}

@@ -165,7 +165,7 @@ function addanswers(i, q,qid) {
     .then(data => data.json()
             .then(json => {
                 let answers = document.getElementById("category" + i + "answers" +q);
-                for(let a=0;a<json.length;a++){
+                for(let a=0;a < json.length;a++){
 
 
                     let transwer = document.createElement("tr");
