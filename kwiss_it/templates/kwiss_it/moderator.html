@@ -27,8 +27,8 @@
 		</div>
 	</div>
 	<div class="invisible" hidden id="templateaccordionitemquestion">
-		<div class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInner" aria-expanded="true" aria-controls="collapseInner">
-			<table class="table table-borderless">
+		<div class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInner"  id="accordionheaderquestion">
+			<table class="table">
 				<tbody>
 				<tr>
 					<td id="question"></td>
@@ -44,7 +44,7 @@
 				</tbody>
 			</table>
 		</div>
-		<div id="collapseInner" class="accordion-collapse collapse" aria-labelledby="collapseInner" data-bs-parent="#accordionquestions">
+		<div id="collapseInner" class="accordion-collapse collapse"  data-bs-parent="#accordionquestions">
 			<div class="accordion-body">
 				<table class="table table-borderless">
 					<tbody id="answers">
@@ -69,5 +69,5 @@
 	</div>
 {% endblock %}
 {% block bodyscript %}
-	<script src="{% static 'js/moderator.js' %}"></script>
+	<script src="{% static 'js/moderator.min.js' %}"></script>
 {% endblock %}
