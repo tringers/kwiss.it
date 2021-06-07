@@ -82,12 +82,14 @@ function categorylist(url = api_url + "/category/?approved=true&pending=true&den
                     btnpromote.innerHTML = (content[i].STid === 1) ? "pending" : "approved";
                     btnpromote.id = "promote" + i.toString();
                     btndemote.innerHTML = (content[i].STid === 3) ? "pending" : "denied";
+                    btnpromote.value = (content[i].STid === 1) ? "approved" : (content[i].STid === 2) ? "denied" : "pending";
+                    btndemote.value = (content[i].STid === 1) ? "approved" : (content[i].STid === 2) ? "denied" : "pending";
 
-                    btnpromote.addEventListener("click", function () {
-
+                    btnpromote.addEventListener("click", (e) => {
+                        stateEvent(e, "category",content[i].Cid)
                     });
-                    btndemote.addEventListener("click", function () {
-
+                    btndemote.addEventListener("click", (e) => {
+                        stateEvent(e, "category",content[i].Cid)
                     });
 
                     let accordionquestions = document.getElementById("accordionquestions")
@@ -140,41 +142,43 @@ function addquestion(i, cid) {
 
                     btnqpromote.id = "category" + i + "qpromote" + q.toString();
                     btnqpromote.innerHTML = (json[q].STid === 1) ? "pending" : "approved";
+                    btnqpromote.value = (json[q].STid === 3) ? "pending" : "denied";
                     btnqdemote.id = "category" + i + "qdemote" + q.toString();
                     btnqdemote.innerHTML = (json[q].STid === 3) ? "pending" : "denied";
+                    btnqdemote.value = (json[q].STid === 3) ? "pending" : "denied";
 
-                    btnqpromote.addEventListener("click",function (){
-
+                    btnqpromote.addEventListener("click", (e) => {
+                        stateEvent(e, "question",json[q].Qid)
                     });
-                    btnqdemote.addEventListener("click",function (){
-
+                    btnqdemote.addEventListener("click", (e) => {
+                        stateEvent(e, "question",json[q].Qid)
                     });
 
                     let answers = document.getElementById("answers")
                     answers.id = "category" + i + "answers" + q.toString();
-                    addanswers(i, q.toString(),json[q].Qid);
+                    addanswers(i, q.toString(), json[q].Qid);
                 }
             })
         );
     return
 }
 
-function addanswers(i, q,qid) {
-    let url = api_url + "/answer/?qid="+qid.toString();
+function addanswers(i, q, qid) {
+    let url = api_url + "/answer/?qid=" + qid.toString();
     fetch(url)
-    .then(data => data.json()
+        .then(data => data.json()
             .then(json => {
-                let answers = document.getElementById("category" + i + "answers" +q);
-                for(let a=0;a < json.length;a++){
+                let answers = document.getElementById("category" + i + "answers" + q);
+                for (let a = 0; a < json.length; a++) {
 
 
                     let transwer = document.createElement("tr");
-                    let answer= document.createElement("td");
+                    let answer = document.createElement("td");
                     let correct = document.createElement("td");
 
-                    answer.id="c"+i+"q"+q+"answer"+a.toString();
-                    answer.innerHTML=json[a].Atext;
-                    correct.id="c"+i+"q"+q+"correct"+a.toString();
+                    answer.id = "c" + i + "q" + q + "answer" + a.toString();
+                    answer.innerHTML = json[a].Atext;
+                    correct.id = "c" + i + "q" + q + "correct" + a.toString();
 
                     transwer.appendChild(answer)
                     transwer.appendChild(correct)
@@ -182,9 +186,34 @@ function addanswers(i, q,qid) {
                 }
 
             })
-    );
+        );
 
     return
 }
+
+function stateEvent(e, path, id) {
+    e.disabled = true;
+    let element = e.currentTarget;
+
+
+    postVote(base_url + '/state/' + path + '/' + id + '/' + element.value);
+}
+
+async function postState(url = '') {
+    const response = await fetch(url, {
+        method: 'POST',
+        cache: 'no-cache',
+        headers: {
+            'Content-Type': 'application/json',
+            "X-CSRFToken": document.getElementsByName('csrfmiddlewaretoken')[0].value,
+        },
+        credentials: 'same-origin',
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+        body: "",
+    });
+    return response.json();
+}
+
 
 document.addEventListener("DOMContentLoaded", start);

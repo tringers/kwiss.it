@@ -57,3 +57,20 @@ def voteQuestion(request, q_id, vote):
 		response_data['result'] = 409
 		response_data['message'] = "multiple votes found for the user for this question"
 	return JsonResponse(response_data)
+
+
+def stateCategory(request, c_id, state):
+	if request.method != 'POST' or not request.user.is_staff:
+		return redirect("moderator")
+	cat_obj = Category.objects.get(c_id=c_id)
+	stat_obj = State.objects.get(Sdescription=state)
+	cat_obj.STid = stat_obj
+	return
+
+def stateQuestion(request, q_id, state):
+	if request.method != 'POST' or not request.user.is_staff:
+		return
+	question_obj = Question.objects.get(q_id=q_id)
+	stat_obj = State.objects.get(Sdescription=state)
+	question_obj.STid = stat_obj
+	return

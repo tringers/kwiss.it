@@ -61,7 +61,11 @@ urlpatterns = [
 	#voting
 	path('vote/category/<int:cat_id>/<int:vote>', vote.voteCat,name='vote'),
 	path('vote/question/<int:q_id>/<int:vote>', vote.voteQuestion,name='vote'),
+	path(r'state/category/<int:c_id>/<str:state>',vote.stateCategory),
+	path(r'state/question/<int:q_id>/<str:state>',vote.stateQuestion),
+
 
 	#moderator
 	path('moderator',moderator.moderator_view,name='moderator')
+
 ]
