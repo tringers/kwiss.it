@@ -63,7 +63,7 @@ function connectionHandle() {
         }
     }
 
-    if (questionNo !== game.processedQuestion && (questionNo+1)  < game.meta.maxQuestions) {
+    if (questionNo !== game.processedQuestion && questionNo < game.meta.maxQuestions) {
         hideQuestionResult();
         game.processedQuestion = questionNo;
         loadQuestion();
