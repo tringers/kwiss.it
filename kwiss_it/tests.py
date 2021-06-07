@@ -122,7 +122,7 @@ class WebsiteTests(TestCase):
 		}, follow=True)
 		self.assertContains(response, 'Lobby:')
 
-	# TODO Weis nicht genau, wie man den Lobbycode auslesen kann...
+	# TODO Lobbycode auslesen und Lobby join
 	def test_join_game(self):
 		login = self.client.login(
 			username='Testinger',
@@ -144,9 +144,7 @@ class WebsiteTests(TestCase):
 
 		otherClient = Client()
 		otherResponse = otherClient.get(reverse('lobbylist'))
-		text = str(otherResponse.content)
-		num = text.find("/lobby/")
-		# self.assertEqual(100, num)
+
 
 	def test_insert_content_category(self):
 		login = self.client.login(
@@ -184,12 +182,11 @@ class WebsiteTests(TestCase):
 			'buttoncreate':			'buttoncreate'
 		})
 		self.assertEqual(response.status_code, 200)
-		print("Response: {}".format(response.content))
+		self.assertNotContains(response, 'alert')
 		# TODO Funktioniert theoretisch.
 		#  Nur Praktisch tauchen die Einträge nicht in der DB auf
 		questions = Question.objects.order_by('-Qid')
-		for question in questions:
-			print("Question1: {}".format(question))
+		self.assertNotIn(str(questions), 'Example Question')
 
 	def test_insert_content_question_single(self):
 		login = self.client.login(
@@ -204,7 +201,7 @@ class WebsiteTests(TestCase):
 
 			'qtype1': 				'single',
 			'answeramount1': 		'2',
-			'questiontext1': 		'Example Question2',
+			'questiontext1': 		'Example Question 2',
 			'question1answertext0': 'Example Answer 2dot1',
 			'question1answertext1': 'Example Answer 2dot2',
 			'question1correct': 	'0',
@@ -212,12 +209,11 @@ class WebsiteTests(TestCase):
 			'buttoncreate': 'buttoncreate'
 		})
 		self.assertEqual(response.status_code, 200)
-		print("Response: {}".format(response.content))
+		self.assertNotContains(response, 'alert')
 		# TODO Funktioniert theoretisch.
 		#  Nur Praktisch tauchen die Einträge nicht in der DB auf
 		questions = Question.objects.order_by('-Qid')
-		for question in questions:
-			print("Question2: {}".format(question))
+		self.assertNotIn(str(questions), 'Example Question 2')
 
 	def test_insert_content_question_multiple(self):
 		login = self.client.login(
@@ -232,7 +228,7 @@ class WebsiteTests(TestCase):
 
 			'qtype1': 				'multiple',
 			'answeramount1': 		'2',
-			'questiontext1': 		'Example Question3',
+			'questiontext1': 		'Example Question 3',
 			'question1answertext0': 'Example Answer 3dot1',
 			'question1answertext1': 'Example Answer 3dot2',
 			'question1correct0': 	'1',
@@ -241,37 +237,11 @@ class WebsiteTests(TestCase):
 			'buttoncreate': 'buttoncreate'
 		})
 		self.assertEqual(response.status_code, 200)
-		print("Response: {}".format(response.content))
+		self.assertNotContains(response, 'alert')
 		# TODO Funktioniert theoretisch.
 		#  Nur Praktisch tauchen die Einträge nicht in der DB auf
 		questions = Question.objects.order_by('-Qid')
-		for question in questions:
-			print("Question3: {}".format(question))
-
-	def test_insert_content_question_number_deviation(self):
-		login = self.client.login(
-			username='Testinger',
-			password='Passwort123',
-		)
-		self.assertTrue(login)
-		response = self.client.post(reverse('addcontent'), {
-			'category': 			'1',
-			'catname': 				'',
-			'catdesc': 				'',
-
-			'qtype1': 				'number_deviation',
-			'questiontext1': 		'Example Question4',
-			'question1answertext0': '4321',
-
-			'buttoncreate': 'buttoncreate'
-		})
-		self.assertEqual(response.status_code, 200)
-		print("Response: {}".format(response.content))
-		# TODO Funktioniert theoretisch.
-		#  Nur Praktisch tauchen die Einträge nicht in der DB auf
-		questions = Question.objects.order_by('-Qid')
-		for question in questions:
-			print("Question4: {}".format(question))
+		self.assertNotIn(str(questions), 'Example Question 3')
 
 # TODO Weis nicht, ob es sinnvoll ist die auszubauen.
 # class DatabaseTest(TestCase):
