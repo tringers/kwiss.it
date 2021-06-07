@@ -234,7 +234,7 @@ class QuestionTypeSerializer(serializers.ModelSerializer):
 
 
 class QuestionTypeView(viewsets.ReadOnlyModelViewSet):
-	queryset = QuestionType.objects.all()
+	queryset = QuestionType.objects.filter(~Q(QTid=4))
 	serializer_class = QuestionTypeSerializer
 
 
