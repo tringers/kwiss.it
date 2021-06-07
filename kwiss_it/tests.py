@@ -19,6 +19,7 @@ class SeparateFileTest(TestCase):
 		self.assertTrue(f, message)
 
 
+# TODO Durchscha ob es noch Seiten zu prüfen gibt
 class WebsiteLoadTest(TestCase):
 
 	def test_load_start_page(self):
@@ -85,6 +86,8 @@ class WebsiteTests(TestCase):
 		}, follow=True)
 		self.assertContains(response, 'Login erfolgreich.')
 
+	# TODO Keine Ahnung warum der Spaß nicht funktioniert.
+	#  Leider verstehe ich den Fehler nicht
 	def test_register(self):
 		response = self.client.post(reverse('register'), {
 			'inputEmail':		'example@example.com',
@@ -99,6 +102,7 @@ class WebsiteTests(TestCase):
 			username='Testi',
 			password='Passwort123')
 		self.assertTrue(login)
+
 
 	def test_create_lobby(self):
 		login = self.client.login(
@@ -119,9 +123,31 @@ class WebsiteTests(TestCase):
 		}, follow=True)
 		self.assertContains(response, 'Lobby:')
 
+	# TODO Weis nicht genau, wie man den Lobbycode auslesen kann...
 	def test_join_game(self):
-		# TODO Selbsterklärend
-		pass
+		login = self.client.login(
+			username='Testinger',
+			password='Passwort123',
+		)
+		self.assertTrue(login)
+		response = self.client.post(reverse('createlobby'), {
+			'createlobbyname':		'testname',
+			'lobbytype':			'public',
+			'gamemode':				'basic',
+			'pending':				'True',
+			'playeramountfield':	'4',
+			'questionamountfield':	'5',
+			'timeamountfield':		'10',
+			'categories':			'1',
+			'buttoncreate':			'buttoncreate'
+		}, follow=True)
+		self.assertContains(response, 'Lobby:')
+
+		otherClient = Client()
+		otherResponse = otherClient.get(reverse('lobbylist'))
+		text = str(otherResponse.content)
+		num = text.find("/lobby/")
+		self.assertEqual(100, num)
 
 	def test_insert_content_category(self):
 		login = self.client.login(
@@ -136,6 +162,7 @@ class WebsiteTests(TestCase):
 			'buttoncreate':	'Erstellen'
 		})
 		self.assertEqual(response.status_code, 200)
+		# TODO Prüfen ob die Category wirklich erstellt wurde.
 
 	def test_insert_content_question(self):
 		login = self.client.login(
@@ -174,12 +201,12 @@ class WebsiteTests(TestCase):
 			'buttoncreate':			'buttoncreate'
 		})
 		self.assertEqual(response.status_code, 200)
-
+		# TODO Funktioniert theoretisch.
+		#  Nur Praktisch tauchen die Einträge nicht in der DB auf
 		questions = Question.objects.order_by('-Qid')[:4]
-		print("Questions: {}".format(questions))
 
 
-
+# TODO Weis nicht, ob es sinnvoll ist die auszubauen.
 # class DatabaseTest(TestCase):
 #
 # 	def test_default_lobby_is_private(self):
