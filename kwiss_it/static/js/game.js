@@ -228,6 +228,9 @@ function timeElapsed() {
 }
 
 function answerSubmission(answer = [-1]) {
+    if(answer.length === 0)
+        answer.push(-1);
+
     postData(base_url + '/game/' + lobby_key, {
         lobbyAuth: lobby_auth,
         name: first_name,
@@ -235,6 +238,7 @@ function answerSubmission(answer = [-1]) {
         answer: answer,
     })
         .then(json => {
+            console.log("Answer: " + json);
             if(json.checkLater)
                 return;
             let myResult = document.getElementById('myResult');
@@ -311,6 +315,7 @@ function getStatus() {
     fetch(base_url + '/game/' + lobby_key)
         .then(data => data.json()
             .then(json => {
+                console.log("Status: " + json);
                 for (let i = 0; i < json.length; i++) {
                     let playerData = json[i];
                     let data = Object.assign(playerScoreTemplate, game.playerScores[playerData.name]);
@@ -336,9 +341,14 @@ submitAnswer.addEventListener('click', () => {
         game.lastSubmitted = true;
         let answers = [];
         let checkSelection = document.getElementsByName('answer');
-        for (let i = 0; i < checkSelection; i++) {
-            if (checkSelection.checked || checkSelection.length === 1)
-                answers.push(checkSelection.value);
+
+        for (let i = 0; i < checkSelection.length; i++) {
+            if(checkSelection[i].id.indexOf('answer_temp') >= 0)
+                continue;
+
+            if (checkSelection[i].checked || checkSelection.length === 5) {
+                answers.push(checkSelection[i].value);
+            }
         }
         answerSubmission(answers);
     }

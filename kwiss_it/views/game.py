@@ -24,6 +24,7 @@ def answerSubmit(request, lobby_key):
 	data = {
 		'status': 200,
 		'message': '',
+		'debug': [],
 		'lastSubmissionCorrect': False,
 		'deviation': 0,
 		'checkLater': False,
@@ -38,6 +39,7 @@ def answerSubmit(request, lobby_key):
 	a_name = answer['name']
 	a_question = answer['qno']
 	a_answer = answer['answer']
+	data['debug'].append(answer)
 
 	# Securitycheck
 	lobby_objset = Lobby.objects.filter(Lkey=lobby_key, Lauthtoken=a_authkey)
@@ -61,16 +63,24 @@ def answerSubmit(request, lobby_key):
 			lq_obj = lq_objset[a_question - 1]
 			q_obj = lq_obj.Qid
 			a_objset = Answer.objects.filter(Qid=q_obj, Acorrect=True)
+			data['debug'].append(q_obj.QTid.QTid)
 
-			if q_obj.QTid == 1:
+			if q_obj.QTid.QTid == 1:
 				# Number correct
+				data['debug'].append(a_objset[0].Atext)
+				data['debug'].append(str(a_answer))
+				return JsonResponse(data)
 				if int(a_objset[0].Atext) == int(a_answer[0]):
 					data['lastSubmissionCorrect'] = True
-			elif q_obj.QTid == 2:
+			elif q_obj.QTid.QTid == 2:
 				# Single correct
+				data['debug'].append(a_objset[0].Anum)
+				data['debug'].append(str(a_answer))
+				return JsonResponse(data)
 				if int(a_objset[0].Anum) == int(a_answer[0]):
 					data['lastSubmissionCorrect'] = True
-			elif q_obj.QTid == 3:
+			elif q_obj.QTid.QTid == 3:
+				return JsonResponse(data)
 				# Multiple correct
 				correct = True
 				if len(a_objset) != len(a_answer):
@@ -92,8 +102,12 @@ def answerSubmit(request, lobby_key):
 							break
 
 				data['lastSubmissionCorrect'] = correct
-			elif q_obj.QTid == 4:
+			elif q_obj.QTid.QTid == 4:
 				# Deviation
+				data['debug'].append(a_objset[0].Atext)
+				data['debug'].append(str(a_answer))
+				return JsonResponse(data)
+				#data['debug'].append(abs(int(a_objset[0].Atext) - int(a_answer[0])))
 				data['lastSubmissionCorrect'] = True
 				if a_answer[0] == -1:
 					data['deviation'] = -1
