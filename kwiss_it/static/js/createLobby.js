@@ -52,7 +52,7 @@ function refreshCategoryAmount() {
 
     for (let i = 0; i < cat_names.length; i++) {
         let category = categories[cat_names[i]];
-        let url= api_url + '/question/?cid=' + category.Cid
+        let url= api_url + '/question/?cid=' + category.Cid+"&approved=true"+(pending ? '&pending=true' : '');
         if(lobbytype.value == "single" || lobbytype.value =="Single"){
             url+="&single=1"
         }
