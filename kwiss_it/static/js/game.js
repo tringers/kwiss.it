@@ -81,7 +81,11 @@ function connectionHandle() {
         clearInterval(heartbeat);
         if(!doneMessage) {
             doneMessage = true;
-            setTimeout(getEndscreen, 10000);
+            let backButton = document.getElementById('backLobby');
+            backButton.hidden = false;
+            backButton.addEventListener('click', () => {
+                window.location.href = base_url + '/lobbylist';
+            });
         }
     } else {
         timeBar.style.width = Math.round(100 - timeElapsed() * 100 / game.meta.timePerQuestion) + '%';
