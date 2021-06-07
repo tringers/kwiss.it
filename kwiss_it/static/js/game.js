@@ -238,7 +238,8 @@ function answerSubmission(answer = [-1]) {
         answer: answer,
     })
         .then(json => {
-            console.log("Answer: " + json);
+            console.log("Answer: ");
+            console.log(json);
             if(json.checkLater)
                 return;
             let myResult = document.getElementById('myResult');
@@ -315,7 +316,8 @@ function getStatus() {
     fetch(base_url + '/game/' + lobby_key)
         .then(data => data.json()
             .then(json => {
-                console.log("Status: " + json);
+                console.log("Status: ");
+                console.log(json);
                 for (let i = 0; i < json.length; i++) {
                     let playerData = json[i];
                     let data = Object.assign(playerScoreTemplate, game.playerScores[playerData.name]);
