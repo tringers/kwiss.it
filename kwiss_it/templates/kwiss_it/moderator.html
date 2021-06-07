@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 	<div class="invisible" hidden id="templateaccordionitemclass">
-		<div class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" id="accordionheader">
+		<div class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" id="accordionheader">
 			<table class="table table-borderless">
 				<tbody>
 				<tr>
@@ -19,7 +19,7 @@
 				</tbody>
 			</table>
 		</div>
-		<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordioncat">
+		<div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordioncat">
 			<div class="accordion-body">
 				<div class="accordion" id="accordionquestions">
 				</div>
@@ -27,7 +27,7 @@
 		</div>
 	</div>
 	<div class="invisible" hidden id="templateaccordionitemquestion">
-		<div class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInner" aria-expanded="true" aria-controls="collapseInner">
+		<div class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInner" aria-expanded="true" aria-controls="collapseInner">
 			<table class="table table-borderless">
 				<tbody>
 				<tr>
@@ -44,10 +44,10 @@
 				</tbody>
 			</table>
 		</div>
-		<div id="collapseInner" class="accordion-collapse collapse show" aria-labelledby="collapseInner" data-bs-parent="#accordionquestions">
+		<div id="collapseInner" class="accordion-collapse collapse" aria-labelledby="collapseInner" data-bs-parent="#accordionquestions">
 			<div class="accordion-body">
 				<table class="table table-borderless">
-					<tbody>
+					<tbody id="answers">
 
 					</tbody>
 				</table>
