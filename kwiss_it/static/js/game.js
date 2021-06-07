@@ -73,6 +73,7 @@ function connectionHandle() {
         game.lastSubmitted = false;
         submitAnswer.disabled = false;
         game.scoresFetched = false;
+        resetVotebutton();
     }
 
     if((questionNo + 1) === game.meta.maxQuestions && !is_question()) {
@@ -97,7 +98,9 @@ async function loadQuestion() {
 
     let question = document.getElementById('question-' + questionNo);
     let cName = question.getAttribute('data-cname');
+    let cId = question.getAttribute('data-cid');
     let qText = question.getAttribute('data-qtext');
+    let qId = question.getAttribute('data-qid');
     qText = await decrypt(qText, lobby_key);
     let qType = question.getAttribute('data-qtype');
 
@@ -119,8 +122,10 @@ async function loadQuestion() {
     let qtype_obj = game.meta.qTypes.getQuestionType(qtid);
 
     qhCategory.innerHTML = cName;
+    qhCategory.setAttribute('data-cid', cId);
     qhCurrentQuestion.innerHTML = (questionNo + 1).toString();
     qhQuestion.innerHTML = qText;
+    qhQuestion.setAttribute('data-qid', qId);
     qhType.innerHTML = qtype_obj.description;
     timeBar.style.width = Math.round(100 - timeElapsed() * 100 / game.meta.timePerQuestion) + '%';
 

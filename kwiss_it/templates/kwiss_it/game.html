@@ -36,8 +36,8 @@
         </div>
     </div>
     <div class="container mx-auto p-3 mb-4 invisible" id="qResult">
-        <div class="row col-lg-10 mx-auto mb-4">
-            <h3 id="myResult"></h3>
+        <div class="row col-lg-10 mx-auto mb-4 border-bottom">
+            <h3 id="myResult" class="border-bottom"></h3>
             <table>
                 <thead>
                 <tr>
@@ -85,12 +85,7 @@
                     <tbody>
                     <tr>
                         <td>
-                            {# TODO: Wird durch Text ersetzt beim Klicken #}
-                            {# TODO: Beim Klick erstellt es schon den Report Inhalt in einer Div #}
-                            {# TODO: Nach letzter Frage wird das Repooriting Div sichtbar #}
-                            {# TODO: Button um einzelne Reports zu löschen am Ende #}
-                            {# TODO: Button um alle sichtbaren Reports zu Senden am Ende #}
-                            <button class="btn btn-outline-danger col-12" id="report">MELDEN</button>
+                            <button class="btn btn-outline-danger col-12" id="report" hidden>MELDEN</button>
                         </td>
                         <td></td>
                         <td>
@@ -117,16 +112,16 @@
                         <td class="pb-2">Frage</td>
                         <td></td>
                         <td class="col-12 pb-2 my-auto btn-group" role="group">
-                            <button type="button" class="btn btn-outline-success col-6" id="question-upvote">&#x1f44d;</button>
-                            <button type="button" class="btn btn-outline-danger col-6" id="question-downvote">&#x1F44E;</button>
+                            <button type="button" class="btn btn-outline-success col-6" id="question-upvote" value="1">&#x1f44d;</button>
+                            <button type="button" class="btn btn-outline-danger col-6" id="question-downvote" value="-1">&#x1F44E;</button>
                         </td>
                     </tr>
                     <tr>
                         <td class="pt-2">Kategorie</td>
                         <td></td>
                         <td class="col-12 pt-2 my-auto btn-group" role="group">
-                            <button type="button" class="btn btn-outline-success col-6" id="category-upvote">&#x1f44d;</button>
-                            <button type="button" class="btn btn-outline-danger col-6" id="category-downvote">&#x1F44E;</button>
+                            <button type="button" class="btn btn-outline-success col-6" id="category-upvote" value="1">&#x1f44d;</button>
+                            <button type="button" class="btn btn-outline-danger col-6" id="category-downvote" value="-1">&#x1F44E;</button>
                         </td>
                     </tr>
                     </tbody>
@@ -140,6 +135,6 @@
     </div>
 {% endblock %}
 {% block gamescript %}
-    <script src="{% static 'js/game.js' %}"></script>
-    <script src="{% static 'js/game_addition.js' %}"></script>
+    <script src="{% static 'js/game.min.js' %}"></script>
+    <script src="{% static 'js/game_addition.min.js' %}"></script>
 {% endblock %}
