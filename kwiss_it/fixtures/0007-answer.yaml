@@ -75,7 +75,7 @@
 - model: kwiss_it.Answer
   fields:
     Qid: 5
-    Anum: 0
+    Anum: 3
     Atext: "Rheinland-Pfalz"
     Acorrect: 0
 
@@ -92,6 +92,7 @@
     Anum: 0
     Atext: "1715"
     Acorrect: 1
+
 - model: kwiss_it.Answer
   fields:
     Qid: 7

@@ -11,3 +11,4 @@ djangorestframework
 django-ratelimit
 django-lazysignup == 2.0
 whitenoise
+pyyaml
