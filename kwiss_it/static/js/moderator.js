@@ -195,7 +195,6 @@ function stateEvent(e, path, id) {
     e.disabled = true;
     let element = e.currentTarget;
 
-
     postState(base_url + '/state/' + path + '/' + id + '/' + element.value);
 }
 

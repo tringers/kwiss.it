@@ -23,72 +23,72 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 # The following try and except block reads the SECRET_KEY or generates a new one
 try:
-	file = open("kwiss/SECRET_KEY", "r")
-	SECRET_KEY = file.readline()
-	file.close()
+    file = open("kwiss/SECRET_KEY", "r")
+    SECRET_KEY = file.readline()
+    file.close()
 except FileNotFoundError:
-	with open("kwiss/SECRET_KEY", 'w') as file:
-		file.write(utils.get_random_secret_key())
+    with open("kwiss/SECRET_KEY", 'w') as file:
+        file.write(utils.get_random_secret_key())
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = [
-	'api.kwiss.it',
-	'www.kwiss.it',
-	'cdn.kwiss.it',
-	'kwiss.it',
-	'localhost',
-	'127.0.0.1',
-	'10.150.0.50',
-	'10.150.0.51',
-	'10.150.0.52',
-	'10.150.0.53',
-	'10.150.0.54',
-	'10.150.0.55',
-	'10.150.0.56',
-	'10.150.0.57',
-	'10.150.0.58',
-	'10.150.0.59',
+    'api.kwiss.it',
+    'www.kwiss.it',
+    'cdn.kwiss.it',
+    'kwiss.it',
+    'localhost',
+    '127.0.0.1',
+    '10.150.0.50',
+    '10.150.0.51',
+    '10.150.0.52',
+    '10.150.0.53',
+    '10.150.0.54',
+    '10.150.0.55',
+    '10.150.0.56',
+    '10.150.0.57',
+    '10.150.0.58',
+    '10.150.0.59',
 ]
 
 
 # Application definition
 
 INSTALLED_APPS = [
-	'kwiss_it.apps.KwissItConfig',
-	'django.contrib.admin',
-	'django.contrib.auth',
-	'django.contrib.contenttypes',
-	'django.contrib.sessions',
-	'django.contrib.messages',
-	'django.contrib.staticfiles',
-	'rest_framework',
-	'lazysignup',
+    'kwiss_it.apps.KwissItConfig',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'rest_framework',
+    'lazysignup',
 ]
 
 MIDDLEWARE = [
-	'django.middleware.security.SecurityMiddleware',
-	'django.contrib.sessions.middleware.SessionMiddleware',
-	'django.middleware.common.CommonMiddleware',
-	'django.middleware.csrf.CsrfViewMiddleware',
-	'django.contrib.auth.middleware.AuthenticationMiddleware',
-	'django.contrib.messages.middleware.MessageMiddleware',
-	'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 REST_FRAMEWORK = {
-	'DEFAULT_PERMISSION_CLASSES': [
-		'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-	],
-	'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-	'PAGE_SIZE': 10,
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'PAGE_SIZE': 10,
 }
 
 AUTHENTICATION_BACKENDS = (
-	'django.contrib.auth.backends.ModelBackend',
-	'lazysignup.backends.LazySignupBackend',
+    'django.contrib.auth.backends.ModelBackend',
+    'lazysignup.backends.LazySignupBackend',
 )
 
 LAZYSIGNUP_CUSTOM_USER_CREATION_FORM = 'kwiss_it.views.convert.UserCreationForm'
@@ -96,20 +96,20 @@ LAZYSIGNUP_CUSTOM_USER_CREATION_FORM = 'kwiss_it.views.convert.UserCreationForm'
 ROOT_URLCONF = 'kwiss.urls'
 
 TEMPLATES = [
-	{
-		'BACKEND': 'django.template.backends.django.DjangoTemplates',
-		'DIRS': [BASE_DIR / 'templates']
-		,
-		'APP_DIRS': True,
-		'OPTIONS': {
-			'context_processors': [
-				'django.template.context_processors.debug',
-				'django.template.context_processors.request',
-				'django.contrib.auth.context_processors.auth',
-				'django.contrib.messages.context_processors.messages',
-			],
-		},
-	},
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / 'templates']
+        ,
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
 ]
 
 WSGI_APPLICATION = 'kwiss.wsgi.application'
@@ -119,17 +119,17 @@ WSGI_APPLICATION = 'kwiss.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 try:
-	file = open("kwiss/my.cnf", "r")
-	file.close()
+    file = open("kwiss/my.cnf", "r")
+    file.close()
 except FileNotFoundError:
-	print("my.cnf not found")
-	with open("kwiss/my.cnf", 'w') as file:
-		file.write('[client]\n')
-		file.write('database =\n')
-		file.write('user =\n')
-		file.write('password =\n')
-		file.write('host =\n')
-		file.write('default - character - set = utf8\n')
+    print("my.cnf not found")
+    with open("kwiss/my.cnf", 'w') as file:
+        file.write('[client]\n')
+        file.write('database =\n')
+        file.write('user =\n')
+        file.write('password =\n')
+        file.write('host =\n')
+        file.write('default - character - set = utf8\n')
 
 #DATABASES = {
 #    'default': {
@@ -142,12 +142,12 @@ except FileNotFoundError:
 # IMPORTANT!!! Furthermore, the my.cnf in the kwiss directory must be adapted.
 
 DATABASES = {
-	'default': {
-		'ENGINE': 'django.db.backends.mysql',
-		'OPTIONS': {
-			'read_default_file': 'kwiss/my.cnf'
-		}
-	}
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'OPTIONS': {
+            'read_default_file': 'kwiss/my.cnf'
+        }
+    }
 }
 
 
@@ -155,18 +155,18 @@ DATABASES = {
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-	{
-		'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-	},
-	{
-		'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-	},
-	{
-		'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-	},
-	{
-		'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-	},
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
 ]
 
 

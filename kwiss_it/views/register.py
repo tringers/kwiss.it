@@ -33,15 +33,20 @@ def register(request):
 		inputEmail = inputEmail.lower()
 		inputUsername = inputUsername.lower()
 		if not check_valid_chars(inputEmail):
-			return 'Email beinhaltet nicht valide Zeichen.'
+			args['errorMsg'] = 'Email beinhaltet nicht valide Zeichen.'
+			return register_end(request, args)
 		if not check_valid_chars(inputName):
-			return 'Anzeigename beinhaltet nicht valide Zeichen.'
+			args['errorMsg'] = 'Anzeigename beinhaltet nicht valide Zeichen.'
+			return register_end(request, args)
 		if not check_valid_chars(inputPassword):
-			return 'Passwort beinhaltet nicht valide Zeichen.'
+			args['errorMsg'] = 'Passwort beinhaltet nicht valide Zeichen.'
+			return register_end(request, args)
 		if not check_valid_chars(inputPassword2):
-			return 'Passwort2 beinhaltet nicht valide Zeichen.'
+			args['errorMsg'] = 'Passwort2 beinhaltet nicht valide Zeichen.'
+			return register_end(request, args)
 		if not check_valid_chars(inputUsername):
-			return 'Benutzername beinhaltet nicht valide Zeichen.'
+			args['errorMsg'] = 'Benutzername beinhaltet nicht valide Zeichen.'
+			return register_end(request, args)
 		# Check min max length of username, email address and password
 		if len(inputEmail) < 6 or len(inputEmail) > 320:
 			args['errorMsg'] = 'Bitte valide Email Adresse angeben.'
