@@ -85,10 +85,10 @@ function categorylist(url = api_url + "/category/?approved=true&pending=true&den
 
                     btnpromote.addEventListener("click", function () {
 
-                    })
+                    });
                     btndemote.addEventListener("click", function () {
 
-                    })
+                    });
 
                     let accordionquestions = document.getElementById("accordionquestions")
                     accordionquestions.id = "accordionquestions" + i.toString();
@@ -143,9 +143,16 @@ function addquestion(i, cid) {
                     btnqdemote.id = "category" + i + "qdemote" + q.toString();
                     btnqdemote.innerHTML = (json[q].STid === 3) ? "pending" : "denied";
 
+                    btnqpromote.addEventListener("click",function (){
+
+                    });
+                    btnqdemote.addEventListener("click",function (){
+
+                    });
+
                     let answers = document.getElementById("answers")
                     answers.id = "category" + i + "answers" + q.toString();
-                    addanswers(i, q.toString(),json[q].Qid)
+                    addanswers(i, q.toString(),json[q].Qid);
                 }
             })
         );
@@ -153,7 +160,7 @@ function addquestion(i, cid) {
 }
 
 function addanswers(i, q,qid) {
-    url = api_url + "/answer/?qid="+qid.toString()
+    let url = api_url + "/answer/?qid="+qid.toString();
     fetch(url)
     .then(data => data.json()
             .then(json => {
@@ -161,12 +168,12 @@ function addanswers(i, q,qid) {
                 for(let a=0;a<json.length;a++){
 
 
-                    let transwer = document.createElement("tr")
-                    let answer= document.createElement("td")
-                    let correct = document.createElement("td")
+                    let transwer = document.createElement("tr");
+                    let answer= document.createElement("td");
+                    let correct = document.createElement("td");
 
-                    answers.id="c"+i+"q"+q+"answer"+a.toString();
-                    answers.innerHTML=json[a].Atext;
+                    answer.id="c"+i+"q"+q+"answer"+a.toString();
+                    answer.innerHTML=json[a].Atext;
                     correct.id="c"+i+"q"+q+"correct"+a.toString();
 
                     transwer.appendChild(answer)
