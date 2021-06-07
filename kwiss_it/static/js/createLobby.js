@@ -113,10 +113,12 @@ function refreshTable() {
 
         data_select_checkbox.checked = category.selected;
 
+        data_select_checkbox.addEventListener('click', (e) => {
+            data_select_checkbox.checked = !data_select_checkbox.checked;
+            categories[cat_names[i]].selected = data_select_checkbox.checked;
+            updateCategorySelect();
+        });
         data_select.addEventListener('click', (e) => {
-            if (e.path[0].localName === "input") {
-                return
-            }
             data_select_checkbox.checked = !data_select_checkbox.checked;
             categories[cat_names[i]].selected = data_select_checkbox.checked;
             updateCategorySelect();
