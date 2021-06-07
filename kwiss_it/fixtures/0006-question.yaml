@@ -1,4 +1,4 @@
-- model: kwiss_it.Category
+- model: kwiss_it.Question
   pk: 1
   fields:
     Cid: 1
@@ -9,101 +9,123 @@
     Qtext: "Wie lang gibt es die Stadt mit dem Namen Karlsruhe?"
     Qplaycount: 0
 
-- model: kwiss_it.Category
+- model: kwiss_it.Question
   pk: 2
   fields:
     Cid: 1
     Uid: ~
     Pid: ~
     STid: 1
-    QTid:
-    Qtext: ""
+    QTid: 2
+    Qtext: "Wieviele Universitäten und Hochschulen hat Karlsruhe?"
     Qplaycount: 0
 
-- model: kwiss_it.Category
+- model: kwiss_it.Question
   pk: 3
   fields:
     Cid: 1
     Uid: ~
     Pid: ~
     STid: 1
-    QTid:
-    Qtext: ""
+    QTid: 4
+    Qtext: "Fläche Karlsruhe in km²?"
     Qplaycount: 0
 
-- model: kwiss_it.Category
+- model: kwiss_it.Question
   pk: 4
   fields:
     Cid: 1
     Uid: ~
     Pid: ~
     STid: 1
-    QTid:
-    Qtext: ""
+    QTid: 1
+    Qtext: "Wie viele Stadteil hat Karlsruhe?"
     Qplaycount: 0
 
-- model: kwiss_it.Category
+- model: kwiss_it.Question
   pk: 5
   fields:
     Cid: 1
     Uid: ~
     Pid: ~
     STid: 1
-    QTid:
-    Qtext: ""
+    QTid: 2
+    Qtext: "In welchem der folgenden Bundesländer liegt Karlsruhe?"
     Qplaycount: 0
 
-- model: kwiss_it.Category
+- model: kwiss_it.Question
   pk: 6
   fields:
     Cid: 1
     Uid: ~
     Pid: ~
     STid: 1
-    QTid:
-    Qtext: ""
+    QTid: 4
+    Qtext: "Was ist die ungefähre Einwohnerzahl von Karlsruhe"
     Qplaycount: 0
 
-- model: kwiss_it.Category
+- model: kwiss_it.Question
   pk: 7
   fields:
     Cid: 1
     Uid: ~
     Pid: ~
     STid: 1
-    QTid:
-    Qtext: ""
+    QTid: 2
+    Qtext: "Wann fing die Errichtung des Schloss Karlsruhe an?"
     Qplaycount: 0
 
-- model: kwiss_it.Category
+- model: kwiss_it.Question
   pk: 8
   fields:
     Cid: 1
     Uid: ~
     Pid: ~
     STid: 1
-    QTid:
-    Qtext: ""
+    QTid: 3
+    Qtext: "Welches der folgenden Antworten ist kein Stadtteil von Karlsruhe?"
     Qplaycount: 0
 
-- model: kwiss_it.Category
+- model: kwiss_it.Question
   pk: 9
   fields:
     Cid: 1
     Uid: ~
     Pid: ~
     STid: 1
-    QTid:
-    Qtext: ""
+    QTid: 2
+    Qtext: "Welcher der Folgenden Fußballer kommt aus Karlsruhe?"
     Qplaycount: 0
 
-- model: kwiss_it.Category
+- model: kwiss_it.Question
   pk: 10
   fields:
     Cid: 1
     Uid: ~
     Pid: ~
     STid: 1
-    QTid:
-    Qtext: ""
+    QTid: 3
+    Qtext: "Welche dieser Firmen haben einen Sitz in Karlsruhe"
+    Qplaycount: 0
+
+- model: kwiss_it.Question
+  pk: 11
+  fields:
+    Cid: 1
+    Uid: ~
+    Pid: ~
+    STid: 1
+    QTid: 2
+    Qtext: "Was für ein Bahnhofstyp ist der Karlsruher Hauptbahnhof?"
+    Qplaycount: 0
+
+- model: kwiss_it.Question
+  pk: 12
+  fields:
+    Cid: 1
+    Uid: ~
+    Pid: ~
+    STid: 1
+    QTid: 1
+    Qtext: "Welcher Fluss fließt in der Nähe von Karlsruhe?"
     Qplaycount: 0

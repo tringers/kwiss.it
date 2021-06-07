@@ -91,7 +91,7 @@ class QuestionType(models.Model):
 
 class Question(models.Model):
 	Qid = models.BigAutoField(primary_key=True)
-	Cid = models.ForeignKey(Category, db_index=True, default=1, on_delete=models.SET_DEFAULT, help_text="Category ID")
+	Cid = models.ForeignKey(Category, db_index=True, default=1, on_delete=models.CASCADE, help_text="Category ID")
 	Uid = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 	Pid = models.ForeignKey(Picture, null=True, blank=True, on_delete=models.SET_NULL, help_text="Picture ID")
 	Qtext = models.CharField(max_length=256)

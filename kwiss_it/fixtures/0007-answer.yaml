@@ -1,0 +1,285 @@
+- model: kwiss_it.Answer
+  fields:
+    Qid: 1
+    Anum: 0
+    Atext: 1715
+    Acorrect: 1
+
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 2
+    Anum: 0
+    Atext: 13
+    Acorrect: 1
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 2
+    Anum: 1
+    Atext: 3
+    Acorrect: 0
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 2
+    Anum: 2
+    Atext: 5
+    Acorrect: 0
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 2
+    Anum: 3
+    Atext: 20
+    Acorrect: 0
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 3
+    Anum: 0
+    Atext: 174
+    Acorrect: 1
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 4
+    Anum: 0
+    Atext: 27
+    Acorrect: 1
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 5
+    Anum: 0
+    Atext: "Baden-Würtenberg"
+    Acorrect: 1
+
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 5
+    Anum: 1
+    Atext: "Berlin"
+    Acorrect: 0
+
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 5
+    Anum: 2
+    Atext: "Schwaben"
+    Acorrect: 0
+
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 5
+    Anum: 0
+    Atext: "Rheinland-Pfalz"
+    Acorrect: 0
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 6
+    Anum: 0
+    Atext: 312000
+    Acorrect: 1
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 7
+    Anum: 0
+    Atext: "1715"
+    Acorrect: 1
+- model: kwiss_it.Answer
+  fields:
+    Qid: 7
+    Anum: 1
+    Atext: "1746"
+    Acorrect: 0
+- model: kwiss_it.Answer
+  fields:
+    Qid: 7
+    Anum: 2
+    Atext: "1848"
+    Acorrect: 0
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 7
+    Anum: 3
+    Atext: "1918"
+    Acorrect: 0
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 8
+    Anum: 0
+    Atext: "Durlach"
+    Acorrect: 0
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 8
+    Anum: 1
+    Atext: "Rintheim"
+    Acorrect: 1
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 8
+    Anum: 2
+    Atext: "Noroststadt"
+    Acorrect: 1
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 8
+    Anum: 3
+    Atext: "Wolfartsweier"
+    Acorrect: 0
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 8
+    Anum: 4
+    Atext: "Außenstadt"
+    Acorrect: 1
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 9
+    Anum: 0
+    Atext: "Oliver Kahn"
+    Acorrect: 1
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 9
+    Anum: 1
+    Atext: "Mario Gomez"
+    Acorrect: 0
+
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 9
+    Anum: 2
+    Atext: "Oliver Reck"
+    Acorrect: 0
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 9
+    Anum: 3
+    Atext: "Manuel Neuer"
+    Acorrect: 0
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 10
+    Anum: 0
+    Atext: "SAP"
+    Acorrect: 1
+- model: kwiss_it.Answer
+  fields:
+    Qid: 10
+    Anum: 1
+    Atext: "KIT"
+    Acorrect: 1
+- model: kwiss_it.Answer
+  fields:
+    Qid: 10
+    Anum: 2
+    Atext: "EnBW"
+    Acorrect: 1
+- model: kwiss_it.Answer
+  fields:
+    Qid: 10
+    Anum: 3
+    Atext: "Michelin"
+    Acorrect: 1
+- model: kwiss_it.Answer
+  fields:
+    Qid: 10
+    Anum: 4
+    Atext: "Sophos"
+    Acorrect: 1
+- model: kwiss_it.Answer
+  fields:
+    Qid: 10
+    Anum: 5
+    Atext: "Burda"
+    Acorrect: 0
+- model: kwiss_it.Answer
+  fields:
+    Qid: 10
+    Anum: 6
+    Atext: "Fauenhofer Institut"
+    Acorrect: 1
+- model: kwiss_it.Answer
+  fields:
+    Qid: 10
+    Anum: 7
+    Atext: "Amazon Pforzheim GmbH"
+    Acorrect: 0
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 11
+    Anum: 0
+    Atext: "Durchgangsbahnhof "
+    Acorrect: 1
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 11
+    Anum: 1
+    Atext: "Keilbahnhof"
+    Acorrect: 0
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 11
+    Anum: 2
+    Atext: "Reiterbahnhof "
+    Acorrect: 0
+- model: kwiss_it.Answer
+  fields:
+    Qid: 11
+    Anum: 3
+    Atext: "Kopfbahnhof"
+    Acorrect: 0
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 12
+    Anum: 0
+    Atext: "Rhein"
+    Acorrect: 1
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 12
+    Anum: 1
+    Atext: "Main"
+    Acorrect: 0
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 12
+    Anum: 2
+    Atext: "Oder"
+    Acorrect: 0
+
+- model: kwiss_it.Answer
+  fields:
+    Qid: 12
+    Anum: 3
+    Atext: "Neckar"
+    Acorrect: 0
+
+
+
+
