@@ -42,7 +42,7 @@ def answerSubmit(request, lobby_key):
 	data['debug'].append(answer)
 
 	# Securitycheck
-	lobby_objset = Lobby.objects.filter(Lkey=lobby_key, Lauthtoken=a_authkey)
+	lobby_objset = Lobby.objects.filter(Lkey=lobby_key)
 
 	if user.first_name != a_name:
 		data['status'] = 400
@@ -69,18 +69,15 @@ def answerSubmit(request, lobby_key):
 				# Number correct
 				data['debug'].append(a_objset[0].Atext)
 				data['debug'].append(str(a_answer))
-				return JsonResponse(data)
 				if int(a_objset[0].Atext) == int(a_answer[0]):
 					data['lastSubmissionCorrect'] = True
 			elif q_obj.QTid.QTid == 2:
 				# Single correct
 				data['debug'].append(a_objset[0].Anum)
 				data['debug'].append(str(a_answer))
-				return JsonResponse(data)
 				if int(a_objset[0].Anum) == int(a_answer[0]):
 					data['lastSubmissionCorrect'] = True
 			elif q_obj.QTid.QTid == 3:
-				return JsonResponse(data)
 				# Multiple correct
 				correct = True
 				if len(a_objset) != len(a_answer):
@@ -106,7 +103,6 @@ def answerSubmit(request, lobby_key):
 				# Deviation
 				data['debug'].append(a_objset[0].Atext)
 				data['debug'].append(str(a_answer))
-				return JsonResponse(data)
 				#data['debug'].append(abs(int(a_objset[0].Atext) - int(a_answer[0])))
 				data['lastSubmissionCorrect'] = True
 				if a_answer[0] == -1:
@@ -130,9 +126,9 @@ def answerSubmit(request, lobby_key):
 			lu_obj.LPquestionanswered = q_obj
 			lu_obj.LPwasdeviation = False
 			lu_obj.save()
-			data['checkLater'] = True
 
 			if q_obj.QTid == 4:
+				data['checkLater'] = True
 				lu_obj.LPwasdeviation = True
 				lu_obj.save()
 
@@ -164,6 +160,7 @@ def answerSubmit(request, lobby_key):
 								lu_obj_all.LPScore += points
 								lu_obj_all.LPlastaddition = points
 								points -= 1
+								first = False
 							else:
 								# Add points for every other but no streak increase
 								lu_obj_all.LPStreak += 0
@@ -225,8 +222,6 @@ def getScores(request, lobby_key):
 		return JsonResponse(data)
 
 	for lu_obj in lu_objset:
-		if not lu_obj.LPwasdeviation and lu_obj.Uid == user:
-			continue
 
 		lu_data = template.copy()
 		lu_data['name'] = lu_obj.Uid.first_name

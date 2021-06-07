@@ -11,6 +11,7 @@ const submitAnswer = document.getElementById('submitAnswer');
 const answerRow = document.getElementById('answers');
 const qResult = document.getElementById('qResult');
 let doneMessage = false;
+let isDeviation = false;
 
 function prepGame() {
     qhMaxQuestion.innerHTML = game.meta.maxQuestions;
@@ -274,10 +275,31 @@ function showQuestionResult() {
     overallResult.innerHTML = '';
 
     for (let i = 0; i < gamedata_keys.length; i++) {
-        if (gamedata_keys[i] === first_name)
-            continue;
-
         let gamedata = game.gamedata[gamedata_keys[i]];
+
+        if (gamedata_keys[i] === first_name && !isDeviation)
+            continue;
+        else if(gamedata_keys[i] === first_name && isDeviation) {
+            let myResult = document.getElementById('myResult');
+            myResult.classList.remove('text-success');
+            myResult.classList.remove('text-danger');
+
+            if (gamedata.lastSubmissionCorrect) {
+                myResult.classList.add('text-success');
+                myResult.innerHTML = "Korrekte Antwort!";
+            } else {
+                myResult.classList.add('text-danger');
+                myResult.innerHTML = "Falsche Antwort!";
+            }
+
+            let myAddition = document.getElementById('myAddition');
+            let myStreak = document.getElementById('myStreak');
+            let myScore = document.getElementById('myScore');
+            myAddition.innerHTML = gamedata.addition;
+            myStreak.innerHTML = gamedata.streak;
+            myScore.innerHTML = gamedata.score;
+            continue;
+        }
 
         let otherRow = document.createElement('tr');
         let otherName = document.createElement('td');
@@ -322,13 +344,17 @@ function getStatus() {
             .then(json => {
                 console.log("Status: ");
                 console.log(json);
-                for (let i = 0; i < json.length; i++) {
-                    let playerData = json[i];
-                    let data = Object.assign(playerScoreTemplate, game.playerScores[playerData.name]);
+                isDeviation = json.deviation;
+
+                for (let i = 0; i < json.results.length; i++) {
+                    let playerData = json.results[i];
+                    let data = Object.assign(playerScoreTemplate, game.gamedata[playerData.name]);
                     data.streak = playerData.streak;
                     data.score = playerData.score;
                     data.addition = playerData.addition;
-                    game.playerScores[playerData.name] = data;
+                    console.log(playerData.name);
+                    console.log(data);
+                    game.gamedata[playerData.name] = data;
                 }
 
                 showQuestionResult();
