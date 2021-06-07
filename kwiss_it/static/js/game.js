@@ -248,8 +248,6 @@ function answerSubmission(answer = [-1]) {
         answer: answer,
     })
         .then(json => {
-            console.log("Answer: ");
-            console.log(json);
             if(json.checkLater)
                 return;
             let myResult = document.getElementById('myResult');
@@ -347,8 +345,6 @@ function getStatus() {
     fetch(base_url + '/game/' + lobby_key)
         .then(data => data.json()
             .then(json => {
-                console.log("Status: ");
-                console.log(json);
                 isDeviation = json.deviation;
 
                 for (let i = 0; i < json.results.length; i++) {
@@ -357,8 +353,6 @@ function getStatus() {
                     data.streak = playerData.streak;
                     data.score = playerData.score;
                     data.addition = playerData.addition;
-                    console.log(playerData.name);
-                    console.log(data);
                     game.gamedata[playerData.name] = data;
                 }
 
