@@ -14,10 +14,11 @@
   pk: 3
   fields:
     QTname: "multiple"
-    QTdescription: "Meherere korrekte Antworten"
+    QTdescription: "Mehrere korrekte Antworten"
 
 - model: kwiss_it.QuestionType
   pk: 4
   fields:
     QTname: "number_deviation"
     QTdescription: "Näheste Zahleneingabe"
+

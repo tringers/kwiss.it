@@ -5,7 +5,7 @@
     Uid: ~
     Pid: ~
     STid: 1
-    QTid: 4
+    QTid: 2
     Qtext: "Wie lang gibt es die Stadt mit dem Namen Karlsruhe?"
     Qplaycount: 0
 
@@ -27,7 +27,7 @@
     Uid: ~
     Pid: ~
     STid: 1
-    QTid: 4
+    QTid: 2
     Qtext: "Fläche Karlsruhe in km²?"
     Qplaycount: 0
 
@@ -60,7 +60,7 @@
     Uid: ~
     Pid: ~
     STid: 1
-    QTid: 4
+    QTid: 2
     Qtext: "Was ist die ungefähre Einwohnerzahl von Karlsruhe"
     Qplaycount: 0
 
