@@ -159,16 +159,19 @@ function addanswers(i, q,qid) {
             .then(json => {
                 let answers = document.getElementById("category" + i + "answers" +q);
                 for(let a=0;a<json.length;a++){
-                    let divanswer = document.createElement("div")
-                    divanswer.innerHTML=atemplate;
-                    answers.appendChild(divanswer);
 
-                    let answer= document.getElementById("answer")
-                    let correct = document.getElementById("correct")
+
+                    let transwer = document.createElement("tr")
+                    let answer= document.createElement("td")
+                    let correct = document.createElement("td")
 
                     answers.id="c"+i+"q"+q+"answer"+a.toString();
                     answers.innerHTML=json[a].Atext;
                     correct.id="c"+i+"q"+q+"correct"+a.toString();
+
+                    transwer.appendChild(answer)
+                    transwer.appendChild(correct)
+                    answers.appendChild(transwer);
                 }
 
             })
