@@ -2,6 +2,12 @@ from .helper import *
 
 
 def add_content(request, args=None):
+	"""
+	function that handles new usercontent that gets postest on kwiss_it/submitusercontent.html
+	:param request:
+	:param args:
+	:return:
+	"""
 	if not args:
 		args = {
 			'errorMsg': '',
