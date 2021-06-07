@@ -263,22 +263,24 @@ def lobby_ready_view(request, lobbykey, ready):
 		lobbyuser_obj.LPLastHeartbeat = datetime.now()
 		lobbyuser_obj.LPready = (ready == 'true')
 		lobbyuser_obj.save()
+
+		lu_objset = LobbyUser.objects.filter(Lid__Lkey=lobbykey)
+		ready = True
+		for lu_obj in lu_objset:
+			if not lu_obj.LPready:
+				ready = False
+
+		print(ready)
+		if ready:
+			l_objset = Lobby.objects.filter(Lkey=lobbykey)
+			if len(l_objset) > 0:
+				l_obj = l_objset[0]
+				l_obj.Lstarted = 1
+				l_obj.save()
+
 		return JsonResponse({
 			'status': 200
 		})
-
-	lu_objset = LobbyUser.objects.filter(Lid__Lkey=lobbykey)
-	ready = True
-	for lu_obj in lu_objset:
-		if not lu_obj.LPready:
-			ready = False
-
-	if ready:
-		l_objset = Lobby.objects.filter(Lkey=lobbykey)
-		if len(l_objset) > 0:
-			l_obj = l_objset[0]
-			l_obj.Lstarted = True
-			l_obj.save()
 
 	return JsonResponse({
 		'status': 403
