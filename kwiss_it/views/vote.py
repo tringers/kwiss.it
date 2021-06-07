@@ -3,13 +3,13 @@ from .helper import *
 
 def voteCat(request, cat_id, vote):
 	if request.method != 'POST':
-		return
+		return HttpResponse(400)
 	if is_lazy_user(request.user):
-		return
+		return HttpResponse(400)
 	try:
 		c_objs = Category.objects.get(Cid=cat_id)
 	except Exception as e:
-		return
+		return HttpResponse(400)
 
 	CV_objs = CategoryVotes.objects.filter(Q(Uid=request.user) & Q(Cid=c_objs))
 	CV_len = len(CV_objs)
@@ -19,24 +19,17 @@ def voteCat(request, cat_id, vote):
 	elif CV_len == 1:
 		CV_objs.vote = vote - 10
 		CV_objs.save()
-	#		response_data['result'] = 200
-	#		response_data['message'] = "successfully voted"
-	#	else:
-	#		response_data['result'] = 409
-	#		response_data['message'] = "multiple votes found for the user for this category"
-	return  # JsonResponse(response_data)
-
+	return  HttpResponse(200)
 
 def voteQuestion(request, q_id, vote):
 	if request.method != 'POST':
-		return
+		return HttpResponse(404)
 	if is_lazy_user(request.user):
-		return
+		return HttpResponse(400)
 	try:
 		q_objs = Question.objects.get(Qid=q_id)
 	except Exception as e:
-		return
-
+		return HttpResponse(400)
 	QV_objs = QuestionVotes.objects.filter(Q(Uid=request.user) & Q(Qid=q_objs))
 	QV_len = len(QV_objs)
 	if QV_len < 1:
@@ -47,7 +40,7 @@ def voteQuestion(request, q_id, vote):
 		QV_objs.vote = vote - 10
 		QV_objs.save()
 
-	return
+	return HttpResponse(200)
 
 
 def stateCategory(request, c_id, state):
