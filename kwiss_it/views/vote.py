@@ -29,6 +29,7 @@ def voteCat(request, cat_id, vote):
 		response_data['message'] = "multiple votes found for the user for this category"
 	return JsonResponse(response_data)
 
+
 def voteQuestion(request, q_id, vote):
 	if request.method != 'POST':
 		return redirect("index")

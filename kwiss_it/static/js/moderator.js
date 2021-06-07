@@ -163,7 +163,7 @@ function addanswers(i, q,qid) {
                     divanswer.innerHTML=atemplate;
                     answers.appendChild(divanswer);
 
-                    let answer= document.getElementById("answer")
+                    let answer = document.getElementById("answer")
                     let correct = document.getElementById("correct")
 
                     answers.id="c"+i+"q"+q+"answer"+a.toString();
