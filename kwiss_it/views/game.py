@@ -101,8 +101,10 @@ def answerSubmit(request, lobby_key):
 					data['deviation'] = abs(int(a_objset[0].Atext) - int(a_answer[0]))
 
 	if data['status'] != 400:
+		lobby_obj = lobby_objset[0]
+		lq_objset = LobbyQuestions.objects.filter(Lid=lobby_obj)
 		lq_obj = lq_objset[a_question - 1]
-		q_obj = Question.objects.get(Qid=lq_obj.Qid)
+		q_obj = lq_obj.Qid
 		lu_objset = LobbyUser.objects.filter(Lid=lobby_obj, Uid=user)
 
 		if len(lu_objset) < 1:
@@ -158,15 +160,15 @@ def answerSubmit(request, lobby_key):
 							lu_obj_all.save()
 			else:
 				if data['lastSubmissionCorrect']:
-					lu_obj.Streak += 1
+					lu_obj.LPStreak += 1
 				else:
-					lu_obj.Streak = 0
-				lu_obj.LPlastaddition = lu_obj.Streak
-				lu_obj.LPscore += lu_obj.Streak
+					lu_obj.LPStreak = 0
+				lu_obj.LPlastaddition = lu_obj.LPStreak
+				lu_obj.LPScore += lu_obj.LPStreak
 				lu_obj.save()
-				data['addition'] = lu_obj.Streak
-				data['streak'] = lu_obj.Streak
-				data['score'] = lu_obj.LPscore
+				data['addition'] = lu_obj.LPStreak
+				data['streak'] = lu_obj.LPStreak
+				data['score'] = lu_obj.LPScore
 
 	return JsonResponse(data)
 
@@ -187,12 +189,40 @@ def getScores(request, lobby_key):
 		'score': 0,
 	}
 
+	if not lobby_key:
+		data['status'] = 400
+		data['message'] = 'Kein Lobby-Key'
+		return JsonResponse(data)
+
 	user = request.user
+	l_objset = Lobby.objects.filter(Lkey=lobby_key)
+
+	if len(l_objset) < 1:
+		data['status'] = 400
+		data['message'] = 'Lobby nicht gefunden'
+		return JsonResponse(data)
+
+	l_obj = l_objset[0]
+	lu_objset = LobbyUser.objects.filter(Lid=l_obj)
+
+	if len(lu_objset.filter(Uid=user)) < 1:
+		data['status'] = 400
+		data['message'] = 'Spieler nicht in Lobby'
+		return JsonResponse(data)
+
+	for lu_obj in lu_objset:
+		if not lu_obj.LPwasdeviation and lu_obj.Uid == user:
+			continue
+
+		lu_data = template.copy()
+		lu_data.name = lu_obj.Uid.first_name
+		lu_data.addition = lu_obj.LPlastaddition
+		lu_data.streak = lu_obj.LPStreak
+		lu_data.score = lu_obj.LPScore
+		data['results'].append(lu_data)
 
 	# Check for "lu_obj.LPwasdeviation" => All data
 	# "!lu_obj.LPwasdeviation" => Others data
-
-	data['results'].append(template.copy())
 
 	return JsonResponse(data)
 
