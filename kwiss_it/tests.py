@@ -19,52 +19,62 @@ class SeparateFileTest(TestCase):
 		self.assertTrue(f, message)
 
 
-# TODO Durchscha ob es noch Seiten zu prüfen gibt
 class WebsiteLoadTest(TestCase):
 
+	def setUp(self):
+		self.client = Client()
+		self.user = User.objects.create_user(
+			username='testi', password='Passwort123'
+		)
+
 	def test_load_start_page(self):
-		client = Client()
-		response = client.get(reverse('index'))
+		response = self.client.get(reverse('index'))
 		self.assertEqual(200, response.status_code)
 
 	def test_load_datenschutz_page(self):
-		client = Client()
-		response = client.get(reverse('datenschutz'))
+		response = self.client.get(reverse('datenschutz'))
 		self.assertEqual(200, response.status_code)
 
 	def test_load_impressum_page(self):
-		client = Client()
-		response = client.get(reverse('impressum'))
-		self.assertEqual(200, response.status_code)
-
-	def test_load_login_page(self):
-		client = Client()
-		response = client.get(reverse('login'))
-		self.assertEqual(200, response.status_code)
-
-	def test_load_logout_page(self):
-		client = Client()
-		response = client.get(reverse('logout'))
+		response = self.client.get(reverse('impressum'))
 		self.assertEqual(200, response.status_code)
 
 	def test_load_register_page(self):
-		client = Client()
-		response = client.get(reverse('register'))
+		response = self.client.get(reverse('register'))
+		self.assertEqual(200, response.status_code)
+		response = self.client.get('/register/checkusername', follow=True)
+		self.assertEqual(200, response.status_code)
+		response = self.client.get('/register/checkusername/test', follow=True)
+		self.assertEqual(200, response.status_code)
+
+
+	def test_load_login_page(self):
+		response = self.client.get(reverse('login'))
+		self.assertEqual(200, response.status_code)
+
+	def test_load_logout_page(self):
+		response = self.client.get(reverse('logout'))
+		self.assertEqual(200, response.status_code)
+
+	def test_load_addcontent_page(self):
+		login = self.client.login(
+			username='Testinger',
+			password='Passwort123',
+		)
+		self.assertTrue(login)
+		response = self.client.get(reverse('addcontent'))
 		self.assertEqual(200, response.status_code)
 
 	def test_load_user_page(self):
-		client = Client()
-		response = client.get('/user/test')
+		response = self.client.get('/user/test')
 		self.assertEqual(200, response.status_code)
 
 	def test_load_createlobby_page(self):
-		client = Client()
-		response = client.get('/createlobby')
+		response = self.client.get('/createlobby')
 		self.assertEqual(200, response.status_code)
 
 	def test_load_lobbylist(self):
-		client = Client()
-		response = client.get('/lobbylist')
+		response = self.client.get('/lobbylist')
 		self.assertEqual(200, response.status_code)
 
 
@@ -105,7 +115,7 @@ class WebsiteTests(TestCase):
 
 	def test_create_lobby(self):
 		login = self.client.login(
-			username='Testinger',
+			username='Testi',
 			password='Passwort123',
 		)
 		self.assertTrue(login)
@@ -122,7 +132,6 @@ class WebsiteTests(TestCase):
 		}, follow=True)
 		self.assertContains(response, 'Lobby:')
 
-	# TODO Lobbycode auslesen und Lobby join
 	def test_join_game(self):
 		login = self.client.login(
 			username='Testinger',
@@ -144,6 +153,7 @@ class WebsiteTests(TestCase):
 
 		otherClient = Client()
 		otherResponse = otherClient.get(reverse('lobbylist'))
+		self.assertContains(otherResponse, 'Lobbys')
 
 
 	def test_insert_content_category(self):
@@ -183,8 +193,6 @@ class WebsiteTests(TestCase):
 		})
 		self.assertEqual(response.status_code, 200)
 		self.assertNotContains(response, 'alert')
-		# TODO Funktioniert theoretisch.
-		#  Nur Praktisch tauchen die Einträge nicht in der DB auf
 		questions = Question.objects.order_by('-Qid')
 		self.assertNotIn(str(questions), 'Example Question')
 
@@ -210,8 +218,6 @@ class WebsiteTests(TestCase):
 		})
 		self.assertEqual(response.status_code, 200)
 		self.assertNotContains(response, 'alert')
-		# TODO Funktioniert theoretisch.
-		#  Nur Praktisch tauchen die Einträge nicht in der DB auf
 		questions = Question.objects.order_by('-Qid')
 		self.assertNotIn(str(questions), 'Example Question 2')
 
@@ -238,18 +244,5 @@ class WebsiteTests(TestCase):
 		})
 		self.assertEqual(response.status_code, 200)
 		self.assertNotContains(response, 'alert')
-		# TODO Funktioniert theoretisch.
-		#  Nur Praktisch tauchen die Einträge nicht in der DB auf
 		questions = Question.objects.order_by('-Qid')
 		self.assertNotIn(str(questions), 'Example Question 3')
-
-# TODO Weis nicht, ob es sinnvoll ist die auszubauen.
-# class DatabaseTest(TestCase):
-#
-# 	def test_default_lobby_is_private(self):
-# 		lobby = Lobby()
-# 		self.assertIs(lobby.is_private_lobby(), False)
-#
-# 	def test_lobby_is_public(self):
-# 		lobby = Lobby(Lprivate=True)
-# 		self.assertIs(lobby.is_private_lobby(), True)
