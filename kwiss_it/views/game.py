@@ -215,10 +215,10 @@ def getScores(request, lobby_key):
 			continue
 
 		lu_data = template.copy()
-		lu_data.name = lu_obj.Uid.first_name
-		lu_data.addition = lu_obj.LPlastaddition
-		lu_data.streak = lu_obj.LPStreak
-		lu_data.score = lu_obj.LPScore
+		lu_data['name'] = lu_obj.Uid.first_name
+		lu_data['addition'] = lu_obj.LPlastaddition
+		lu_data['streak'] = lu_obj.LPStreak
+		lu_data['score'] = lu_obj.LPScore
 		data['results'].append(lu_data)
 
 	# Check for "lu_obj.LPwasdeviation" => All data
