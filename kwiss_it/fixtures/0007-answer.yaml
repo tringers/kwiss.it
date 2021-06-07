@@ -1,14 +1,14 @@
 - model: kwiss_it.Answer
   fields:
     Qid: 1
-    Anum: 0
+    Anum: 3
     Atext: 1715
     Acorrect: 1
 
 - model: kwiss_it.Answer
   fields:
     Qid: 1
-    Anum: 1
+    Anum: 0
     Atext: 1675
     Acorrect: 0
 
@@ -22,7 +22,7 @@
 - model: kwiss_it.Answer
   fields:
     Qid: 1
-    Anum: 3
+    Anum: 1
     Atext: 1750
     Acorrect: 0
 
@@ -37,14 +37,14 @@
 - model: kwiss_it.Answer
   fields:
     Qid: 2
-    Anum: 1
+    Anum: 2
     Atext: 3
     Acorrect: 0
 
 - model: kwiss_it.Answer
   fields:
     Qid: 2
-    Anum: 2
+    Anum: 1
     Atext: 5
     Acorrect: 0
 
@@ -59,7 +59,7 @@
 - model: kwiss_it.Answer
   fields:
     Qid: 3
-    Anum: 0
+    Anum: 2
     Atext: 174
     Acorrect: 1
 
@@ -73,7 +73,7 @@
 - model: kwiss_it.Answer
   fields:
     Qid: 3
-    Anum: 2
+    Anum: 0
     Atext: 213
     Acorrect: 0
 
@@ -88,7 +88,7 @@
 - model: kwiss_it.Answer
   fields:
     Qid: 4
-    Anum: 0
+    Anum: 3
     Atext: 27
     Acorrect: 1
 
@@ -109,7 +109,7 @@
 - model: kwiss_it.Answer
   fields:
     Qid: 4
-    Anum: 3
+    Anum: 0
     Atext: 43
     Acorrect: 0
 
@@ -146,7 +146,7 @@
 - model: kwiss_it.Answer
   fields:
     Qid: 6
-    Anum: 0
+    Anum: 3
     Atext: 312000
     Acorrect: 1
 
@@ -167,7 +167,7 @@
 - model: kwiss_it.Answer
   fields:
     Qid: 6
-    Anum: 3
+    Anum: 0
     Atext: 199750
     Acorrect: 0
 
@@ -175,14 +175,14 @@
 - model: kwiss_it.Answer
   fields:
     Qid: 7
-    Anum: 0
+    Anum: 1
     Atext: "1715"
     Acorrect: 1
 
 - model: kwiss_it.Answer
   fields:
     Qid: 7
-    Anum: 1
+    Anum: 0
     Atext: "1746"
     Acorrect: 0
 
@@ -219,7 +219,7 @@
   fields:
     Qid: 8
     Anum: 2
-    Atext: "Noroststadt"
+    Atext: "Nordstadt"
     Acorrect: 1
 
 - model: kwiss_it.Answer
@@ -326,14 +326,14 @@
 - model: kwiss_it.Answer
   fields:
     Qid: 11
-    Anum: 0
+    Anum: 1
     Atext: "Durchgangsbahnhof"
     Acorrect: 1
 
 - model: kwiss_it.Answer
   fields:
     Qid: 11
-    Anum: 1
+    Anum: 0
     Atext: "Keilbahnhof"
     Acorrect: 0
 
@@ -355,7 +355,7 @@
 - model: kwiss_it.Answer
   fields:
     Qid: 12
-    Anum: 0
+    Anum: 2
     Atext: "Rhein"
     Acorrect: 1
 
@@ -369,7 +369,7 @@
 - model: kwiss_it.Answer
   fields:
     Qid: 12
-    Anum: 2
+    Anum: 0
     Atext: "Oder"
     Acorrect: 0
 

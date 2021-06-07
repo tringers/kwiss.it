@@ -5,10 +5,10 @@ def voteCat(request, cat_id, vote):
 	if request.method != 'POST':
 		return redirect("index")
 	response_data = {}
-	if not cat_id.isnumeric() or not vote.isnumeric():
-		response_data['result'] = 400
-		response_data['message'] = "wrong data format used"
-		return JsonResponse(response_data)
+	#if not cat_id.isnumeric() or not vote.isnumeric():
+	#	response_data['result'] = 400
+	#	response_data['message'] = "wrong data format used"
+	#	return JsonResponse(response_data)
 	c_objs = Category.objects.filter(Cid=cat_id)
 
 	if len(c_objs) != 1:
@@ -16,12 +16,14 @@ def voteCat(request, cat_id, vote):
 		response_data['message'] = "category not found"
 		return JsonResponse(response_data)
 	CV_objs = CategoryVotes.objects.filter(Q(Uid=request.user) & Q(Cid=c_objs))
-	if len(CV_objs) == 1:
-		CV_objs.vote = vote - 10
+	CV_len = len(CV_objs)
+	if CV_len < 1:
+		obj = QuestionVotes.objects.create(Cid=c_objs, Uid=request.user, vote=vote - 10)
+		obj.save()
 		response_data['result'] = 200
 		response_data['message'] = "successfully voted"
-	elif len(CV_objs) < 1:
-		QuestionVotes.objects.create(Cid=c_objs, Uid=request.user, vote=vote - 10)
+	elif CV_len == 1:
+		CV_objs[0].vote = vote - 10
 		response_data['result'] = 200
 		response_data['message'] = "successfully voted"
 	else:
@@ -34,10 +36,10 @@ def voteQuestion(request, q_id, vote):
 	if request.method != 'POST':
 		return redirect("index")
 	response_data = {}
-	if not q_id.isnumeric() or not vote.isnumeric():
-		response_data['result'] = 400
-		response_data['message'] = "wrong data format used"
-		return JsonResponse(response_data)
+	#if not q_id.isnumeric() or not vote.isnumeric():
+	#	response_data['result'] = 400
+	#	response_data['message'] = "wrong data format used"
+	#	return JsonResponse(response_data)
 	q_objs = Question.objects.filter(Qid=q_id)
 
 	if len(q_objs) != 1:
@@ -45,12 +47,14 @@ def voteQuestion(request, q_id, vote):
 		response_data['message'] = "category not found"
 		return JsonResponse(response_data)
 	QV_objs = QuestionVotes.objects.filter(Q(Uid=request.user) & Q(Qid=q_objs))
-	if len(QV_objs) == 1:
-		QV_objs.vote = vote - 10
+	QV_len = len(QV_objs)
+	if QV_len < 1:
+		obj = QuestionVotes.objects.create(Qid=q_objs, Uid=request.user, vote=vote - 10)
+		obj.save()
 		response_data['result'] = 200
 		response_data['message'] = "successfully voted"
-	elif len(QV_objs) < 1:
-		QuestionVotes.objects.create(Qid=q_objs, Uid=request.user, vote=vote - 10)
+	elif QV_len == 1:
+		QV_objs[0].vote = vote - 10
 		response_data['result'] = 200
 		response_data['message'] = "successfully voted"
 	else:

@@ -112,16 +112,16 @@
                         <td class="pb-2">Frage</td>
                         <td></td>
                         <td class="col-12 pb-2 my-auto btn-group" role="group">
-                            <button type="button" class="btn btn-outline-success col-6" id="question-upvote" value="1">&#x1f44d;</button>
-                            <button type="button" class="btn btn-outline-danger col-6" id="question-downvote" value="-1">&#x1F44E;</button>
+                            <button type="button" class="btn btn-outline-success col-6" id="question-upvote" value="11">&#x1f44d;</button>
+                            <button type="button" class="btn btn-outline-danger col-6" id="question-downvote" value="9">&#x1F44E;</button>
                         </td>
                     </tr>
                     <tr>
                         <td class="pt-2">Kategorie</td>
                         <td></td>
                         <td class="col-12 pt-2 my-auto btn-group" role="group">
-                            <button type="button" class="btn btn-outline-success col-6" id="category-upvote" value="1">&#x1f44d;</button>
-                            <button type="button" class="btn btn-outline-danger col-6" id="category-downvote" value="-1">&#x1F44E;</button>
+                            <button type="button" class="btn btn-outline-success col-6" id="category-upvote" value="11">&#x1f44d;</button>
+                            <button type="button" class="btn btn-outline-danger col-6" id="category-downvote" value="9">&#x1F44E;</button>
                         </td>
                     </tr>
                     </tbody>
@@ -135,6 +135,6 @@
     </div>
 {% endblock %}
 {% block gamescript %}
-    <script src="{% static 'js/game.min.js' %}"></script>
-    <script src="{% static 'js/game_addition.min.js' %}"></script>
+    <script src="{% static 'js/game.js' %}"></script>
+    <script src="{% static 'js/game_addition.js' %}"></script>
 {% endblock %}

@@ -34,7 +34,7 @@ allow_chars_for_email = r'^[a-z0-9.!#$%&\'*+-/=?^_`{|}~@]+$'
 
 
 def check_valid_chars(inputStr: str) -> bool:
-	if not re.match("^[A-Za-z0-9 _!§$%&/()=?+#*'~,.;:\n-]*$", inputStr):
+	if not re.match("^[A-Za-z0-9 _!§$%&/@()=?+#*'~,.;:\n-]*$", inputStr):
 		return False
 	return True
 

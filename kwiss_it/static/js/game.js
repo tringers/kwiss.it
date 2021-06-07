@@ -19,7 +19,7 @@ function prepGame() {
     if (game.meta.timeStarted === 0) {
         // Prepare game (5s delay)
         stopHeartbeat();
-        heartbeat = setInterval(sendHeartbeat, 100);
+        heartbeat = setInterval(sendHeartbeat, 500);
         for (let i = 0; i < 6; i++) {
             setTimeout(() => {
                 let lobbyDelayTime = document.getElementById('lobbyDelayTime');
@@ -55,13 +55,13 @@ function connectionHandle() {
     if (questionNo === game.processedQuestion && !is_question()) {
         if (!game.lastSubmitted) {
             game.lastSubmitted = true;
-            // TODO: Submit "Question not submitted to server"
+            submitAnswer.disabled = true;
             answerSubmission([-1]);
         }
         // Disable Answer section and wait for server to send resolution
         if (!game.scoresFetched) {
             game.scoresFetched = true;
-            setTimeout(getStatus, 3000);
+            setTimeout(getStatus, 5000);
         }
     }
 
