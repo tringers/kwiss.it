@@ -44,15 +44,15 @@ function categorylist(url = api_url + "/category/?approved=true&pending=true&den
                     let btnpromote = document.getElementById("promote")
                     let btndemote = document.getElementById("demote")
 
-                    catname.innerText= content[i].Cname;
+                    catname.innerHTML= content[i].Cname;
                     catname.id="catname"+i.toString();
-                    catdesc.innerText= content[i].Cdescription;
+                    catdesc.innerHTML= content[i].Cdescription;
                     catdesc.id="catdesc"+i.toString();
-                    catstate.innerText= (content[i].STid == 1)? "approved" : (content[i].STid == 2)? "pending" : "denied";
+                    catstate.innerHTML= (content[i].STid == 1)? "approved" : (content[i].STid == 2)? "pending" : "denied";
                     catstate.id="catstate"+i.toString();
-                    btnpromote.value=(content[i].STid == 1)? "pending" : "approved";
+                    btnpromote.innerHTML=(content[i].STid == 1)? "pending" : "approved";
                     btnpromote.id="promote"+i.toString();
-                    btndemote.value=(content[i].STid == 3)? "pending" : "denied" ;
+                    btndemote.innerHTML=(content[i].STid == 3)? "pending" : "denied" ;
 
                     btnpromote.addEventListener("click",function (){
 
